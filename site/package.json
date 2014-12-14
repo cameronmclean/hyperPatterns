@@ -1,0 +1,15 @@
+{
+  "name": "hyperPatterns",
+  "version": "1.0.0",
+  "description": "hypermedia API for lab patterns",
+  "main": "hyperPatterns.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Cameron McLean",
+  "license": "ISC",
+  "dependencies": {
+    "connect-rest": "^1.5.1",
+    "express": "^4.10.6"
+  }
+}
