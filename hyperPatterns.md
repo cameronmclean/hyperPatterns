@@ -23,3 +23,39 @@ use /Projects/hyperPatterns/site for the app and keep related project notes, doc
 9) Need cors `npm install --save cors` to enable cross-origin resource sharing `app.use('/api', require('cors')());`
 
 10) Use connect-rest `npm install --save connect-rest` to create APIs
+
+
+
+#####20141215
+Started using [connect](https://github.com/senchalabs/connect), and [connect-rest](https://github.com/imrefazekas/connect-rest) with [nano](https://github.com/dscape/nano#dbinsertdoc-params-callback) to create a node server for the api.
+
+Things to think about...
+1) AP paths, methods, payloads for each state transition
+2) where will content be marked up into LD/RDF? server, database or client? 
+3) modelling patterns as RDF/JSON-LD - we start with the JSON-LD that we eventually want, and then implement the server and DB to marshall various documents and resources to produce this content. 
+
+??
+
+Linked data platform primer...
+1) establish a basic container - eg http://api.patterns.org/patterns
+we should be able to read this root document and discover the affordances
+i.e it should return JSON-LD/Hydra that describes the list of patterns we can GET, and the option to POST a new one.
+
+??
+
+PATH                             METHOD         DESCRIPTION
+
+/patterns/		                 GET            List all the patterns
+				                 POST           Create a new pattern
+
+/patterns/{name}/				 GET            List the pattern elements and forces
+								 POST			Create a force
+								 PUT			Update the pattern
+								 DELETE         Delete the pattern
+
+/patterns/{name}/{{force}}/      GET            List the force properties
+								 PUT			Update the force
+								 DELETE         Delete the force
+
+/\*/\*     				         OPTIONS
+				 				 HEAD
