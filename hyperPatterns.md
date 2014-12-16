@@ -60,6 +60,8 @@ PATH                             METHOD         DESCRIPTION
 /\*/\*     				         OPTIONS
 				 				 HEAD
 
+>>nb not sure if above will work - nested basic containers?
+
 ---
 Created lib folder. First script is syncDesignDocs.js which specfies all the design docs we want to use/store in couchDB. Running `node syncDesignDocs.js` from the hyperpatterns/site/lib dir will write teh docs to couchdb /patterns/_design etc...
 

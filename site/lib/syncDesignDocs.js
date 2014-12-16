@@ -10,7 +10,7 @@ var patternDesignDoc = {
 	language: 'javascript',
 	'views': {
 		'getAllPatterns': {
-			"map": "function(doc){emit(doc_id, doc._rev)}"
+			"map": "function(doc){emit(doc.name, doc)}"
 		}
 
 	}
