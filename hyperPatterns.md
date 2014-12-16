@@ -30,7 +30,7 @@ use /Projects/hyperPatterns/site for the app and keep related project notes, doc
 Started using [connect](https://github.com/senchalabs/connect), and [connect-rest](https://github.com/imrefazekas/connect-rest) with [nano](https://github.com/dscape/nano#dbinsertdoc-params-callback) to create a node server for the api.
 
 Things to think about...
-1) AP paths, methods, payloads for each state transition
+1) API paths, methods, payloads for each state transition
 2) where will content be marked up into LD/RDF? server, database or client? 
 3) modelling patterns as RDF/JSON-LD - we start with the JSON-LD that we eventually want, and then implement the server and DB to marshall various documents and resources to produce this content. 
 
@@ -65,3 +65,9 @@ PATH                             METHOD         DESCRIPTION
 ---
 Created lib folder. First script is syncDesignDocs.js which specfies all the design docs we want to use/store in couchDB. Running `node syncDesignDocs.js` from the hyperpatterns/site/lib dir will write teh docs to couchdb /patterns/_design etc...
 
+######20141216
+When doing couch db doc updates - need to read in whole doc, make changes and PUT back. The '_rev' must be present and same as current rev in order to prevent a update clash.
+
+A PUT to a doc with mathching _revs is accepted, and the resulant doc gets a new _rev.
+
+I wrote some hacky/inelegant code to get the current _design/patterns doc, extract the _rev, and append it to the defined docs in syncDesignDocs.js - currently it assumes the desing doc already exists.
