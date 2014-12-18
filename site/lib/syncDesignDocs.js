@@ -4,7 +4,7 @@
 var nano = require('../node_modules/nano')('http://127.0.0.1:5984');
 var db = nano.use('patterns');
 
-// view to return all the pattern docs for a /patterns/ GET
+// view to return all the pattern docs for a api/patterns/ GET request
 var patternDesignDoc = {
 	_id: '_design/patterns',
 	language: 'javascript',

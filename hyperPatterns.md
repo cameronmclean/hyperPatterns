@@ -70,4 +70,25 @@ When doing couch db doc updates - need to read in whole doc, make changes and PU
 
 A PUT to a doc with mathching _revs is accepted, and the resulant doc gets a new _rev.
 
-I wrote some hacky/inelegant code to get the current _design/patterns doc, extract the _rev, and append it to the defined docs in syncDesignDocs.js - currently it assumes the desing doc already exists.
+I wrote some hacky/inelegant code to get the current _design/patterns doc, extract the _rev, and append it to the defined docs in syncDesignDocs.js - currently it assumes the design doc already exists.
+
+#####20141217
+Some design considerations - we could store three types of docs in couchdb - pattern doc, force doc, @context doc. (perhaps also a fourth author doc? and a fifth bibJSON doc?). This allows us to separate the "content" which can be wrapped in an RDF "contex" at query time and allows content and contex to be decoupled, creating ease of maintenence and developmemt. when an api call is received by node, the server is responsible for calling couchdb _views _displays _lists etc, which marshall and join the approproate docs, - where couchdb joins or views are difficult, we can combine multiple db views in node and perform additional processing to formulate the appropriate response. This might be (relatively) straight-forward for GETing data, but perhaps it makes sense to decide docuemnt boundaries for easy POST/PUTing of data - the node server and middleware will be responsible for parseing these requests into the approprite JSON strucutres for insertion into couchdb. 
+
+Design decision - we should put all the event and update handling, mulitdocument validation etc in the node app.This means if we later want a differnet doc store, we only have to refactor/change code in (mostly)one place. 
+
+Also - the decision to separate the @contex - means we can create clean, plain JSON at the flick of a switch.
+
+#####20141218
+Started on creating seperate @contex .json docs for various components of patterns - authors, pattern body, forces and bibTEX/JSON references. These contexts can be appended to representations by node.js middle ware as required and added as an array "@context": ["http://patterns.org/context/bibTEX.json", "http://patterns.org/context/forces.json"] etc...
+
+started on bibTEX.json as a contex to wrap bibTEX files that are parsed as/into JSON. bibTEX.json is a mapping for the typical bibTEX keys. 
+Note JSON-LD is case sentive, while bibTEX is not - therefore remember to implementa a .tolowercase() when parsing in bibTEX to JSON. *only for the resulting (bib)JSON KEYS*
+plan on using this bibTEX to JSON library for node.js - https://www.npmjs.com/package/bibtex-parser-js
+
+The list of bibTEX fields to match to vocabs was taken from wikipedia [here](http://en.wikipedia.org/wiki/BibTeX).
+
+NOTE: the need to aviod name collisions in @contexts - eg "name:" and "title" - may be for journal, person, pattern, force etc... perhaps pre-pend potential collisions with something like patternName: patternAuthor: forceName: etc... 
+
+
+Note: as far as possible we have tried to use SPAR ontologies (http://sempublishing.sourceforge.net/) but there are still gaps - we resort to using the older http://zeitkunst.org/bibtex/0.1/ bibREX in OWL vocab as it maintans the closes semantics. 
