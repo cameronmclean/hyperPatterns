@@ -17,7 +17,7 @@ var apiOptions = {
 var app = connect();
 app.use( rest.rester( apiOptions ) );
 http.createServer(app).listen(3000);
-console.log("connect server started and listening on port 3000")
+console.log("connect server started and listening on port 3000");
 
 //couch db settings
 var nano = require('nano')('http://127.0.0.1:5984');
@@ -29,7 +29,7 @@ rest.get('/patterns', function(request, content){
 	return db.view('patterns', 'getAllPatterns', function(err, body){
 		if (!err){
 			console.log(body);
-		};
+		}
 	});
 });
 

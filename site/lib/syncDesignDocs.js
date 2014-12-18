@@ -12,10 +12,8 @@ var patternDesignDoc = {
 		'getAllPatterns': {
 			"map": "function(doc){emit(doc)}"
 		}
-
 	}
-
-} ;
+};
 
 
 //first get the desgin doc and grab the rev
@@ -24,7 +22,7 @@ var patternDesignDoc = {
 var getRev = db.get("_design/patterns", function(err, body){
 	// if not error - 
 	if (!err){
-		console.log('_design/patterns doc already exists... _rev: '+ body['_rev']);
+		console.log('_design/patterns doc exists with... _rev: '+ body['_rev']);
 		//double check that body['_rev'] exists
 		if (body['_rev']){
 			//set _rev on patternDesignDoc specfied above to current _rev we just fetched
@@ -35,15 +33,13 @@ var getRev = db.get("_design/patterns", function(err, body){
 			db.insert(patternDesignDoc, '_design/patterns', function(err, body){
 			if (!err){
 				console.log("Design docs updated!");
-			}
-
-			else {
+			} else {
 				console.log(err);
-			};
-		});
-	};
+			  }
+		    });
+	    }
 		
-	};
+	}
 });
 
 //console.log("pattern doc outsie the db.get"+patternDesignDoc['_rev']);

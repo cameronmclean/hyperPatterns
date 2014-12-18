@@ -92,3 +92,8 @@ NOTE: the need to aviod name collisions in @contexts - eg "name:" and "title" - 
 
 
 Note: as far as possible we have tried to use SPAR ontologies (http://sempublishing.sourceforge.net/) but there are still gaps - we resort to using the older http://zeitkunst.org/bibtex/0.1/ bibREX in OWL vocab as it maintans the closes semantics. 
+
+#####20141219
+Created syncContextDoc.js in site/libs - where we define @context docs to be stored in couchdb. they they have the "\_id" : _name of context_ and a "doctype": "context" . Note - we need to manually create a context doc at localhost:5984/patterns/ with the approriate custom "_id" via futon first, then we can run `node syncContextDocs.js` to get a _rev and add all the details specifed in the syncContextDocs.js 
+
+   
