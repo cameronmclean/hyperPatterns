@@ -1,0 +1,7 @@
+{
+	"@context": {
+	"forceName": "http://schema.org/name",
+	"description": "http://purl.org/dc/terms/description",
+	"pic": "http://xmlns.com/foaf/0.1/depiction"
+	}
+}

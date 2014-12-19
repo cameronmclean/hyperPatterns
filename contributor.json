@@ -1,0 +1,8 @@
+{
+	"@context": {
+	"ORCID": { "@id": "http://purl.org/spar/scoro/hasORCID",
+			   "@type": "@id"
+			 },
+	"authorName": "http://xmlns.com/foaf/0.1/name"
+	}
+}

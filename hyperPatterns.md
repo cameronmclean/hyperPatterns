@@ -88,7 +88,7 @@ plan on using this bibTEX to JSON library for node.js - https://www.npmjs.com/pa
 
 The list of bibTEX fields to match to vocabs was taken from wikipedia [here](http://en.wikipedia.org/wiki/BibTeX).
 
-NOTE: the need to aviod name collisions in @contexts - eg "name:" and "title" - may be for journal, person, pattern, force etc... perhaps pre-pend potential collisions with something like patternName: patternAuthor: forceName: etc... 
+NOTE: the need to avoid name collisions in @contexts - eg "name:" and "title" - may be for journal, person, pattern, force etc... perhaps pre-pend potential collisions with something like patternName: patternAuthor: forceName: etc... 
 
 
 Note: as far as possible we have tried to use SPAR ontologies (http://sempublishing.sourceforge.net/) but there are still gaps - we resort to using the older http://zeitkunst.org/bibtex/0.1/ bibREX in OWL vocab as it maintans the closes semantics. 
@@ -96,4 +96,13 @@ Note: as far as possible we have tried to use SPAR ontologies (http://sempublish
 #####20141219
 Created syncContextDoc.js in site/libs - where we define @context docs to be stored in couchdb. they they have the "\_id" : _name of context_ and a "doctype": "context" . Note - we need to manually create a context doc at localhost:5984/patterns/ with the approriate custom "_id" via futon first, then we can run `node syncContextDocs.js` to get a _rev and add all the details specifed in the syncContextDocs.js 
 
+
+---
+we use the generic schema.org "name" for both name of pattern, and name of force - this has broader sematics than existing dc terms like "title" etc which may have implict pragmatic differences amongst different communites. The choice of 'name' rather than 'title' reflects our view of patterns as 
+fucntional and active, rather than passive litary constructs. 
+
+Note - our pattern ontology to describe the parts of pattern not covered with existing vocabs - the classes we define, correspond to the resources we identified in the API design - they are both things we need to give IRIs to. (of course we need to mint IRIs for the novel pattern properties too)
+
+created v0.2 of the pattern ontology - we now have 4 Classes - DesignPattern, Force, Contributor, Reference
+and properties - hasProblem, hasContext, hasSolution, hasRationale, and hasForce  
    
