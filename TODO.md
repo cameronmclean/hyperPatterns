@@ -23,3 +23,5 @@ dereferencable
 
 publish pattern ontology - set up server with content negotiation,
 - ttl, rdf/XML, 303 HTML
+
+add DesignPattern, Force, Reference, Contributor to @contex docs
