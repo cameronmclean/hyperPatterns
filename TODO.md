@@ -31,3 +31,9 @@ resource URL - author - ORCID number, bibTEX - numeric /1, /2 etc?
 
 firm up consistent terminoloy
 evidence, reference, author, contributor etx..
+
+how to handle pictogram resources
+
+handling deletes and edits - rollback strategies so I can undo 
+malicious users or noobs mistakes.
+(eg a delete request to the API - doesnt delete from the database) 
