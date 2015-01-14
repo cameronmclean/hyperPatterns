@@ -14,7 +14,7 @@ bibJSON
 	- will also need to deal with citekey to make it a node.
 
 refactor "evidence" or create new field to allow URLs+descripions for 
-non-bibTEX resources (eg videos, blogs, stackexchange answers)...
+non-bibTEX resources (eg videos, blogs, stackexchange answers)...					wont fix - just use bibTEX @online, and URL: "", Date: "" etc...
 
 rewrite pattern ontology - 2 classes - Pattern, Force - properties 
 
@@ -24,4 +24,10 @@ dereferencable
 publish pattern ontology - set up server with content negotiation,
 - ttl, rdf/XML, 303 HTML
 
-add DesignPattern, Force, Reference, Contributor to @contex docs
+add DesignPattern, Force, Reference, Contributor to @contex docs					yep
+
+slugs for authorID and refID in patterns/... 
+resource URL - author - ORCID number, bibTEX - numeric /1, /2 etc?
+
+firm up consistent terminoloy
+evidence, reference, author, contributor etx..
