@@ -1,10 +1,10 @@
-// run node syncDesignDocs.js from the lib folder to update/add the views and design docs that we define for couchDB here 
+// run node syncContextDocs.js from the lib folder to update/add the context docs that we specify here 
 // note relative path to nano module 
 
 var nano = require('../node_modules/nano')('http://127.0.0.1:5984');
 var db = nano.use('patterns');
 
-// view to return all the pattern docs for a api/patterns/ GET request
+// specifies the @contex json to be included / mapped to bibTEX docs
 var bibTEXContext = {
 	"_id": "bibTEX",
 	"doctype": "context",
@@ -30,10 +30,56 @@ var bibTEXContext = {
 	}
 };
 
+// specifies the @contex json to be included / mapped to contributor (author) docs
+var contributorContex = {
+	"_id": "contributor",
+	"doctype": "context",
+	"@context": {
+	"ORCID": { "@id": "http://purl.org/spar/scoro/hasORCID",
+			   "@type": "@id"
+			 },
+	"authorName": "http://xmlns.com/foaf/0.1/name"
+	}
+};
+
+// specifies the @contex json to be included / mapped to pattern docs 
+//note that pattern represenations will include contributor, evidence, force docs
+var patternContext = {
+	"_id": "pattern",
+	"doctype": "context",
+	"@context": {
+	"name": "http://schema.org/name",
+	"context": "http://purl/ontology/lp#hasContext",
+	"problem": "http://purl/ontology/lp#hasProblem",
+	"force": { "id": "http://purl/ontology/lp#hasForce",
+				"@type": "@id"
+			},
+	"solution": "http://purl/ontology/lp#hasSolution",
+	"rationale": "http://purl/ontology/lp#hasRationale",
+	"diagram": "http://schema.org/diagram",
+	"evidence": { "@id": "http://purl.org/spar/cito/citesAsEvidence",
+				  "@type": "@id"
+				},
+	"author": { "@id": "http://purl.org/dc/terms/creator",
+				"@type": "@id"
+			},
+	}
+};
+
+// specifies the @contex json to be included / mapped to force docs
+var forceContext = {
+	"_id": "force",
+	"doctype": "context",
+	"@context": {
+	"forceName": "http://schema.org/name",
+	"description": "http://purl.org/dc/terms/description",
+	"pic": "http://xmlns.com/foaf/0.1/depiction"
+	}
+};
 
 //first get the desgin doc and grab the rev
 //NB assumes the design doc already exists!!!
-//TODO - handle create if not exist.
+//TODO - handle create if not exist?
 var getRev = db.get("bibTEX", function(err, body){
 	// if not error - 
 	if (!err){
