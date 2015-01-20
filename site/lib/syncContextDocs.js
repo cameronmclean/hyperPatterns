@@ -45,7 +45,7 @@ var contributorContex = {
 };
 
 // specifies the @contex json to be included / mapped to pattern docs 
-//note that pattern represenations will include contributor, evidence, force docs
+//note that pattern represenations served by the API will include contributor, evidence, force docs
 var patternContext = {
 	"_id": "pattern",
 	"doctype": "context",
@@ -106,6 +106,7 @@ function syncDocs() {
 					})
 				}
 				else{
+					// if the db.get fails
 					console.log(err);
 				}
 				//console.log("doc id is "+doc['_id']+" and doc rev is set to "+doc['_rev']);

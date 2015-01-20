@@ -105,4 +105,55 @@ Note - our pattern ontology to describe the parts of pattern not covered with ex
 
 created v0.2 of the pattern ontology - we now have 4 Classes - DesignPattern, Force, Contributor, Reference
 and properties - hasProblem, hasContext, hasSolution, hasRationale, and hasForce  
+
+######20150120
+
+2015 and we're back!
+
+tweaked syncContextDocs.js to include the latest semantic mapping for Pattern, Force, Contributor, and Reference docs.
+Spent ages stuck on getting the nano couchdb get() and insert() functions to work properly within a for loop, iterating through the context
+docs to get a _rev and insert the latest. This was due to the asynchronous callback functions and iterator/variable scope.
+
+final solution was the following - see links 
+ http://stackoverflow.com/questions/750486/javascript-closure-inside-loops-simple-practical-example/19323214#19323214
+ http://learn.jquery.com/javascript-101/functions/#immediately-invoked-function-expression-iife
+ http://en.wikipedia.org/wiki/Immediately-invoked_function_expression
+
+
+```javascript
+//note this function uses an Immediately Invoked Function expression to 
+// allow async call-back funtions to close properly within the 
+// for loop. see
+// http://stackoverflow.com/questions/750486/javascript-closure-inside-loops-simple-practical-example/19323214#19323214
+// http://learn.jquery.com/javascript-101/functions/#immediately-invoked-function-expression-iife
+// http://en.wikipedia.org/wiki/Immediately-invoked_function_expression
+
+function syncDocs() {
+	for (var x = 0; x < contextDocs.length; x++) {
+		//IIFE - anon function will be called on each iteration of the for loop
+		// we pass in the value of for loop x as index within the anon funct 
+		(function(index){
+			//we copy the contents of the JSON objects specified above into the temp var doc here
+			var doc = JSON.parse(JSON.stringify(contextDocs[index]));
+			//retreive the doc from couch db
+			db.get(doc['_id'], function(err, body){
+				if(!err){
+					//if OK, set/create temp doc "_rev" field to match current db rev
+					doc['_rev'] = body['_rev'];
+					//write the doc
+					db.insert(doc, function(err, body){
+						console.log(body);
+					})
+				}
+				else{
+					// if the db.get fails
+					console.log(err);
+				}
+				//console.log("doc id is "+doc['_id']+" and doc rev is set to "+doc['_rev']);
+			})
+		})(x); // we send the for loop iterator x to the (IIFE) anon function above, where it is defined as 'index' 
+			   // see IIFE links above
+	}
+}
+``` 
    
