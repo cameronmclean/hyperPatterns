@@ -18,7 +18,7 @@ non-bibTEX resources (eg videos, blogs, stackexchange answers)...					wont fix -
 
 rewrite pattern ontology - 2 classes - Pattern, Force - properties 
 
-add to context docs, @type and @id for property values that sould be 
+add to context docs, @type and @id for property values that sould be 				yep
 dereferencable
 
 publish pattern ontology - set up server with content negotiation,
@@ -37,3 +37,9 @@ how to handle pictogram resources
 handling deletes and edits - rollback strategies so I can undo 
 malicious users or noobs mistakes.
 (eg a delete request to the API - doesnt delete from the database) 
+
+variable scope, closures, async, callbacks.
+somthing about the event driven nature is doing my head in re:
+getting and combining docs from the db via nano and connect-rest....
+
+give syncDesignDocs.js the same treatment as syncContextDocs.js

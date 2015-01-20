@@ -24,21 +24,36 @@ var nano = require('nano')('http://127.0.0.1:5984');
 var db = nano.use('patterns');
 
 // First routing - return all patterns from couchDB as JSON-LD/hydra
-rest.get('/patterns', function(request, content){
+//rest.get('/patterns', function(request, content){
 	//return {"hello": "world"};	
-	return db.view('patterns', 'getAllPatterns', function(err, body){
-		if (!err){
-			console.log(body);
-		}
-	});
-});
+//	return db.view('patterns', 'getAllPatterns', function(err, body){
+//		if (!err){
+//			console.log(body);
+//		}
+//	});
+//});
 
+
+
+//return json-ld of a specific pattern contributor/author
+//rest-connect supports paramaterised paths :orcid value is 
+//nested under parameters in the requests object: {"parameters": {"orcid": "value"}, ...} 
+rest.get('/patterns/contributors/:orcid', function(request, content){
+		
+	var urlParams = request.parameters; //get parameters from request
+	var docID = urlParams['orcid']; // get orcid for doc retrevial 
+	console.log("request for pattern contributor with author ID "+docID);
+
+	//code to get context doc, author doc by id, mix them, and return as json-ld
+	//TROUBLE - nano, and callbacks/async nature - cant figure how to do this yet..
+	// haveing variable scope issues.	
+});
 
 //create a new pattern
-rest.post('/patterns', function(request, content){
-	
-	var newPattern = content;
-	console.log(content);
-
-	db.insert(newPattern);
-});
+//rest.post('/patterns', function(request, content){
+//	
+//	var newPattern = content;
+//	console.log(content);
+//
+//	db.insert(newPattern);
+//});

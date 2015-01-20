@@ -112,7 +112,7 @@ and properties - hasProblem, hasContext, hasSolution, hasRationale, and hasForce
 
 tweaked syncContextDocs.js to include the latest semantic mapping for Pattern, Force, Contributor, and Reference docs.
 Spent ages stuck on getting the nano couchdb get() and insert() functions to work properly within a for loop, iterating through the context
-docs to get a _rev and insert the latest. This was due to the asynchronous callback functions and iterator/variable scope.
+docs to get a _rev and insert the latest. This was due to variable hoisting within nested functions and iterator/variable scope.
 
 final solution was the following - see links 
  http://stackoverflow.com/questions/750486/javascript-closure-inside-loops-simple-practical-example/19323214#19323214
