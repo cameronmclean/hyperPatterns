@@ -32,7 +32,7 @@ Started using [connect](https://github.com/senchalabs/connect), and [connect-res
 Things to think about...
 1) API paths, methods, payloads for each state transition
 2) where will content be marked up into LD/RDF? server, database or client? 
-3) modelling patterns as RDF/JSON-LD - we start with the JSON-LD that we eventually want, and then implement the server and DB to marshall various documents and resources to produce this content. 
+3) modeling patterns as RDF/JSON-LD - we start with the JSON-LD that we eventually want, and then implement the server and DB to marshal various documents and resources to produce this content. 
 
 ??
 
@@ -63,27 +63,27 @@ PATH                             METHOD         DESCRIPTION
 >>nb not sure if above will work - nested basic containers?
 
 ---
-Created lib folder. First script is syncDesignDocs.js which specfies all the design docs we want to use/store in couchDB. Running `node syncDesignDocs.js` from the hyperpatterns/site/lib dir will write teh docs to couchdb /patterns/_design etc...
+Created lib folder. First script is syncDesignDocs.js which specifies all the design docs we want to use/store in couchDB. Running `node syncDesignDocs.js` from the hyperpatterns/site/lib dir will write the docs to couchdb /patterns/_design etc...
 
 ######20141216
 When doing couch db doc updates - need to read in whole doc, make changes and PUT back. The '_rev' must be present and same as current rev in order to prevent a update clash.
 
-A PUT to a doc with mathching _revs is accepted, and the resulant doc gets a new _rev.
+A PUT to a doc with matching _revs is accepted, and the resultant doc gets a new _rev.
 
 I wrote some hacky/inelegant code to get the current _design/patterns doc, extract the _rev, and append it to the defined docs in syncDesignDocs.js - currently it assumes the design doc already exists.
 
 #####20141217
-Some design considerations - we could store three types of docs in couchdb - pattern doc, force doc, @context doc. (perhaps also a fourth author doc? and a fifth bibJSON doc?). This allows us to separate the "content" which can be wrapped in an RDF "contex" at query time and allows content and contex to be decoupled, creating ease of maintenence and developmemt. when an api call is received by node, the server is responsible for calling couchdb _views _displays _lists etc, which marshall and join the approproate docs, - where couchdb joins or views are difficult, we can combine multiple db views in node and perform additional processing to formulate the appropriate response. This might be (relatively) straight-forward for GETing data, but perhaps it makes sense to decide docuemnt boundaries for easy POST/PUTing of data - the node server and middleware will be responsible for parseing these requests into the approprite JSON strucutres for insertion into couchdb. 
+Some design considerations - we could store three types of docs in couchdb - pattern doc, force doc, @context doc. (perhaps also a fourth author doc? and a fifth bibJSON doc?). This allows us to separate the "content" which can be wrapped in an RDF "contex" at query time and allows content and context to be decoupled, creating ease of maintenance and development. when an api call is received by node, the server is responsible for calling couchdb _views _displays _lists etc, which marshal and join the appropriate docs, - where couchdb joins or views are difficult, we can combine multiple db views in node and perform additional processing to formulate the appropriate response. This might be (relatively) straight-forward for GETing data, but perhaps it makes sense to decide docuemnt boundaries for easy POST/PUTing of data - the node server and middleware will be responsible for parsing these requests into the appropriate JSON strucutres for insertion into couchdb. 
 
-Design decision - we should put all the event and update handling, mulitdocument validation etc in the node app.This means if we later want a differnet doc store, we only have to refactor/change code in (mostly)one place. 
+Design decision - we should put all the event and update handling, mulitdocument validation etc in the node app.This means if we later want a different doc store, we only have to refactor/change code in (mostly)one place. 
 
 Also - the decision to separate the @contex - means we can create clean, plain JSON at the flick of a switch.
 
 #####20141218
-Started on creating seperate @contex .json docs for various components of patterns - authors, pattern body, forces and bibTEX/JSON references. These contexts can be appended to representations by node.js middle ware as required and added as an array "@context": ["http://patterns.org/context/bibTEX.json", "http://patterns.org/context/forces.json"] etc...
+Started on creating separate @contex .json docs for various components of patterns - authors, pattern body, forces and bibTEX/JSON references. These contexts can be appended to representations by node.js middle ware as required and added as an array "@context": ["http://patterns.org/context/bibTEX.json", "http://patterns.org/context/forces.json"] etc...
 
-started on bibTEX.json as a contex to wrap bibTEX files that are parsed as/into JSON. bibTEX.json is a mapping for the typical bibTEX keys. 
-Note JSON-LD is case sentive, while bibTEX is not - therefore remember to implementa a .tolowercase() when parsing in bibTEX to JSON. *only for the resulting (bib)JSON KEYS*
+started on bibTEX.json as a context to wrap bibTEX files that are parsed as/into JSON. bibTEX.json is a mapping for the typical bibTEX keys. 
+Note JSON-LD is case sentive, while bibTEX is not - therefore remember to implement a .tolowercase() when parsing in bibTEX to JSON. *only for the resulting (bib)JSON KEYS*
 plan on using this bibTEX to JSON library for node.js - https://www.npmjs.com/package/bibtex-parser-js
 
 The list of bibTEX fields to match to vocabs was taken from wikipedia [here](http://en.wikipedia.org/wiki/BibTeX).
@@ -91,15 +91,15 @@ The list of bibTEX fields to match to vocabs was taken from wikipedia [here](htt
 NOTE: the need to avoid name collisions in @contexts - eg "name:" and "title" - may be for journal, person, pattern, force etc... perhaps pre-pend potential collisions with something like patternName: patternAuthor: forceName: etc... 
 
 
-Note: as far as possible we have tried to use SPAR ontologies (http://sempublishing.sourceforge.net/) but there are still gaps - we resort to using the older http://zeitkunst.org/bibtex/0.1/ bibREX in OWL vocab as it maintans the closes semantics. 
+Note: as far as possible we have tried to use SPAR ontologies (http://sempublishing.sourceforge.net/) but there are still gaps - we resort to using the older http://zeitkunst.org/bibtex/0.1/ bibREX in OWL vocab as it maintains the closes semantics. 
 
 #####20141219
-Created syncContextDoc.js in site/libs - where we define @context docs to be stored in couchdb. they they have the "\_id" : _name of context_ and a "doctype": "context" . Note - we need to manually create a context doc at localhost:5984/patterns/ with the approriate custom "_id" via futon first, then we can run `node syncContextDocs.js` to get a _rev and add all the details specifed in the syncContextDocs.js 
+Created syncContextDoc.js in site/libs - where we define @context docs to be stored in couchdb. they they have the "\_id" : _name of context_ and a "doctype": "context" . Note - we need to manually create a context doc at localhost:5984/patterns/ with the appropriate custom "_id" via futon first, then we can run `node syncContextDocs.js` to get a _rev and add all the details specified in the syncContextDocs.js 
 
 
 ---
-we use the generic schema.org "name" for both name of pattern, and name of force - this has broader sematics than existing dc terms like "title" etc which may have implict pragmatic differences amongst different communites. The choice of 'name' rather than 'title' reflects our view of patterns as 
-fucntional and active, rather than passive litary constructs. 
+we use the generic schema.org "name" for both name of pattern, and name of force - this has broader semantics than existing dc terms like "title" etc which may have implicit pragmatic differences amongst different communities. The choice of 'name' rather than 'title' reflects our view of patterns as 
+functional and active, rather than passive literary constructs. 
 
 Note - our pattern ontology to describe the parts of pattern not covered with existing vocabs - the classes we define, correspond to the resources we identified in the API design - they are both things we need to give IRIs to. (of course we need to mint IRIs for the novel pattern properties too)
 
@@ -135,7 +135,7 @@ function syncDocs() {
 		(function(index){
 			//we copy the contents of the JSON objects specified above into the temp var doc here
 			var doc = JSON.parse(JSON.stringify(contextDocs[index]));
-			//retreive the doc from couch db
+			//retrieve the doc from couch db
 			db.get(doc['_id'], function(err, body){
 				if(!err){
 					//if OK, set/create temp doc "_rev" field to match current db rev
@@ -164,15 +164,15 @@ OK - sorting out getting information back out of callback functions returned whe
 Problem was, I was misunderstaning Ajax
 http://community.sitepoint.com/t/how-to-update-globale-variable-from-within-a-callback-function/12621/2
 
-The main js code doesnt wait for the db.get() call to finish before moveing on to the next thing.
-The solution is to write another function within the scope (hiher) of all the db calls we need to marshal, and then call that upon the db.get() _etc_ callback function execution....
-This keeps teh variables we want within the right function scope.
+The main js code doesnt wait for the db.get() call to finish before moving on to the next thing.
+The solution is to write another function within the scope (higher) of all the db calls we need to marshal, and then call that upon the db.get() _etc_ callback function execution....
+This keeps the variables we want within the right function scope.
 
 _that solved half the problem_
 
 The other problem - we need integrate the various async calls in the final step to assemble and emit a proper JSON-LD representation assembled from the various couchdb docs.
 The only real way to do this, without going down nested callback hell, is to implement a counter.
-After each async request/callback is run, it updates a counter. we then check the counter to see if the expected number of async functions have completed, and if so, execute a final done() function, which can assume the shared variables manipulated by different async fucntions are now in their final state. NOTE - there are various ways to do this - mine is somewhat hard coded at the moment (but at least commented)
+After each async request/callback is run, it updates a counter. we then check the counter to see if the expected number of async functions have completed, and if so, execute a final done() function, which can assume the shared variables manipulated by different async functions are now in their final state. NOTE - there are various ways to do this - mine is somewhat hard coded at the moment (but at least commented)
 see http://stackoverflow.com/questions/855904/javascript-synchronizing-after-asynchronous-calls?rq=1
 
 And also, a new slightly annoying feature/bug I noticed today
@@ -188,6 +188,7 @@ eg
 db.get(docID, function(err, body){
 	console.log(body);
 });
+```
 
 gives 
 
@@ -200,6 +201,6 @@ gives
      authorName: 'http://xmlns.com/foaf/0.1/name' } }
 ```
 
-?? asked on gitter (chat forum for nano via github) - had all sorts of issues editing within dialiog box so request for help came out garbled.
+?? asked on gitter (chat forum for nano via github) - had all sorts of issues editing within dialog box so request for help came out garbled.
 we'll see if anyone can make sense of what I meant... :-/
 

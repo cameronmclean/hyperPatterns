@@ -18,8 +18,8 @@ non-bibTEX resources (eg videos, blogs, stackexchange answers)...					wont fix -
 
 rewrite pattern ontology - 2 classes - Pattern, Force - properties 
 
-add to context docs, @type and @id for property values that sould be 				yep - but double check
-dereferencable
+add to context docs, @type and @id for property values that should be 				yep - but double check
+dereference
 
 publish pattern ontology - set up server with content negotiation,
 - ttl, rdf/XML, 303 HTML
@@ -29,7 +29,7 @@ add DesignPattern, Force, Reference, Contributor to @contex docs					yep
 slugs for authorID and refID in patterns/... 
 resource URL - author - ORCID number, bibTEX - numeric /1, /2 etc?
 
-firm up consistent terminoloy
+firm up consistent terminology
 evidence, reference, author, contributor etx..
 
 how to handle pictogram resources
@@ -39,10 +39,10 @@ malicious users or noobs mistakes.
 (eg a delete request to the API - doesnt delete from the database) 
 
 variable scope, closures, async, callbacks.
-somthing about the event driven nature is doing my head in re:
+something about the event driven nature is doing my head in re:
 getting and combining docs from the db via nano and connect-rest....
 
-check control flow issues with contributor route...!!!(related to aboove)			yep - implemented counter
+check control flow issues with contributor route...!!!(related to above)			yep - implemented counter
 
 give syncDesignDocs.js the same treatment as syncContextDocs.js
 
@@ -52,5 +52,5 @@ POST /pattern/conributor - as test run for POSTing a whole pattern
 //prob delete this route later - only edit authors via whole pattern to
 simplify client.
 
-move hyperPatterns.js apiconext from /api to / - put api in hostname?
+move hyperPatterns.js apicontext setting from /api to / - put api in hostname?
 
