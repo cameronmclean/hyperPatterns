@@ -53,7 +53,7 @@ rest.get('/patterns/contributors/:orcid', function(request, content){
 	function done(){
 
 		console.log('this is the final doc!');
-		console.log(doc);
+		console.log(JSON.stringify(doc, null, 2));
 	}
 
 

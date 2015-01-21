@@ -211,4 +211,10 @@ and
 `var jsonld = require('jsonld');` in main hyperPatterns.js
 
 next to refactor /patterns/contributor/:orcid wrangleMainDoc() and wrangleContextDoc() to use jsonld functions.
+checked out new branch jsonld - had a hack but no success - jsonld.compact() wouldnt return a merged doc, only the context....
 
+skipped back to master.
+discovery
+using `JSON.stringify(doc, null, 2)` on docs prettyfies them nicely and the console.log(doc) now validates as proper JSON-LD.
+happy for now, but wondering if the later whole pattern stringify will get messed up with "" or '' within the text of a pattern doc...???
+I know JSON.stringify can mess with datetime and other JSON standards.... 

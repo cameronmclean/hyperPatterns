@@ -56,3 +56,11 @@ simplify client.
 move hyperPatterns.js apicontext setting from /api to / - put api in hostname?
 
 document 1:n modelling pattern>forces, author>patterns, pattern>reference
+
+does JSON.stringify bugger up patterns or JSON objects where value text
+has single/double quotes etc?
+
+JSON-LD for patterns/contributors/:orcid - does it need an @id? it starts
+with a black node according to JSON-LD playground....
+
+assert that pattern/contributor/:orcid is a person?
