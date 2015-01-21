@@ -13,7 +13,7 @@ Resources											HTTP
 /patterns/{patternName}/authors/{authorID}			DELETE - and its gone
 /patterns/{patternName}/forces						GET - returns list of all pattern forces
 /patterns/{patternName}/forces						POST - accepts JSON encoded new force (force must not already exist)
-*/patterns/:patternName/forces/new					GET - template for POSt*
+*/patterns/:patternName/forces/new					GET - template for POS*
 /patterns/{patternName}/forces/{forceName}   		GET - JSON-LD force
 /patterns/{patternName}/forces/{forceName}   		PUT - accepts JSON encoded edited force (force must exist)
 /patterns/{patternName}/forces/{forceName}   		DELETE - and its gone  
@@ -72,3 +72,11 @@ The *API* only has to provide GET functionality to the resource we need to give/
 The editing or creating is handled buy seperate "command" resources, with a monolithic JSON, and the node.js code implements the business logic.
 THis gives nice separation. If want to chage the logic the client doesnt break - it still GETS the atomic resources and POSTs to the same resource - only the payloads change...
 COOl ay!
+
+
+---------
+####OK, the master list.
+
+Routes implemented so far
+
+/api/patterns/contributor/:orcid 			GET - returns JSON-LD of anthorName, and ORCID as HTTP URL

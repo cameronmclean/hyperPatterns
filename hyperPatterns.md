@@ -157,3 +157,49 @@ function syncDocs() {
 }
 ``` 
    
+#####21050121
+
+OK - sorting out getting information back out of callback functions returned when we make db.get() etc calls using nano within a connect-rest app.get() route..(for example)
+
+Problem was, I was misunderstaning Ajax
+http://community.sitepoint.com/t/how-to-update-globale-variable-from-within-a-callback-function/12621/2
+
+The main js code doesnt wait for the db.get() call to finish before moveing on to the next thing.
+The solution is to write another function within the scope (hiher) of all the db calls we need to marshal, and then call that upon the db.get() _etc_ callback function execution....
+This keeps teh variables we want within the right function scope.
+
+_that solved half the problem_
+
+The other problem - we need integrate the various async calls in the final step to assemble and emit a proper JSON-LD representation assembled from the various couchdb docs.
+The only real way to do this, without going down nested callback hell, is to implement a counter.
+After each async request/callback is run, it updates a counter. we then check the counter to see if the expected number of async functions have completed, and if so, execute a final done() function, which can assume the shared variables manipulated by different async fucntions are now in their final state. NOTE - there are various ways to do this - mine is somewhat hard coded at the moment (but at least commented)
+see http://stackoverflow.com/questions/855904/javascript-synchronizing-after-asynchronous-calls?rq=1
+
+And also, a new slightly annoying feature/bug I noticed today
+docs in couchdb are correctly stored with keys and values "double quoted"
+eg
+
+```
+{"_id":"contributor","_rev":"3-43aad752c0316729b0d6ee975c039956","doctype":"context","@context":{"ORCID":{"@id":"http://purl.org/spar/scoro/hasORCID","@type":"@id"},"authorName":"http://xmlns.com/foaf/0.1/name"}}
+```
+but getting it from nano, within node,js and printing it to console.log() 
+eg
+```
+db.get(docID, function(err, body){
+	console.log(body);
+});
+
+gives 
+
+```
+{ _id: 'contributor',
+  _rev: '3-43aad752c0316729b0d6ee975c039956',
+  doctype: 'context',
+  '@context':
+   { ORCID: { '@id': 'http://purl.org/spar/scoro/hasORCID', '@type': '@id' },
+     authorName: 'http://xmlns.com/foaf/0.1/name' } }
+```
+
+?? asked on gitter (chat forum for nano via github) - had all sorts of issues editing within dialiog box so request for help came out garbled.
+we'll see if anyone can make sense of what I meant... :-/
+

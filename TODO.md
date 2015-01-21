@@ -18,7 +18,7 @@ non-bibTEX resources (eg videos, blogs, stackexchange answers)...					wont fix -
 
 rewrite pattern ontology - 2 classes - Pattern, Force - properties 
 
-add to context docs, @type and @id for property values that sould be 				yep
+add to context docs, @type and @id for property values that sould be 				yep - but double check
 dereferencable
 
 publish pattern ontology - set up server with content negotiation,
@@ -42,4 +42,15 @@ variable scope, closures, async, callbacks.
 somthing about the event driven nature is doing my head in re:
 getting and combining docs from the db via nano and connect-rest....
 
+check control flow issues with contributor route...!!!(related to aboove)			yep - implemented counter
+
 give syncDesignDocs.js the same treatment as syncContextDocs.js
+
+get /pattern/contributor/:orcid - 404s, content type, proper function
+
+POST /pattern/conributor - as test run for POSTing a whole pattern
+//prob delete this route later - only edit authors via whole pattern to
+simplify client.
+
+move hyperPatterns.js apiconext from /api to / - put api in hostname?
+

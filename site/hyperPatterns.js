@@ -39,15 +39,74 @@ var db = nano.use('patterns');
 //rest-connect supports paramaterised paths :orcid value is 
 //nested under parameters in the requests object: {"parameters": {"orcid": "value"}, ...} 
 rest.get('/patterns/contributors/:orcid', function(request, content){
+
 		
 	var urlParams = request.parameters; //get parameters from request
 	var docID = urlParams['orcid']; // get orcid for doc retrevial 
 	console.log("request for pattern contributor with author ID "+docID);
+	
+	var doc = {}; //to store the final structure that will be returned
+	var progress = 0; //a counter to mark number of async requests
 
-	//code to get context doc, author doc by id, mix them, and return as json-ld
-	//TROUBLE - nano, and callbacks/async nature - cant figure how to do this yet..
-	// haveing variable scope issues.	
+	// to be called when all async requests to coucdb and responces have been marshalled
+	function done(){
+		console.log('this is the final doc!');
+		console.log(doc);
+	}
+
+
+	//takes the body from a db.get context doc, adds the @context to the doc
+	//to be served by the API
+	function wrangleContext(body){
+	
+		doc['@context'] = body['@context']; //just grab the @contex key and its values
+		
+		//if this function was called, db.get() was successful
+		//update counter	
+		progress++;
+		//check if the main doc has been wrangled, proceed to final response if so
+		if(progress === 2){
+			done();
+		}
+	}
+
+	function wrangleMainDoc(body){
+		//set the final doc fields and keys to the retreived author doc
+		//
+		for (x in body){
+			doc[x] = body[x];
+			//console.log(body[x]);
+		}
+
+		// then remove the db specific fields
+		delete main['_id'];
+		delete main['_rev'];
+
+		//if this function was called, db.get() was successful
+		//update counter	
+		progress++;
+		//if the context doc has been wrangled, proceed to final response
+		if(progress === 2){
+			done();
+		}
+	}
+
+	//orchstrates the calls to the db, and subsequent doc wrangling
+	function getDoc() {
+		db.get(docID, function(err, body){
+			wrangleMainDoc(body);
+		});
+
+		db.get('contributor', function(err, body){
+			wrangleContext(body);
+		});
+	}
+
+	//do it all 
+	getDoc();
+
 });
+
 
 //create a new pattern
 //rest.post('/patterns', function(request, content){
