@@ -1,15 +1,16 @@
 //This is the node, express/rest-connect, couch hypermedia API for lab pattens
 
-//var express = require('express');
+//var express = require('express'); //<--------Express NOT USED?!
 
 
 //API details
 var http = require('http');
 var connect = require('connect');
 var rest = require('connect-rest');
+var jsonld = require('jsonld');
 
 var apiOptions = {
-	contex: '/api',
+	contex: '/api', 
 	domain: require('domain').create(),
 };
 
@@ -79,8 +80,8 @@ rest.get('/patterns/contributors/:orcid', function(request, content){
 		}
 
 		// then remove the db specific fields
-		delete main['_id'];
-		delete main['_rev'];
+		delete doc['_id'];
+		delete doc['_rev'];
 
 		//if this function was called, db.get() was successful
 		//update counter	
@@ -107,6 +108,7 @@ rest.get('/patterns/contributors/:orcid', function(request, content){
 
 });
 
+// rest.get('/patterns/:pname/force/:fname', function)
 
 //create a new pattern
 //rest.post('/patterns', function(request, content){

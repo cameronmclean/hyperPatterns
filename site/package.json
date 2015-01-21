@@ -12,6 +12,7 @@
     "connect": "^3.3.3",
     "connect-rest": "^1.5.1",
     "express": "^4.10.6",
+    "jsonld": "^0.3.19",
     "nano": "^6.0.2"
   }
 }

@@ -54,3 +54,4 @@ simplify client.
 
 move hyperPatterns.js apicontext setting from /api to / - put api in hostname?
 
+document 1:n modelling pattern>forces, author>patterns, pattern>reference
