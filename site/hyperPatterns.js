@@ -51,6 +51,7 @@ rest.get('/patterns/contributors/:orcid', function(request, content){
 
 	// to be called when all async requests to coucdb and responces have been marshalled
 	function done(){
+
 		console.log('this is the final doc!');
 		console.log(doc);
 	}

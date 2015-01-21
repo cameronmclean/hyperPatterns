@@ -204,3 +204,11 @@ gives
 ?? asked on gitter (chat forum for nano via github) - had all sorts of issues editing within dialog box so request for help came out garbled.
 we'll see if anyone can make sense of what I meant... :-/
 
+Added jsonld https://github.com/digitalbazaar/jsonld.js
+by
+`sudo npm install --save jsonld` from /hyperPatterns/site dir
+and
+`var jsonld = require('jsonld');` in main hyperPatterns.js
+
+next to refactor /patterns/contributor/:orcid wrangleMainDoc() and wrangleContextDoc() to use jsonld functions.
+

@@ -46,7 +46,8 @@ check control flow issues with contributor route...!!!(related to above)			yep -
 
 give syncDesignDocs.js the same treatment as syncContextDocs.js
 
-get /pattern/contributor/:orcid - 404s, content type, proper function
+get /pattern/contributor/:orcid - 404s, content type, and serve 
+proper content type.
 
 POST /pattern/conributor - as test run for POSTing a whole pattern
 //prob delete this route later - only edit authors via whole pattern to
