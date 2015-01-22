@@ -39,12 +39,13 @@ var db = nano.use('patterns');
 //return json-ld of a specific pattern contributor/author
 //rest-connect supports paramaterised paths :orcid value is 
 //nested under parameters in the requests object: {"parameters": {"orcid": "value"}, ...} 
-rest.get('/patterns/contributors/:orcid', function(request, content){
+rest.get('/patterns/contributor/:orcid', function(request, content, callback){
 
 		
 	var urlParams = request.parameters; //get parameters from request
 	var docID = urlParams['orcid']; // get orcid for doc retrevial 
 	console.log("request for pattern contributor with author ID "+docID);
+
 	
 	var doc = {}; //to store the final structure that will be returned
 	var progress = 0; //a counter to mark number of async requests
@@ -54,6 +55,8 @@ rest.get('/patterns/contributors/:orcid', function(request, content){
 
 		console.log('this is the final doc!');
 		console.log(JSON.stringify(doc, null, 2));
+		callback(null, doc);
+		//TODO - add code to push doc to HTTP response with appropriate headers
 	}
 
 
@@ -80,6 +83,9 @@ rest.get('/patterns/contributors/:orcid', function(request, content){
 			//console.log(body[x]);
 		}
 
+		// add subject to JSON-LD - prevent top level blank node
+		doc['@id'] = "http://api.patterns.org/contributor/"+docID;
+
 		// then remove the db specific fields
 		delete doc['_id'];
 		delete doc['_rev'];
@@ -93,11 +99,20 @@ rest.get('/patterns/contributors/:orcid', function(request, content){
 		}
 	}
 
+
+
 	//orchstrates the calls to the db, and subsequent doc wrangling
 	function getDoc() {
 		db.get(docID, function(err, body){
-			wrangleMainDoc(body);
-		});
+			if (!err){
+				wrangleMainDoc(body);
+			}
+			else{
+				console.log(err);
+				goToError(err);				
+				}
+			}
+		);
 
 		db.get('contributor', function(err, body){
 			wrangleContext(body);
@@ -107,7 +122,20 @@ rest.get('/patterns/contributors/:orcid', function(request, content){
 	//do it all 
 	getDoc();
 
+	//if error fetching db.get() main doc
+	function goToError(err){
+		return callback("Failed getting document, status code "+err.statusCode);
+				//if (err.statusCode === 404){
+				//	console.log('404 bro!');
+					//put and create general error handling
+					//eg call a 404() function or 500() funciton that
+					//is a catch-all for all failed requests
+	}
+
 });
+
+
+
 
 // rest.get('/patterns/:pname/force/:fname', function)
 

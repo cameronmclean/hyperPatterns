@@ -217,4 +217,44 @@ skipped back to master.
 discovery
 using `JSON.stringify(doc, null, 2)` on docs prettyfies them nicely and the console.log(doc) now validates as proper JSON-LD.
 happy for now, but wondering if the later whole pattern stringify will get messed up with "" or '' within the text of a pattern doc...???
-I know JSON.stringify can mess with datetime and other JSON standards.... 
+I know JSON.stringify can mess with datetime and other JSON standards....
+
+#####20150122
+
+OK - so added an extra goToError() function, that returns a string indicating the error (eg 404) from trying to get a *couchdb doc* - that is to say - when we dereference /patterns/contributor/:orcid, if the value of :orcid does not map to a couchDB doc, we return the error back to the client. a 404 from couchdb also means a 404 from the pattern api - i;ve aligned the implementation deatails with the API service here, i.e i'm assiming for now that an API request for a contributor equates to a couchdb GET on the conributor doc. this is not best practice or very good error handling, but it will suffice for now - better than a silent or no response. 
+
+I got the API to return properly formatted JSON-LD to the client - used a callback in the original 
+rest-connect rest.get(/path). this callback is initiated when the final done() function is called, and passes the doc back...
+
+ i.e 
+
+ ```javascript
+ est.get('/patterns/contributor/:orcid', function(request, content, callback){
+
+		
+	var urlParams = request.parameters; //get parameters from request
+	var docID = urlParams['orcid']; // get orcid for doc retrevial 
+	console.log("request for pattern contributor with author ID "+docID);
+
+	
+	var doc = {}; //to store the final structure that will be returned
+	var progress = 0; //a counter to mark number of async requests
+
+	// to be called when all async requests to coucdb and responces have been marshalled
+	function done(){
+
+		console.log('this is the final doc!');
+		console.log(JSON.stringify(doc, null, 2));
+		callback(null, doc);
+		//TODO - add code to push doc to HTTP response with appropriate headers
+	}
+
+//etc ..
+```
+
+I also added a new field in the returned JSON-LD to make a reference ("@id") of the resource being described.
+Not sure if this is necessary yet - but it prevents blank nodes in the n-tripleization of the JSON-LS document. 
+
+we add this in the wrangleMainDoc() function of the rest.get('/patterns/contributor/:orcid') route.
+`doc['@id'] = "http://api.patterns.org/contributor/"+docID;`
+

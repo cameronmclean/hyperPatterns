@@ -46,7 +46,7 @@ check control flow issues with contributor route...!!!(related to above)			yep -
 
 give syncDesignDocs.js the same treatment as syncContextDocs.js
 
-get /pattern/contributor/:orcid - 404s, content type, and serve 
+get /pattern/contributor/:orcid - 404s, content type, and serve 					404 implemented
 proper content type.
 
 POST /pattern/conributor - as test run for POSTing a whole pattern
@@ -60,7 +60,7 @@ document 1:n modelling pattern>forces, author>patterns, pattern>reference
 does JSON.stringify bugger up patterns or JSON objects where value text
 has single/double quotes etc?
 
-JSON-LD for patterns/contributors/:orcid - does it need an @id? it starts
+JSON-LD for patterns/contributors/:orcid - does it need an @id? it starts			added in for now..
 with a black node according to JSON-LD playground....
 
 assert that pattern/contributor/:orcid is a person?
