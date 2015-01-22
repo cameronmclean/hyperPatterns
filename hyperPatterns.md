@@ -258,3 +258,19 @@ Not sure if this is necessary yet - but it prevents blank nodes in the n-triplei
 we add this in the wrangleMainDoc() function of the rest.get('/patterns/contributor/:orcid') route.
 `doc['@id'] = "http://api.patterns.org/contributor/"+docID;`
 
+cant get rest.post to work!
+cant access the content part of the POST - is undefined.
+Request object has all sorts, but not the json payload.
+callback is a function that takes err, result, and resOptions argument...
+found this for finding the params for a function..
+
+```
+	var reg = /\(([\s\S]*?)\)/;
+		var params = reg.exec(callback);
+		if (params) 
+     	var param_names = params[1].split(',');
+     	console.log(param_names);
+
+```
+
+but otherwise meh. try again tomorrow...
