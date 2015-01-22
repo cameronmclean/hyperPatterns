@@ -134,7 +134,95 @@ rest.get('/patterns/contributor/:orcid', function(request, content, callback){
 
 });
 
+//temp POST route for receiving a pattern contributor
+// this will take a JSON with all the right deets, split it
+// and store it in couchdb, with a doc ID created from the ORCID id.
+rest.post('/patterns/contributor', function(request, content, callback){
 
+	//code to check content and assemble into doc
+	//var docToInsert = content;
+	//console.log(content);
+	//console.log(request);
+	//callback(null, request);
+	//for (x in request){
+	//	console.log("*************************");
+	//	console.log(request);
+	//console.log(JSON.stringify(request.headers));	
+
+	//}
+	//var thingy = request;
+	//console.log(thingy);
+
+
+	var a = {
+		"ORCID": request.body.ORCID,
+		"test": request.body.test
+	};
+
+	//console.log(request);
+	var a = request.parser;
+	console.log(a);
+
+	function wranglePOST(doc){
+		try {
+			JSON.parse(doc);	
+		} catch(e) {
+			goToError(e);
+		}
+
+		return doInsert(doc);
+	}
+
+	function success(body){
+		callback(null, body);
+	}
+
+	function goToError(body){
+		callback(null, body);
+	}
+
+
+	function doInsert(doc){
+	var orcidID = doc['ORCID'];
+	db.insert(doc, docID, function(err, body){
+		if(!err){
+			success(body);
+		}
+		else{
+			goToError(err);
+		}
+
+	 });
+	}
+
+	//do it all
+	//wranglePOST(a);
+});
+
+
+//temp GET route for receving a template to POST a new contributor
+rest.get('/patterns/newcontributor', function(request, content, callback){
+
+	function sendToClient(doc){
+		callback(null, doc);
+	}
+
+	//if error fetching db.get() new contributor template doc
+	function goToError(err){
+		return callback("Failed getting new contributor template, status code "+err.statusCode);
+	}
+
+	db.get('newContributorTemplate', function(err, body){
+		if (!err){
+		sendToClient(body);
+	    }
+	    else {
+	    	console.log(err);
+	    	goToError(err);
+	    }
+	});
+
+});
 
 
 // rest.get('/patterns/:pname/force/:fname', function)

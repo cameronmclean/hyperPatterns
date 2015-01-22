@@ -80,3 +80,5 @@ COOl ay!
 Routes implemented so far
 
 /api/patterns/contributor/:orcid 			GET - returns JSON-LD of anthorName, and ORCID as HTTP URL
+
+api/patterns/newcontributor					GET - returns JSON-LD template for adding new contributor (or will)!
