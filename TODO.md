@@ -64,3 +64,5 @@ JSON-LD for patterns/contributors/:orcid - does it need an @id? it starts			adde
 with a black node according to JSON-LD playground....
 
 assert that pattern/contributor/:orcid is a person?
+
+fix JSON.parse check on /contributor POST

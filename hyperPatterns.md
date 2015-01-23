@@ -274,3 +274,38 @@ found this for finding the params for a function..
 ```
 
 but otherwise meh. try again tomorrow...
+
+#####20150123
+ALRIGHTY!
+
+So, ended up ditching connect, connect-rest - keep hyperPatterns as simple Node, express app.
+created new branch - express to try again - will merge/overwite master when its working
+Solved issues relating to POST body
+
+1) - need to use middleware - body-parse
+`npm install --save body-parse`
+add to *hp.js* (the new main app name for now)
+
+```
+var bodyParser = require('body-parser');
+app.use(bodyParser.json());
+```
+
+getting at the POST body is now as easy as req.body ...
+
+```
+app.post('/patterns/contributor', function(req, res){
+	
+	var payload = JSON.stringify(req.body, null, 2);
+	console.log(payload);
+	
+	if (JSON.parse(payload)){
+		console.log("Looks legit");
+		res.send("OK!");
+	}
+	else{
+		res.send("Please submit valid JSON");
+	}
+	
+});
+```
