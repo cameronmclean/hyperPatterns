@@ -83,6 +83,7 @@ app.get('/patterns/contributor/:orcid', function(req, res){
 			}
 			else{
 				console.log("******* Error in /patterns/contributor getDoc() **********");
+				console.log("Failed getting document "+docID+" , status code "+err.statusCode);
 				goToError(err);				
 				}
 			}
@@ -98,8 +99,8 @@ app.get('/patterns/contributor/:orcid', function(req, res){
 
 	//if error fetching db.get() main doc
 	function goToError(err){
-		res.send("Failed getting document "+docID+" , status code "+err.statusCode);
-	
+		
+		res.sendStatus(404); // if there is an error getting docs from db, send 404
 	}
 });
 

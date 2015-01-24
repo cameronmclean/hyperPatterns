@@ -309,3 +309,9 @@ app.post('/patterns/contributor', function(req, res){
 	
 });
 ```
+
+####20150125
+OK - so put in a proper 404 error handling response for /patterns/contributor/:id 
+if :orcid doc cant be retreived from couch, we goToError()
+and res.sendStatus(404);
+

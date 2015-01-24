@@ -25,7 +25,7 @@ Resources											HTTP
 /patterns/{patternName}/evidence/{refID}			DELETE - and it's gone
 
 
-#http://www.thoughtworks.com/insights/blog/rest-api-design-resource-modeling
+####http://www.thoughtworks.com/insights/blog/rest-api-design-resource-modeling
 
 //this ends up being a fairly fine grained set of CRUD operations on pattern resources.
 This makes for a more 'chattier' API (clients must make multiple resquests to achieve a business task" 
