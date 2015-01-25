@@ -398,4 +398,4 @@ instead of messing about with nested anon functions and callbcak hell - used asy
 		);
 	}
 ```
-
+used same approach above to get and add contributor/author docs to GET pattern/:num route

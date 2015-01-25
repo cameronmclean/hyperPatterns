@@ -168,7 +168,7 @@ app.get('/patterns/:intID', function(req, res){
 							//res.send(JSON.stringify(docToSend, null, 2));
 							console.log(docToSend);
 							var docToPass = JSON.parse(JSON.stringify(docToSend));
-							getPatternForces(docToPass);
+							getPatternForces(docToPass); //<------------if all done, move to next function
 						});
 					}
 					else {
@@ -193,7 +193,7 @@ app.get('/patterns/:intID', function(req, res){
 
 
 	function getPatternForces(patternDoc){
-		console.log("getForces called! with parameter "+patternDoc);
+		//console.log("getForces called! with parameter "+patternDoc);
 		//this function is called after a successful getPattern()
 		//we extract the force references, fetch from db, and marshall them into the docToSend
 		var forceDetails = []; //array to store whole forces docs from db
@@ -203,7 +203,7 @@ app.get('/patterns/:intID', function(req, res){
 			db.get(force, function(err, body){
 				if(!err){
 				forceDetails.push(body);
-				console.log(body);
+				//console.log(body);
 				callback(); //so we can escape to the final function
 				}
 			});
@@ -212,7 +212,8 @@ app.get('/patterns/:intID', function(req, res){
 		 function(err){
 		 	if(!err){
 		 	docToSend['force'] = forceDetails;
-		 	res.send(JSON.stringify(docToSend, null, 2));
+		 	getPatternContributors(docToSend);  //<--------if we're done, move to next function
+		 //	res.send(JSON.stringify(docToSend, null, 2));
 		    }
 		    else {
 		    	goToError(err);
@@ -221,60 +222,35 @@ app.get('/patterns/:intID', function(req, res){
 
 		);
 	}
-		//go and fetch the docs immediately 
-//		(function(){
-//			do {
-//				console.log('do it!');
-//				db.get(patternDoc.force[newcounter], function(err, body){
-//				//	console.log("force "+newcounter+" >>>>"+body);
-//				if(!err){
-//					console.log(newcount);
-//					forceDetails.push = body;
-//					console.log("doc "+newcounter+" retreived");
-//					newcounter++;
-//					console.log("counter incemented");
-					//console.log(forceDetails[index].pic);
-					//newcounter++;
-					//console.log(newcounter+" "+patternDoc.force.length);						
-//					}
-//				});
-//
-//			}
-//			while (newcounter < numberOfForces);
-//		})();
-//
-//		console.log(forceDetails[1]);
-//		console.log("hello?");
-//	}
 
-//		for (var x = 0; x < patternDoc.force.length; x++){
-//
-//			(function(index){ 
-//			
-//			if (index < patternDoc.force.length) {
-//				db.get(patternDoc.force[index], function(err, body){
-//				//	console.log("force "+newcounter+" >>>>"+body);
-//					forceDetails[index] = body;
-//					console.log(forceDetails[index].pic);
-//					newcounter++;
-//					console.log(newcounter+" "+patternDoc.force.length);						
-//				});
-//			}
-//			
-//			else {
-//				docToSend['force'] = JSON.parse(JSON.stringify(forceDetails));
-//				progress++;
-//				res.send(JSON.stringify(docToSend, null, 2));
-//			}
-//		})(x);
-//		}
+	function getPatternContributors(patternDoc){
+		var contribDetails = [];
+		var listOfContributors = patternDoc.author;
+
+		async.each(listOfContributors, function(contrib, callback){
+			db.get(contrib, function(err, body){
+				if(!err){
+					contribDetails.push(body);
+					callback();
+				}
+			});
+		 },
+		 function(err){
+		 	if(!err){
+		 		docToSend['author'] = contribDetails;
+		 		res.send(JSON.stringify(docToSend, null, 2));
+		 	}
+		 	else {
+		 		goToError(err);
+		 	}
+		 }
+		);
+
+	}
 		
-//	}		
-	
-	
 
 	function marshalContext(){
-		//the function to grab all the context docs, wrangle them and add to the final docToSend
+		//the function to grab all the context docs, wrangle them and add to the docToSend
 	}
 
 	function goToError(err){

@@ -16,7 +16,7 @@ bibJSON
 refactor "evidence" or create new field to allow URLs+descripions for 
 non-bibTEX resources (eg videos, blogs, stackexchange answers)...					wont fix - just use bibTEX @online, and URL: "", Date: "" etc...
 
-rewrite pattern ontology - 2 classes - Pattern, Force - properties 
+rewrite pattern ontology - 2 classes - Pattern, Force + properties 
 
 add to context docs, @type and @id for property values that should be 				yep - but double check
 dereference
@@ -40,7 +40,7 @@ malicious users or noobs mistakes.
 
 variable scope, closures, async, callbacks.
 something about the event driven nature is doing my head in re:
-getting and combining docs from the db via nano and connect-rest....
+getting and combining docs from the db via nano and connect-rest....				yep - use async.js
 
 check control flow issues with contributor route...!!!(related to above)			yep - implemented counter
 
@@ -53,7 +53,7 @@ POST /pattern/conributor - as test run for POSTing a whole pattern
 //prob delete this route later - only edit authors via whole pattern to
 simplify client.
 
-move hyperPatterns.js apicontext setting from /api to / - put api in hostname?
+move hyperPatterns.js apicontext setting from /api to / - put api in hostname?		no longer needed - switched to express
 
 document 1:n modelling pattern>forces, author>patterns, pattern>reference
 
@@ -61,7 +61,7 @@ does JSON.stringify bugger up patterns or JSON objects where value text
 has single/double quotes etc?
 
 JSON-LD for patterns/contributors/:orcid - does it need an @id? it starts			added in for now..
-with a black node according to JSON-LD playground....
+with a blank node according to JSON-LD playground....
 
 assert that pattern/contributor/:orcid is a person?
 
