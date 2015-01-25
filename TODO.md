@@ -68,3 +68,6 @@ assert that pattern/contributor/:orcid is a person?
 fix JSON.parse check on /contributor POST
 
 add check to see if route :variables are the right type before hitting the database
+
+GET /patterns/contributor/:orcid route - db schema has changed - write view and function
+to get and match 'doctype': "contributor" by "ORCID": "http://orchid/:orcid"...

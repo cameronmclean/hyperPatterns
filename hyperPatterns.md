@@ -345,4 +345,15 @@ it emits a list of objects, with "id", "key", and "value" fields of mathching do
 4 if so - grab the whole doc
 5 if not, (the for loop is exhaused with no match), go to 404 error
 
+--
+getting a list of forces and wrangling them into one JSON-LD
+is tricky - we cant have lists of list or sets of sets ...
+use @graph?
+embeddign?
+
+
+--
+gah - still having trouble breaking out of callbacks, passing variables and mustering all the docs
+code to get list of pattern forces, make a db.get() call for each force doc id still not working...
+too tired, need fresh eyes/brain...
 

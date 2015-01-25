@@ -139,6 +139,8 @@ app.get('/patterns/:intID', function(req, res){
 	var intID = req.params.intID;
 	var progress = 0;
 	var docToSend = {};
+	var forces = [];
+
 
 	getPattern(intID);
 
@@ -149,6 +151,7 @@ app.get('/patterns/:intID', function(req, res){
 			if(!err){
 				var list = body['rows'];
 				var counter = 0; // counter available outside of for loop
+	
 
 				//test to see if :intID matches a patter doc on the list
 				//if so get it							
@@ -158,20 +161,23 @@ app.get('/patterns/:intID', function(req, res){
 					
 					if (String(list[x].value) === num){
 						db.get(list[x].id, function(err, body){
-							docToSend = body;
+							docToSend = JSON.parse(JSON.stringify(body));
 							//console.log(docToSend);
 							progress++;
-							res.send(JSON.stringify(docToSend, null, 2));
+							//res.send(JSON.stringify(docToSend, null, 2));
+							console.log(docToSend);
+							var docToPass = JSON.parse(JSON.stringify(docToSend));
+							getPatternForces(docToPass);
 						});
 					}
 					else {
 						counter++;
+						console.log("counter = "+counter+" progress = "+progress);
 					}
-			     	
 				}
 				
 				// if we have been through the for loop and found nothing....
-				if (counter === list.length){
+				if (counter === list.length && progress < 1){
 					console.log("no match!");
 					goToError("doc not found in db list!");
 				 }
@@ -184,6 +190,70 @@ app.get('/patterns/:intID', function(req, res){
 		});
 	}
 
+
+	function getPatternForces(patternDoc){
+		console.log("getForces called! with parameter "+patternDoc);
+		//this function is called after a successful getPattern()
+		//we extract the force references, fetch from db, and marshall them into the docToSend
+		var forceDetails = []; //array to store realted forces from db
+		var newcounter = 0;
+		var numberOfForces = patternDoc.force.length;
+
+		//go and fetch the docs immediately 
+		(function(){
+			do {
+				console.log('do it!');
+				db.get(patternDoc.force[newcounter], function(err, body){
+				//	console.log("force "+newcounter+" >>>>"+body);
+				if(!err){
+					console.log(newcount);
+					forceDetails.push = body;
+					console.log("doc "+newcounter+" retreived");
+					newcounter++;
+					console.log("counter incemented");
+					//console.log(forceDetails[index].pic);
+					//newcounter++;
+					//console.log(newcounter+" "+patternDoc.force.length);						
+					}
+				});
+
+			}
+			while (newcounter < numberOfForces);
+		})();
+
+		console.log(forceDetails[1]);
+		console.log("hello?");
+	}
+
+//		for (var x = 0; x < patternDoc.force.length; x++){
+//
+//			(function(index){ 
+//			
+//			if (index < patternDoc.force.length) {
+//				db.get(patternDoc.force[index], function(err, body){
+//				//	console.log("force "+newcounter+" >>>>"+body);
+//					forceDetails[index] = body;
+//					console.log(forceDetails[index].pic);
+//					newcounter++;
+//					console.log(newcounter+" "+patternDoc.force.length);						
+//				});
+//			}
+//			
+//			else {
+//				docToSend['force'] = JSON.parse(JSON.stringify(forceDetails));
+//				progress++;
+//				res.send(JSON.stringify(docToSend, null, 2));
+//			}
+//		})(x);
+//		}
+		
+//	}		
+	
+	
+
+	function marshalContext(){
+		//the function to grab all the context docs, wrangle them and add to the final docToSend
+	}
 
 	function goToError(err){
 		console.log("**********error getting pattern doc "+intID+" ... "+err);

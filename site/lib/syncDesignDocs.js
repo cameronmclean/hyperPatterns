@@ -10,7 +10,7 @@ var views = {
 	language: 'javascript',
 	'views': {
 		'getPatternByNum': {
-			"map": "function(doc){ if(doc.doctype='pattern' && doc.int_id){ emit('int_id', doc.int_id);}}"
+			"map": "function(doc){ if(doc.doctype==='pattern' && doc.int_id){ emit('int_id', doc.int_id);}}"
 		}
 	}
 };
