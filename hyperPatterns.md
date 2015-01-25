@@ -357,3 +357,45 @@ gah - still having trouble breaking out of callbacks, passing variables and must
 code to get list of pattern forces, make a db.get() call for each force doc id still not working...
 too tired, need fresh eyes/brain...
 
+####20150126
+ALrighty. So figured it out (kinda)
+Use async.js !
+https://github.com/caolan/async
+http://justinklemm.com/node-js-async-tutorial/
+http://www.sebastianseilund.com/nodejs-async-in-practice
+
+the documentation is a little terse, but I got it working in short time..
+
+instead of messing about with nested anon functions and callbcak hell - used async.each()
+- takes three arguements - 
+1 a list of items to iterate through (in our case the list of force doc _ids - listOfForces)
+2 a function that wraps the async function we want to call - takes a single item (force) and a callback
+3 the final function to call (takes err if occured during iteration function)
+
+
+```javascript
+	function getPatternForces(patternDoc){
+		console.log("getForces called! with parameter "+patternDoc);
+		//this function is called after a successful getPattern()
+		//we extract the force references, fetch from db, and marshall them into the docToSend
+		var forceDetails = []; //array to store whole forces docs from db
+		var listOfForceDocs = patternDoc.force;
+
+		async.each(listOfForceDocs, function(force, callback){
+			db.get(force, function(err, body){
+				if(!err){
+				forceDetails.push(body);
+				console.log(body);
+				callback();
+				}
+			});
+		 },
+		 function(err){
+		 	docToSend['force'] = forceDetails;
+		 	res.send(JSON.stringify(docToSend, null, 2));
+		 }
+
+		);
+	}
+```
+

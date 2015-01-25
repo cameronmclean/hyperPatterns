@@ -4,6 +4,7 @@
 
 var bodyParser = require('body-parser');
 var express = require('express');
+var async = require('async');
 var app = express();
 
 //couch db settings
@@ -195,35 +196,56 @@ app.get('/patterns/:intID', function(req, res){
 		console.log("getForces called! with parameter "+patternDoc);
 		//this function is called after a successful getPattern()
 		//we extract the force references, fetch from db, and marshall them into the docToSend
-		var forceDetails = []; //array to store realted forces from db
-		var newcounter = 0;
-		var numberOfForces = patternDoc.force.length;
+		var forceDetails = []; //array to store whole forces docs from db
+		var listOfForceDocs = patternDoc.force;
 
-		//go and fetch the docs immediately 
-		(function(){
-			do {
-				console.log('do it!');
-				db.get(patternDoc.force[newcounter], function(err, body){
-				//	console.log("force "+newcounter+" >>>>"+body);
+		async.each(listOfForceDocs, function(force, callback){
+			db.get(force, function(err, body){
 				if(!err){
-					console.log(newcount);
-					forceDetails.push = body;
-					console.log("doc "+newcounter+" retreived");
-					newcounter++;
-					console.log("counter incemented");
+				forceDetails.push(body);
+				console.log(body);
+				callback(); //so we can escape to the final function
+				}
+			});
+		 },
+		 // called afer all the iterations above
+		 function(err){
+		 	if(!err){
+		 	docToSend['force'] = forceDetails;
+		 	res.send(JSON.stringify(docToSend, null, 2));
+		    }
+		    else {
+		    	goToError(err);
+		    }
+		 }
+
+		);
+	}
+		//go and fetch the docs immediately 
+//		(function(){
+//			do {
+//				console.log('do it!');
+//				db.get(patternDoc.force[newcounter], function(err, body){
+//				//	console.log("force "+newcounter+" >>>>"+body);
+//				if(!err){
+//					console.log(newcount);
+//					forceDetails.push = body;
+//					console.log("doc "+newcounter+" retreived");
+//					newcounter++;
+//					console.log("counter incemented");
 					//console.log(forceDetails[index].pic);
 					//newcounter++;
 					//console.log(newcounter+" "+patternDoc.force.length);						
-					}
-				});
-
-			}
-			while (newcounter < numberOfForces);
-		})();
-
-		console.log(forceDetails[1]);
-		console.log("hello?");
-	}
+//					}
+//				});
+//
+//			}
+//			while (newcounter < numberOfForces);
+//		})();
+//
+//		console.log(forceDetails[1]);
+//		console.log("hello?");
+//	}
 
 //		for (var x = 0; x < patternDoc.force.length; x++){
 //

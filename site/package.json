@@ -9,6 +9,7 @@
   "author": "Cameron McLean",
   "license": "ISC",
   "dependencies": {
+    "async": "^0.9.0",
     "connect": "^3.3.3",
     "connect-rest": "^1.5.1",
     "express": "^4.10.6",
