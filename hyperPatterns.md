@@ -315,3 +315,34 @@ OK - so put in a proper 404 error handling response for /patterns/contributor/:i
 if :orcid doc cant be retreived from couch, we goToError()
 and res.sendStatus(404);
 
+
+SO - now working on a GET route that will return an entire pattern.
+This is tricky - requires to think about how to store, reference and marshal all the docs,
+and how to key /patterns/:name to identify and fetch data base docs.
+when is a pattern stull the same pattern?
+i.e we use a slug to crate english type url names - "pigment-extraction", then say we later change the pattern
+name to 'dye extraction' - but the url still says "pigment" etc - it gets confusing.
+or we can use patters/:number - the number stays constant through multiple edits...
+this way we always talk about / identify the same pattern, although its details and properties will change through time.
+I think the second strategy is better... we could expose a pattern version number? 
+
+So - one probably good enough strategy for now...
+http://stackoverflow.com/questions/5073343/approaches-to-generate-auto-incrementing-numeric-ids-in-couchdb
+- when *pattern* docs are created, keep the couchdb UUID for _id
+- create "docytype" and "int_id" fields, we can use these for lookup of a single doc.
+- when saving new patterns, do a query (map and reduce) to _count the number of docs (=used integers) and 
+
+Note : as the stackexcahnge post says, this approcah always has us tied to a permanantly broken naming model.
+In my case, it's only broken if we later use the replication and distributed couchdb fucntions - which we wont..
+
+...
+SO - added a db view (design) doc that retreives all docs of type "pattern" and that have a "int_id" field.
+it emits a list of objects, with "id", "key", and "value" fields of mathching docs.
+
+1 we then grab the :num from the route
+2 grab the list of pattern docs with int_id
+3 go thorugh the list to see if :num has a match in the document list
+4 if so - grab the whole doc
+5 if not, (the for loop is exhaused with no match), go to 404 error
+
+

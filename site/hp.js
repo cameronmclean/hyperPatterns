@@ -14,6 +14,16 @@ var db = nano.use('patterns');
 app.use(bodyParser.json());
 
 
+var server = app.listen(3000, function() {
+	var host = server.address().address;
+	var port = server.address().port
+
+	console.log("App listening at http://%s:%s", host, port);
+
+}) ;
+
+//routes
+//*******************************************************************************
 
 app.get('/patterns/contributor/:orcid', function(req, res){
 	
@@ -104,6 +114,9 @@ app.get('/patterns/contributor/:orcid', function(req, res){
 	}
 });
 
+
+//*******************************************************************************
+
 app.post('/patterns/contributor', function(req, res){
 	
 	var payload = JSON.stringify(req.body, null, 2);
@@ -120,10 +133,61 @@ app.post('/patterns/contributor', function(req, res){
 });
 
 
-var server = app.listen(3000, function() {
-	var host = server.address().address;
-	var port = server.address().port
+//**********************************************************************************
 
-	console.log("App listening at http://%s:%s", host, port);
+app.get('/patterns/:intID', function(req, res){
+	var intID = req.params.intID;
+	var progress = 0;
+	var docToSend = {};
 
-}) ;
+	getPattern(intID);
+
+
+	function getPattern(num){
+		// a list of all pattern nums and id in the db
+		db.get('_design/patterns/_view/getPatternByNum', function(err, body){
+			if(!err){
+				var list = body['rows'];
+				var counter = 0; // counter available outside of for loop
+
+				//test to see if :intID matches a patter doc on the list
+				//if so get it							
+				for (var x=0; x < list.length; x++){
+					//console.log("list.length = "+list.length);
+					//console.log("before if, x = "+x);
+					
+					if (String(list[x].value) === num){
+						db.get(list[x].id, function(err, body){
+							docToSend = body;
+							//console.log(docToSend);
+							progress++;
+							res.send(JSON.stringify(docToSend, null, 2));
+						});
+					}
+					else {
+						counter++;
+					}
+			     	
+				}
+				
+				// if we have been through the for loop and found nothing....
+				if (counter === list.length){
+					console.log("no match!");
+					goToError("doc not found in db list!");
+				 }
+
+			}
+			
+			else{
+				goToError(err);
+			}
+		});
+	}
+
+
+	function goToError(err){
+		console.log("**********error getting pattern doc "+intID+" ... "+err);
+		res.sendStatus(404);
+	}
+
+});

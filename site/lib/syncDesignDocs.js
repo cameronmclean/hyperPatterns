@@ -4,17 +4,29 @@
 var nano = require('../node_modules/nano')('http://127.0.0.1:5984');
 var db = nano.use('patterns');
 
-// view to return all the pattern docs for a api/patterns/ GET request
-var patternDesignDoc = {
+// view to query all the pattern docs in the db - returns a list of doc _id and int_id values
+var views = {
 	_id: '_design/patterns',
 	language: 'javascript',
 	'views': {
-		'getAllPatterns': {
-			"map": "function(doc){emit(doc)}"
+		'getPatternByNum': {
+			"map": "function(doc){ if(doc.doctype='pattern' && doc.int_id){ emit('int_id', doc.int_id);}}"
 		}
 	}
 };
 
+// view to get a single pattern doc by name
+//var singlePattern = {
+//	_id: '_design/singlePattern',
+//	language: 'javascript',
+//	'views': {
+//		'singlePattern': {
+//			"map": "function(doc){ ifemit(doc)}"
+//		}
+//	}
+//};
+
+//var designDocs = [allPatterns]
 
 //first get the desgin doc and grab the rev
 //NB assumes the design doc already exists!!!
@@ -26,11 +38,11 @@ var getRev = db.get("_design/patterns", function(err, body){
 		//double check that body['_rev'] exists
 		if (body['_rev']){
 			//set _rev on patternDesignDoc specfied above to current _rev we just fetched
-			patternDesignDoc['_rev'] = body['_rev'];
+			views['_rev'] = body['_rev'];
 			//console.log("hi mum"+patternDesignDoc['_rev']);
 			
 			//update existing design doc
-			db.insert(patternDesignDoc, '_design/patterns', function(err, body){
+			db.insert(views, '_design/patterns', function(err, body){
 			if (!err){
 				console.log("Design docs updated!");
 			} else {

@@ -66,3 +66,5 @@ with a black node according to JSON-LD playground....
 assert that pattern/contributor/:orcid is a person?
 
 fix JSON.parse check on /contributor POST
+
+add check to see if route :variables are the right type before hitting the database
