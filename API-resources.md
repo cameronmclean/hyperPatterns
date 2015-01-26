@@ -81,4 +81,9 @@ Routes implemented so far
 
 /patterns/contributor/:orcid 			GET - returns JSON-LD of anthorName, and ORCID as HTTP URL
 
-/patterns/contributor					POST - accepts JSON
+/patterns/contributor					POST - accepts JSON 
+
+/patterns/:num							GET - returns JSON-LD of entire pattern
+
+/patterns/:num/force/:num				GET - returns JSON-LD of single force
+

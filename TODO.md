@@ -63,7 +63,7 @@ has single/double quotes etc?
 JSON-LD for patterns/contributors/:orcid - does it need an @id? it starts			added in for now..
 with a blank node according to JSON-LD playground....
 
-assert that pattern/contributor/:orcid is a person?
+assert that pattern/contributor/:orcid is a person?									yes - and Nope - because it isn't
 
 fix JSON.parse check on /contributor POST
 
@@ -79,4 +79,8 @@ resource template URLs hardcoded in app.get('patterns/:num')
 
 catch general 404s for random URL strings that dont match...
 
-change hardcoded URLs for dynamcially adding "@id" to response JSON-LDs in each route
+change hardcoded URLs for dynamcially adding "@id" and "@type" 
+to response JSON-LDs in each route
+
+Pattern ontology - current declares that a person (contributor) is part of 
+a design pattern _ this not the intended semantics									YEP!
