@@ -62,12 +62,6 @@
     "diagram": "http://schema.org/diagram",
     "evidence": "http://purl.org/spar/cito/citesAsEvidence",
     "author": "http://purl.org/dc/terms/creator",
-    "forceName": "http://schema.org/name",
-    "description": "http://purl.org/dc/terms/description",
-    "pic": {
-      "@id": "http://xmlns.com/foaf/0.1/depiction",
-      "@type": "@id"
-    },
     "address": "http://schemas.talis.com/2005/address/schema#localityName",
     "booktitle": "http://purl.org/dc/terms/title",
     "chapter": "http://purl.org/ontology/bibo/chapter",
@@ -88,6 +82,12 @@
     },
     "volume": "http://sw-portal.deri.org/ontologies/swportal#isVolume",
     "year": "http://purl.org/spar/fabio/hasPublicationYear",
+    "forceName": "http://schema.org/name",
+    "description": "http://purl.org/dc/terms/description",
+    "pic": {
+      "@id": "http://xmlns.com/foaf/0.1/depiction",
+      "@type": "@id"
+    },
     "ORCID": {
       "@id": "http://purl.org/spar/scoro/hasORCID",
       "@type": "@id"
