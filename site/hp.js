@@ -70,7 +70,7 @@ app.get('/patterns/contributor/:orcid', function(req, res){
 		}
 
 		// add subject to JSON-LD - prevent top level blank node
-		doc['@id'] = "http://api.patterns.org/contributor/"+docID;
+		doc['@id'] = "http://patterns.org/contributor/"+docID;
 
 		// then remove the db specific fields
 		delete doc['_id'];
@@ -143,7 +143,7 @@ app.get('/patterns/:pNum/force/:fNum', function(req, res){
 	var forceMatch = {};
 	var progress = 0; 
 
-	console.log("you tried to get pattern "+pNum+" and force "+fNum);
+	console.log("you tried to get pattern "+pNum+" force "+fNum);
 
 	getPattern(pNum);
 	//addContext();

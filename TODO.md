@@ -76,3 +76,7 @@ clean final pattern JSON of internal dbfields for each function in
 app.get('patterns/:num') route
 
 resource template URLs hardcoded in app.get('patterns/:num')
+
+catch general 404s for random URL strings that dont match...
+
+change hardcoded URLs for dynamcially adding "@id" to response JSON-LDs in each route
