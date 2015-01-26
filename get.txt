@@ -1,0 +1,108 @@
+{
+  "_id": "064cca1bedb086b2777af1ecab000f13",
+  "_rev": "7-9c1eda86d9b369f919572415ceb6b3eb",
+  "int_id": 1,
+  "force": [
+    {
+      "_id": "064cca1bedb086b2777af1ecab00203c",
+      "_rev": "2-e169f6f17e5f23ffbbd8b1841582bd7f",
+      "doctype": "force",
+      "forceName": "Test force",
+      "description": "Test descritpion",
+      "pic": "http://i.imgur.com/ZQgf47f.jpg",
+      "parentPattern": null,
+      "int_id": 1
+    },
+    {
+      "_id": "064cca1bedb086b2777af1ecab002647",
+      "_rev": "2-c56bd183df9c3a9a22d18ea548867f58",
+      "doctype": "force",
+      "forceName": "Test force 2",
+      "description": "Test description 2",
+      "pic": "http://i.imgur.com/DLrwl.jpg",
+      "parentPattern": null,
+      "int_id": 2
+    }
+  ],
+  "doctype": "pattern",
+  "author": [
+    {
+      "_id": "0000-0002-9836-3824",
+      "_rev": "2-84da9e39c29ba199c167fb3b779a417a",
+      "ORCID": "http://orcid.org/0000-0002-9836-3824",
+      "authorName": "Cameron McLean"
+    },
+    {
+      "_id": "0000-0002-9836-3824",
+      "_rev": "2-84da9e39c29ba199c167fb3b779a417a",
+      "ORCID": "http://orcid.org/0000-0002-9836-3824",
+      "authorName": "Cameron McLean"
+    }
+  ],
+  "evidence": [
+    {
+      "_id": "064cca1bedb086b2777af1ecab0026be",
+      "_rev": "1-508d73510e4144876cd4663acadeaf6f",
+      "doctype": "evidence",
+      "int_id": 1,
+      "parentPattern": null,
+      "entrytype": "Journal",
+      "author": "Cam",
+      "url": "http://www.w3schools.com/js/js_break.asp",
+      "series": "Dr Who"
+    },
+    {
+      "_id": "064cca1bedb086b2777af1ecab0026be",
+      "_rev": "1-508d73510e4144876cd4663acadeaf6f",
+      "doctype": "evidence",
+      "int_id": 1,
+      "parentPattern": null,
+      "entrytype": "Journal",
+      "author": "Cam",
+      "url": "http://www.w3schools.com/js/js_break.asp",
+      "series": "Dr Who"
+    }
+  ],
+  "@context": {
+    "name": "http://schema.org/name",
+    "context": "http://purl/ontology/lp#hasContext",
+    "problem": "http://purl/ontology/lp#hasProblem",
+    "force": {
+      "id": "http://purl/ontology/lp#hasForce",
+      "@type": "@id"
+    },
+    "solution": "http://purl/ontology/lp#hasSolution",
+    "rationale": "http://purl/ontology/lp#hasRationale",
+    "diagram": "http://schema.org/diagram",
+    "evidence": {
+      "@id": "http://purl.org/spar/cito/citesAsEvidence",
+      "@type": "@id"
+    },
+    "author": "http://purl.org/dc/terms/creator",
+    "forceName": "http://schema.org/name",
+    "description": "http://purl.org/dc/terms/description",
+    "pic": "http://xmlns.com/foaf/0.1/depiction",
+    "address": "http://schemas.talis.com/2005/address/schema#localityName",
+    "booktitle": "http://purl.org/dc/terms/title",
+    "chapter": "http://purl.org/ontology/bibo/chapter",
+    "doi": "http://purl.org/ontology/bibo/doi",
+    "edition": "http://purl.org/ontology/bibo/edition",
+    "editor": "http://purl.org/ontology/bibo/editor",
+    "entrytype": "http://purl.org/net/nknouf/ns/bibtex#Entry",
+    "journal": "http://schemas.talis.com/2005/address/schema#localityName",
+    "month": "http://purl.org/net/nknouf/ns/bibtex#hasMonth",
+    "number": "http://purl.org/net/nknouf/ns/bibtex#hasNumber",
+    "pages": "http://purl.org/net/nknouf/ns/bibtex#hasPages",
+    "publisher": "http://purl.org/dc/terms/publisher",
+    "series": "http://purl.org/net/nknouf/ns/bibtex#hasSeries",
+    "title": "http://purl.org/dc/terms/title",
+    "url": "http://purl.org/spar/fabio/hasURL",
+    "volume": "http://sw-portal.deri.org/ontologies/swportal#isVolume",
+    "year": "http://purl.org/spar/fabio/hasPublicationYear",
+    "ORCID": {
+      "@id": "http://purl.org/spar/scoro/hasORCID",
+      "@type": "@id"
+    },
+    "authorName": "http://xmlns.com/foaf/0.1/name"
+  }
+}

@@ -71,3 +71,6 @@ add check to see if route :variables are the right type before hitting the datab
 
 GET /patterns/contributor/:orcid route - db schema has changed - write view and function
 to get and match 'doctype': "contributor" by "ORCID": "http://orchid/:orcid"...
+
+clean final pattern JSON of internal dbfields for each function in 
+app.get('patterns/:num') route

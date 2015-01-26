@@ -399,3 +399,41 @@ instead of messing about with nested anon functions and callbcak hell - used asy
 	}
 ```
 used same approach above to get and add contributor/author docs to GET pattern/:num route
+
+so
+
+A pattern doc references its contrbutor docs by using the ORCID id xxxx-xxxx-xxxx-xxxx as the handle/doc _id
+Forces are referenced by the internal couchdb id, as are reference(bibTEX docs)
+
+OK - so added some dummy files intp couch, get /patterns/:num is now working and returns valid JSON, but
+not valid JSON-LD - because our @context hasForce ect define the rage to be a @id and we give an array of forces..
+Still need to clean up response JSON fields to hide inplementation details, and sort teh proper JSON_LD that should represent a whole pattern, but progress is being made.
+also - used underscore library - very helpful
+https://www.npmjs.com/package/underscore
+`var _ = require('underscore')`
+lets us do extend operations on JSON objects - we use this to combine all the context docs
+
+```javascript
+async.each(contextsToGet, function(context, callback){
+			db.get(context, function(err, body){
+				if(!err){
+					_.extend(contextDetails, body['@context']); // we use the underscore lib to add more fields to a JSON
+					callback();
+				}
+			});
+		 },
+		 function(err){
+		 	if(!err){
+		 		docToSend['@context'] = contextDetails;
+		 		res.send(JSON.stringify(docToSend, null, 2)); //<--- we're done, send the response! 
+		 	}
+		 	else {
+		 		goToError(err);
+		 	}
+		 }
+		);
+
+```
+note: we might need to refactor earlier functions in app.get('patterns/:num') to use _.extend if we dont use arrays..
+
+

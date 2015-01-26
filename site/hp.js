@@ -5,6 +5,7 @@
 var bodyParser = require('body-parser');
 var express = require('express');
 var async = require('async');
+var _ = require('underscore');
 var app = express();
 
 //couch db settings
@@ -223,6 +224,7 @@ app.get('/patterns/:intID', function(req, res){
 		);
 	}
 
+	//called after successful getPatternForces()
 	function getPatternContributors(patternDoc){
 		var contribDetails = [];
 		var listOfContributors = patternDoc.author;
@@ -238,7 +240,8 @@ app.get('/patterns/:intID', function(req, res){
 		 function(err){
 		 	if(!err){
 		 		docToSend['author'] = contribDetails;
-		 		res.send(JSON.stringify(docToSend, null, 2));
+		 		getPatternReferences(docToSend);
+		 		//res.send(JSON.stringify(docToSend, null, 2));
 		 	}
 		 	else {
 		 		goToError(err);
@@ -248,9 +251,54 @@ app.get('/patterns/:intID', function(req, res){
 
 	}
 		
+	//called after succesful getPatternContributors
+	function getPatternReferences(patternDoc){
+		var refDetails = [];
+		var listOfReferences = patternDoc.evidence;
+	
+		async.each(listOfReferences, function(ref, callback){
+			db.get(ref, function(err, body){
+				if(!err){
+					refDetails.push(body);
+					callback();
+				}
+			});
+		 },
+		 function(err){
+		 	if(!err){
+		 		docToSend['evidence'] = refDetails;
+		 		marshalContext(docToSend); //<- if we're done, move to next function
+		 		//res.send(JSON.stringify(docToSend, null, 2));
+		 	}
+		 	else {
+		 		goToError(err);
+		 	}
+		 }
+		);
+	}
 
 	function marshalContext(){
+		var contextDetails = {}
+		var contextsToGet = ['pattern', 'bibTEX', 'force', 'contributor']
 		//the function to grab all the context docs, wrangle them and add to the docToSend
+		async.each(contextsToGet, function(context, callback){
+			db.get(context, function(err, body){
+				if(!err){
+					_.extend(contextDetails, body['@context']); // we use the underscore lib to add more fields to a JSON
+					callback();
+				}
+			});
+		 },
+		 function(err){
+		 	if(!err){
+		 		docToSend['@context'] = contextDetails;
+		 		res.send(JSON.stringify(docToSend, null, 2)); //<--- we're done, send the response! 
+		 	}
+		 	else {
+		 		goToError(err);
+		 	}
+		 }
+		);
 	}
 
 	function goToError(err){
