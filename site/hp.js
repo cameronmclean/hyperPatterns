@@ -203,6 +203,7 @@ app.get('/patterns/:intID', function(req, res){
 		async.each(listOfForceDocs, function(force, callback){
 			db.get(force, function(err, body){
 				if(!err){
+				body['@id'] = "http://patterns.org/patterns/"+intID+"/force/"+body.int_id;
 				forceDetails.push(body);
 				//console.log(body);
 				callback(); //so we can escape to the final function
@@ -232,6 +233,7 @@ app.get('/patterns/:intID', function(req, res){
 		async.each(listOfContributors, function(contrib, callback){
 			db.get(contrib, function(err, body){
 				if(!err){
+					body['@id'] = "http://patterns.org/patterns/contributor/"+body.ORCID.slice(-19);
 					contribDetails.push(body);
 					callback();
 				}
@@ -259,6 +261,7 @@ app.get('/patterns/:intID', function(req, res){
 		async.each(listOfReferences, function(ref, callback){
 			db.get(ref, function(err, body){
 				if(!err){
+					body['@id'] = "http://patterns.org/patterns/"+intID+"/evidence/"+body.int_id;
 					refDetails.push(body);
 					callback();
 				}
@@ -292,6 +295,7 @@ app.get('/patterns/:intID', function(req, res){
 		 function(err){
 		 	if(!err){
 		 		docToSend['@context'] = contextDetails;
+		 		docToSend['@id'] = "http://patterns.org/patterns/"+intID;
 		 		res.send(JSON.stringify(docToSend, null, 2)); //<--- we're done, send the response! 
 		 	}
 		 	else {

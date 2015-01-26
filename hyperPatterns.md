@@ -436,4 +436,72 @@ async.each(contextsToGet, function(context, callback){
 ```
 note: we might need to refactor earlier functions in app.get('patterns/:num') to use _.extend if we dont use arrays..
 
+OK - so it seems the JSON-LD is not valid because we are specifying 
+
+```
+"ORCID": { "@id": "http://purl.org/spar/scoro/hasORCID",
+			   "@type": "@id"
+			 },
+
+"force": { "id": "http://purl/ontology/lp#hasForce",
+				"@type": "@id"
+			},
+
+"author": { "@id": "http://purl.org/dc/terms/creator",
+				"@type": "@id"
+			},
+
+```
+
+etc in the various @context docs. if we remove the @type: @id and just specify say
+`"ORCID": http://purl.org/spar/scoro/hasORCID"` then things look better.
+JSON-LD then validates in http://json-ld.org/playground/index.html but not anywhere else...!
+eg, exporting the N-triples to view at http://rhizomik.net/html/redefer/rdf2svg-form/ or trying
+to convert anthing at http://rdf-translator.appspot.com/ causes error - invalid syntax or token.
+
+cant see where the error is...! 
+
+OK - wait. maybe there is no error.
+
+pasting the n-tripes from http://json-ld.org/playground/index.html into http://rdf-translator.appspot.com/
+_and specifying input = n-triples and outtpuy = ntriples_ gives valid syntax that can be visulaised by
+http://rhizomik.net/html/redefer/rdf2svg-form/
+
+So there might be a strage character or some EOF/line feed thing going on?
+
+Will sort out later, but the graph without specifying @type: @id in the context still looks correct.
+Instead of specifying what should be a URL in the context - add the info inline with @id to specify a url...
+
+Sweetbix....
+
+Sorted it out. What was causing the trouble was where I was specifying @type : @id in the @context, 
+JSON-LD was expecting a URL/resource but I was giving an array of resources.
+The sematics of hasForce can be specified in the pattern ontology - no need to specify it again here.
+Where mappings are 1:1 eg each force has one pictogram - i've specified in the @context that 
+for eg.
+`"pic" : {"@id": "foaf:depiction", "@type": "@id"}`
+this ensures that values that are URLs are treated as resources, not strings.
+
+still need to clean up single pattern JSON(-LD) output to remove couchdb internals but looking good.
+
+NOTE: we have also added within each appropriate function for app.get('patterns/:num') a line to
+specify the resource @id in the final JSON-LD.
+eg
+
+``` javascript
+async.each(listOfForceDocs, function(force, callback){
+			db.get(force, function(err, body){
+				if(!err){
+				body['@id'] = "http://patterns.org/patterns/"+intID+"/force/"+body.int_id;
+				forceDetails.push(body);
+				//console.log(body);
+				callback(); //so we can escape to the final function
+				}
+			});
+		 },
+		 ...etc
+```
+
+the `body['@id'] = "http://patterns.org/patterns/"+intID+"/force/"+body.int_id;` has the template URL hardcoded.
+Nedd to fix or modify this later.
 

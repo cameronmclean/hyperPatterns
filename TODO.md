@@ -74,3 +74,5 @@ to get and match 'doctype': "contributor" by "ORCID": "http://orchid/:orcid"...
 
 clean final pattern JSON of internal dbfields for each function in 
 app.get('patterns/:num') route
+
+resource template URLs hardcoded in app.get('patterns/:num')

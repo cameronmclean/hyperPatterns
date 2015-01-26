@@ -26,7 +26,9 @@ var bibTEXContext = {
 	"publisher": "http://purl.org/dc/terms/publisher",
 	"series": "http://purl.org/net/nknouf/ns/bibtex#hasSeries",
 	"title": "http://purl.org/dc/terms/title",
-	"url": "http://purl.org/spar/fabio/hasURL",
+	"url": {"@id": "http://purl.org/spar/fabio/hasURL",
+		"@type": "@id"
+		},
 	"volume": "http://sw-portal.deri.org/ontologies/swportal#isVolume",
 	"year": "http://purl.org/spar/fabio/hasPublicationYear"
 	}
@@ -53,18 +55,12 @@ var patternContext = {
 	"name": "http://schema.org/name",
 	"context": "http://purl/ontology/lp#hasContext",
 	"problem": "http://purl/ontology/lp#hasProblem",
-	"force": { "id": "http://purl/ontology/lp#hasForce",
-				"@type": "@id"
-			},
+	"force": "http://purl/ontology/lp#hasForce",
 	"solution": "http://purl/ontology/lp#hasSolution",
 	"rationale": "http://purl/ontology/lp#hasRationale",
 	"diagram": "http://schema.org/diagram",
-	"evidence": { "@id": "http://purl.org/spar/cito/citesAsEvidence",
-				  "@type": "@id"
-				},
-	"author": { "@id": "http://purl.org/dc/terms/creator",
-				"@type": "@id"
-			},
+	"evidence": "http://purl.org/spar/cito/citesAsEvidence",
+	"author": "http://purl.org/dc/terms/creator",
 	}
 };
 
@@ -75,7 +71,9 @@ var forceContext = {
 	"@context": {
 	"forceName": "http://schema.org/name",
 	"description": "http://purl.org/dc/terms/description",
-	"pic": "http://xmlns.com/foaf/0.1/depiction"
+	"pic": {"@id": "http://xmlns.com/foaf/0.1/depiction",
+	"@type": "@id"
+	 	}
 	}
 };
 
