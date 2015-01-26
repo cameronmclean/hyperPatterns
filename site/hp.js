@@ -134,6 +134,139 @@ app.post('/patterns/contributor', function(req, res){
 	
 });
 
+//**********************************************************************************
+
+app.get('/patterns/:pNum/force/:fNum', function(req, res){
+	var pNum = req.params.pNum;
+	var fNum = req.params.fNum;
+	var listOfForces = [];
+	var forceMatch = {};
+	var progress = 0; 
+
+	console.log("you tried to get pattern "+pNum+" and force "+fNum);
+
+	getPattern(pNum);
+	//addContext();
+	
+	function getPattern(num){
+		// a list of all pattern nums and id in the db
+		db.get('_design/patterns/_view/getPatternByNum', function(err, body){
+			if(!err){
+				var list = body['rows'];
+				var counter = 0; // counter available outside of for loop
+	
+				//test to see if :intID matches a patter doc on the list
+				//if so get it							
+				for (var x=0; x < list.length; x++){
+					//console.log("list.length = "+list.length);
+					//console.log("before if, x = "+x);
+					
+					if (String(list[x].value) === num){
+						db.get(list[x].id, function(err, body){
+							if(body.force){ //make sure body.force is defined
+								listOfForces = body.force;
+								console.log("force list passed to getForces()"+listOfForces[0]);
+								progress++;
+								console.log('progress from getPattern = '+progress);
+								getForces(listOfForces); //<------------if all done, move to next function
+							}
+							else{ // body.force err
+								goToError("error getting force list from pattern");
+							}
+						});
+					}
+					else {
+						counter++;
+						console.log("counter = "+counter+" progress = "+progress);
+					}
+				}
+				
+				// if we have been through the for loop and found nothing....
+				if (counter === list.length && progress < 1){
+					console.log("no match!");
+					goToError("pattern doc not found in db list!");
+				 }
+
+			}
+			
+			else{
+				goToError(err);
+			}
+		});
+	}
+
+	function getForces(array){
+		console.log("getForces");
+				// a list of all force nums and id in the db
+		db.get('_design/patterns/_view/getForceByNum', function(err, body){
+			if(!err){
+				var list = body['rows']; //list of force numbers to check
+				console.log(body['rows']);
+				var counter = 0; // counter available outside of for loop
+	
+				//test to see if :fNum matches a force doc on the list
+				//if so get it							
+				for (var x=0; x < list.length; x++){
+
+					if (String(list[x].value) === fNum){
+						db.get(list[x].id, function(err, body){
+							forceMatch = body;
+							delete forceMatch['_id'];
+							delete forceMatch['_rev'];
+							delete forceMatch['int_id'];
+							delete forceMatch['parentPattern'];
+							delete forceMatch['docType'];
+							progress++;
+							console.log('progress from getForces = '+progress);
+							//console.log("we done got forces! "+JSON.stringify(forceMatch));
+							//if context alread added...
+						//	if (progress === 3){  
+						//		res.send(JSON.stringify(forceMatch, null, 2)); //<---------we're all done
+						//	}
+							addContext(forceMatch); //<------------if all done, move to next function
+						});
+					}
+					else {
+						counter++;
+						console.log("counter = "+counter+" progress = "+progress);
+					}
+				}
+				
+				// if we have been through the for loop and found nothing....
+				if (counter === list.length && progress < 2){
+					console.log("no match!");
+					goToError("force doc not found in db list!");
+				 }
+
+			}
+			
+			else{
+				goToError(err);
+			}
+		});
+	}
+
+	function addContext(match){
+		db.get('force', function(err, body){
+			match['@context'] = body['@context'];
+			match['@id'] = 'http://patterns/'+pNum+"/force/"+fNum; // <--------- we add @id of resource to the JSONLD here
+			progress++
+			console.log('progress from addContext = '+progress);
+			//if forceDoc content already done
+			if (progress === 3){
+				res.send(JSON.stringify(match, null, 2));
+			}
+		});
+	}
+
+	function goToError(err){
+		console.log("**********error getting pattern doc "+pNum+" and force "+fNum+" ... "+err);
+		res.sendStatus(404);
+	}
+
+});
+
+
 
 //**********************************************************************************
 

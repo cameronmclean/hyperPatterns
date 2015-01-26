@@ -11,6 +11,9 @@ var views = {
 	'views': {
 		'getPatternByNum': {
 			"map": "function(doc){ if(doc.doctype==='pattern' && doc.int_id){ emit('int_id', doc.int_id);}}"
+		},
+		'getForceByNum': {
+			"map": "function(doc){ if(doc.doctype==='force' && doc.int_id){ emit('int_id', doc.int_id);}}"
 		}
 	}
 };
