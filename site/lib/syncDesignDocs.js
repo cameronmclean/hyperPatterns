@@ -14,6 +14,9 @@ var views = {
 		},
 		'getForceByNum': {
 			"map": "function(doc){ if(doc.doctype==='force' && doc.int_id){ emit('int_id', doc.int_id);}}"
+		},
+		'getRefByNum': {
+			"map": "function(doc){ if(doc.doctype==='evidence' && doc.int_id){ emit('int_id', doc.int_id);}}"
 		}
 	}
 };

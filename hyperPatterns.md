@@ -464,7 +464,7 @@ cant see where the error is...!
 OK - wait. maybe there is no error.
 
 pasting the n-tripes from http://json-ld.org/playground/index.html into http://rdf-translator.appspot.com/
-_and specifying input = n-triples and outtpuy = ntriples_ gives valid syntax that can be visulaised by
+_and specifying input = n-triples and outtput = ntriples_ gives valid syntax that can be visulaised by
 http://rhizomik.net/html/redefer/rdf2svg-form/
 
 So there might be a strage character or some EOF/line feed thing going on?
@@ -505,3 +505,18 @@ async.each(listOfForceDocs, function(force, callback){
 the `body['@id'] = "http://patterns.org/patterns/"+intID+"/force/"+body.int_id;` has the template URL hardcoded.
 Nedd to fix or modify this later.
 
+
+#####20150127
+ - addded `doc["@type"] = "http://purl.org/lp/:Resource"` to locations where we specify "@id" in the final JSON-LD
+ NB - still hardcoded
+
+ changed pattern ontology so it no longer asserts that people are part of a pattern
+
+ tidied up code, removed old debugging console.logs that were cluttering output
+
+ removed couchdb internal fields/vale from final JSON-LD - note hardcoded at multiple locations
+ another targer for refactoring
+
+ implemented /pattern/:num/evidence/:num GET route. <-- note starting to duplicate code now
+ consider refactoring many of the functions within each GET route 
+ eg, make a general addContex(listOfContexts) etc.

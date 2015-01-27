@@ -1,7 +1,18 @@
 Schemas for *couchdb*
 
-note - these are not @context docs, but the interal representation of pattern documents that node and couchdb wrangle into
-the final JSON-LD that is sent.
+here is the interal representation of all pattern documents that node and couchdb wrangle into
+the final JSON-LD and representations that are sent.
+
+*@Context Doc*
+{
+	"\_id": "name",
+	"\_rev": couchdb_hash,
+	"doctype": 'context,'
+	"@context": {
+		"key": "value"
+		...
+	}
+}
 
 *Pattern Doc*
 
@@ -23,8 +34,8 @@ the final JSON-LD that is sent.
 
 *Contributor Doc*
 {
-	"\_id":  ,
-	"\_rev": ,
+	"\_id": orchid_string ,
+	"\_rev": couch_db hash,
 	"doctype": "contributor",
 	"ORCID": url,
 	"authorName": string
@@ -44,7 +55,7 @@ the final JSON-LD that is sent.
 
 }
 
-*evidence docs*
+*Evidence doc*
 
 {
 	"\_id":  ,

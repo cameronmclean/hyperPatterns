@@ -16,7 +16,7 @@ bibJSON
 refactor "evidence" or create new field to allow URLs+descripions for 
 non-bibTEX resources (eg videos, blogs, stackexchange answers)...					wont fix - just use bibTEX @online, and URL: "", Date: "" etc...
 
-rewrite pattern ontology - 2 classes - Pattern, Force + properties 
+rewrite pattern ontology - 2 classes - Pattern, Force + properties 					yep
 
 add to context docs, @type and @id for property values that should be 				yep - but double check
 dereference
@@ -84,3 +84,17 @@ to response JSON-LDs in each route
 
 Pattern ontology - current declares that a person (contributor) is part of 
 a design pattern _ this not the intended semantics									YEP!
+
+refactor - many functions are written inline and parts are duplicated
+create an array of general functions (eg get by int_id) and put in main scope..
+eg
+- cleanCouchDBFields(object)
+- addContext(listOfContexts)
+-
+-
+
+
+sanitize POST requests before doing anything with them
+
+use json-ld library to process final JSON-LD response 
+- will it remove non-LD and unused contexts?

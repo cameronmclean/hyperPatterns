@@ -1,6 +1,6 @@
 // run `node syncContextDocs.js` from the lib folder to update/add the context docs that we specify here 
-// note the relative path to nano module..
-// currently this script requires the context docs to already exist in couch 
+// note the relative path to nano module from where this doc is stored.
+// currently this script requires the context docs to already exist in couchdb 
 // if creating/defining a brand new context doc - use futon or curl to create an otherwise empty doc with the needed "_id" first.
 
 var nano = require('../node_modules/nano')('http://127.0.0.1:5984');
@@ -47,7 +47,7 @@ var contributorContex = {
 };
 
 // specifies the @contex json to be included / mapped to pattern docs 
-//note that pattern represenations served by the API will include contributor, evidence, force docs
+//note that whole pattern represenations served by the API will include merged contributor, evidence, force context docs
 var patternContext = {
 	"_id": "pattern",
 	"doctype": "context",

@@ -138,6 +138,132 @@ app.post('/patterns/contributor', function(req, res){
 
 //**********************************************************************************
 
+app.get('/patterns/:pNum/evidence/:eNum', function(req, res){
+	var pNum = req.params.pNum;
+	var eNum = req.params.eNum;
+	var listOfReferences = [];
+	var refMatch = {};
+	var progress = 0;
+	var docToSend = {};
+
+	//start here and first try to get pattern doc with pNum
+	getPattern(pNum);
+
+	function getPattern(num){
+		// a list of all pattern nums and id in the db
+		db.get('_design/patterns/_view/getPatternByNum', function(err, body){
+			if(!err){
+				var list = body['rows'];
+				var counter = 0; // counter available outside of for loop
+	
+				//test to see if :pNum matches a patter doc on the list
+				//if so get it							
+				for (var x=0; x < list.length; x++){
+					//console.log("list.length = "+list.length);
+					//console.log("before if, x = "+x);
+					
+					if (String(list[x].value) === num){
+						db.get(list[x].id, function(err, body){
+							if(body.evidence){ //make sure body.evidence is defined
+								listOfReferences = body.evidence;
+								progress++;
+							//	console.log('progress from getPattern = '+progress);
+								getReferences(listOfReferences); //<------------if all done (pattern doc exists, move to next function
+							}
+							else{ // body.force err
+								goToError("error getting reference list from pattern");
+							}
+						});
+					}
+					else {
+						counter++;
+					//	console.log("counter = "+counter+" progress = "+progress);
+					}
+				}
+				
+				// if we have been through the for loop and found nothing....
+				if (counter === list.length && progress < 1){
+				//	console.log("no match!");
+					goToError("pattern doc not found in db list!");
+				 }
+
+			}
+			
+			else{
+				goToError(err);
+			}
+		});
+	}
+
+	
+	function getReferences(array){
+				// a list of all f nums and id in the db
+		db.get('_design/patterns/_view/getRefByNum', function(err, body){
+			if(!err){
+				var list = body['rows']; //list of Reference numbers to check
+				//console.log(body['rows']);
+				var counter = 0; // counter available outside of for loop
+	
+				//test to see if :eNum matches a force doc on the list
+				//if so get it							
+				for (var x=0; x < list.length; x++){
+
+					if (String(list[x].value) === eNum){
+						db.get(list[x].id, function(err, body){
+							refMatch = body;
+							delete refMatch['_id'];				//delete all the coucdb interal key/values
+							delete refMatch['_rev'];
+							delete refMatch['int_id'];
+							delete refMatch['parentPattern'];
+							delete refMatch['doctype'];
+							progress++;
+							//console.log('progress from getReferences = '+progress);
+							addContext(refMatch); //<------------if all done, move to next function
+						});
+					}
+					else {
+						counter++;
+						//console.log("counter = "+counter+" progress = "+progress);
+					}
+				}
+				
+				// if we have been through the for loop and found nothing....
+				if (counter === list.length && progress < 2){
+					//console.log("no match!");
+					goToError("ref doc not found in db list!");
+				 }
+
+			}
+			
+			else{
+				goToError(err);
+			}
+		});
+	}
+
+	function addContext(match){
+		db.get('bibTEX', function(err, body){
+			match['@context'] = body['@context'];
+			match['@id'] = 'http://patterns/'+pNum+"/evidence/"+eNum; // <--------- we add @id of resource to the JSONLD here
+			match['@type'] = 'http://purl.org/lp/Reference'; //<----------- and declare that this resource is type Reference
+			progress++
+			//console.log('progress from addContext = '+progress);
+			//if forceDoc content already done
+			if (progress === 3){
+				res.send(JSON.stringify(match, null, 2));
+			}
+		});
+	}
+	
+	function goToError(err){
+		console.log("**********error getting pattern doc "+pNum+" and evidence "+eNum+" ... "+err);
+		res.sendStatus(404);
+	}
+
+});
+
+//**********************************************************************************
+
 app.get('/patterns/:pNum/force/:fNum', function(req, res){
 	var pNum = req.params.pNum;
 	var fNum = req.params.fNum;
@@ -147,8 +273,8 @@ app.get('/patterns/:pNum/force/:fNum', function(req, res){
 
 	//console.log("you tried to get pattern "+pNum+" force "+fNum);
 
+	//first - try to get pattern with pNum
 	getPattern(pNum);
-	//addContext();
 	
 	function getPattern(num){
 		// a list of all pattern nums and id in the db
@@ -157,7 +283,7 @@ app.get('/patterns/:pNum/force/:fNum', function(req, res){
 				var list = body['rows'];
 				var counter = 0; // counter available outside of for loop
 	
-				//test to see if :intID matches a patter doc on the list
+				//test to see if :pNum matches a patter doc on the list
 				//if so get it							
 				for (var x=0; x < list.length; x++){
 					//console.log("list.length = "+list.length);
@@ -170,7 +296,7 @@ app.get('/patterns/:pNum/force/:fNum', function(req, res){
 							//	console.log("force list passed to getForces()"+listOfForces[0]);
 								progress++;
 							//	console.log('progress from getPattern = '+progress);
-								getForces(listOfForces); //<------------if all done, move to next function
+								getForces(listOfForces); //<------------if all done (pattern doc exists, move to next function
 							}
 							else{ // body.force err
 								goToError("error getting force list from pattern");
@@ -216,7 +342,7 @@ app.get('/patterns/:pNum/force/:fNum', function(req, res){
 							delete forceMatch['_rev'];
 							delete forceMatch['int_id'];
 							delete forceMatch['parentPattern'];
-							delete forceMatch['docType'];
+							delete forceMatch['doctype'];
 							progress++;
 							console.log('progress from getForces = '+progress);
 							addContext(forceMatch); //<------------if all done, move to next function
@@ -333,7 +459,7 @@ app.get('/patterns/:intID', function(req, res){
 				body['@type'] = "http://purl.org/lp/Force";
 				delete body['_id'];
 				delete body['_rev'];
-				delete body['docType'];
+				delete body['doctype'];
 				delete body['int_id'];
 				delete body['parentPattern'];
 				forceDetails.push(body);
@@ -400,7 +526,7 @@ app.get('/patterns/:intID', function(req, res){
 					delete body['_rev'];
 					delete body['int_id'];
 					delete body['parentPattern'];
-					delete body['docType'];
+					delete body['doctype'];
 					refDetails.push(body);
 					callback();
 				}
@@ -438,7 +564,7 @@ app.get('/patterns/:intID', function(req, res){
 		 		delete docToSend['_id'];
 		 		delete docToSend['_rev'];
 		 		delete docToSend['int_id'];
-		 		delete docToSend['docType'];
+		 		delete docToSend['doctype'];
 		 		res.send(JSON.stringify(docToSend, null, 2)); //<--- we're done, send the response! 
 		 	}
 		 	else {
