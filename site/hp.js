@@ -76,7 +76,7 @@ app.get('/patterns/contributor/:orcid', function(req, res){
 		// then remove the db specific fields
 		delete doc['_id'];
 		delete doc['_rev'];
-		delete doc['docType'];
+		delete doc['doctype'];
 
 		//if this function was called, db.get() was successful
 		//update counter	
@@ -343,6 +343,7 @@ app.get('/patterns/:pNum/force/:fNum', function(req, res){
 							delete forceMatch['int_id'];
 							delete forceMatch['parentPattern'];
 							delete forceMatch['doctype'];
+							delete forceMatch['_attachments'];
 							progress++;
 							console.log('progress from getForces = '+progress);
 							addContext(forceMatch); //<------------if all done, move to next function
@@ -462,6 +463,7 @@ app.get('/patterns/:intID', function(req, res){
 				delete body['doctype'];
 				delete body['int_id'];
 				delete body['parentPattern'];
+				delete body['_attachments'];
 				forceDetails.push(body);
 				callback(); //so we can escape to the final function
 				}
@@ -493,6 +495,7 @@ app.get('/patterns/:intID', function(req, res){
 					body["@type"] = "http://purl.org/lp/Contributor";
 					delete body['_id'];
 					delete body['_rev'];
+					delete body['_doctype'];
 					contribDetails.push(body);
 					callback();
 				}
@@ -565,6 +568,7 @@ app.get('/patterns/:intID', function(req, res){
 		 		delete docToSend['_rev'];
 		 		delete docToSend['int_id'];
 		 		delete docToSend['doctype'];
+		 		delete docToSend['_attachments'];
 		 		res.send(JSON.stringify(docToSend, null, 2)); //<--- we're done, send the response! 
 		 	}
 		 	else {
