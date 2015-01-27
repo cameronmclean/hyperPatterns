@@ -81,9 +81,27 @@ Routes implemented so far
 
 /patterns/contributor/:orcid 			GET - returns JSON-LD of anthorName, and ORCID as HTTP URL
 
-/patterns/contributor					POST - accepts JSON 
+/patterns/contributor					POST - accepts JSON  //note just for testing - will delete later
 
 /patterns/:num							GET - returns JSON-LD of entire pattern
 
 /patterns/:num/force/:num				GET - returns JSON-LD of single force
 
+/patterns/:num/evidence/:num			GET - returns JSON-LD of pattern reference
+
+-----
+TODO
+
+/patterns								GET - return a list of patterns
+
+/patterns/contributor					GET - return list of authors
+
+??
+/patterns/new 							GET - return a blank template
+
+/patterns/new 							POST - create a new pattern
+
+??
+/patterns/update/:num					GET - return a populated template for editing 
+
+/patterns/update/:num					POST - wrangle and update changes.

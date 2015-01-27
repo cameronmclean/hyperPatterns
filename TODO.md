@@ -79,7 +79,7 @@ resource template URLs hardcoded in app.get('patterns/:num')
 
 catch general 404s for random URL strings that dont match...
 
-change hardcoded URLs for dynamcially adding "@id" and "@type" 
+change hardcoded URLs for dynamically adding "@id" and "@type" 
 to response JSON-LDs in each route
 
 Pattern ontology - current declares that a person (contributor) is part of 
@@ -90,11 +90,22 @@ create an array of general functions (eg get by int_id) and put in main scope..
 eg
 - cleanCouchDBFields(object)
 - addContext(listOfContexts)
--
--
+- ...
 
+
+manually add whole pattern into couch so tests look pretty
 
 sanitize POST requests before doing anything with them
 
 use json-ld library to process final JSON-LD response 
 - will it remove non-LD and unused contexts?
+
+add additional info to JSON-LD response for
+/patterns/contributor
+	- list of patterns
+/pattern/:num/force/:num
+	- explicit parent pattern (shouldn't rely on URL semantics)
+/patterns/:num/evidence/:num
+	- explicit parent pattern - as above
+(note we must also think about the context docs and semantics here too)
+doing the above makes these resources proper linked data.

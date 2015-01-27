@@ -37,20 +37,20 @@ the final JSON-LD and representations that are sent.
 	"\_id": orchid_string ,
 	"\_rev": couch_db hash,
 	"doctype": "contributor",
-	"ORCID": url,
+	"ORCID": url as string,
 	"authorName": string
 }
 
 *Force Doc*
 
 {
-	"\_id":  ,
-	"\_rev": ,
+	"\_id":  couchdb_id,
+	"\_rev": couchdb_hash,
 	"doctype": "force",
 	"int_id": integer,
 	"forceName": string,
 	"description": string,
-	"pic": url,
+	"pic": url as string,
 	"parentPattern": "_id",
 
 }
@@ -58,8 +58,8 @@ the final JSON-LD and representations that are sent.
 *Evidence doc*
 
 {
-	"\_id":  ,
-	"\_rev": ,
+	"\_id":  couchdb_id,
+	"\_rev": couchdb_hash,
 	"doctype": "evidence",
 	"int_id": integer,
 	"parentPattern": "_id",

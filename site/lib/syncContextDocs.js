@@ -58,9 +58,14 @@ var patternContext = {
 	"force": "http://purl/ontology/lp#hasForce",
 	"solution": "http://purl/ontology/lp#hasSolution",
 	"rationale": "http://purl/ontology/lp#hasRationale",
-	"diagram": "http://schema.org/diagram",
+	"diagram": {"@id": "http://schema.org/image",
+		"@type": "@id"
+	    },
 	"evidence": "http://purl.org/spar/cito/citesAsEvidence",
 	"author": "http://purl.org/dc/terms/creator",
+	"pic": {"@id": "http://xmlns.com/foaf/0.1/depiction",
+	"@type": "@id"
+	 	}
 	}
 };
 
