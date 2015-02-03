@@ -634,6 +634,33 @@ First lesson - we need to strip new line characters from JSON stings or else it'
 This tripped me up becase pasting in bibTEX citations from google schoalr includes such formatting characters.
 Be sure to wrangle/sanitise such strings in angular before POSTing to /new etc
 
-got to first step - confirming post reqiet body is JSON, formating it, shoving it into a variable for further wrangling.
+got to first step - confirming post request body is JSON, formating it, shoving it into a variable for further wrangling.
 NB - remember POST requests must have headers set to `"Content-type": "application/json"`
+
+#####20150204
+
+OK - so leant the hard way the differnce between JSON and jaascript object.
+JSON is a data transfer/serialisation format - all keys must be quoted strings - this allows reserved js keywords to be used as keys eg "new": "car" is valid JSON, but new: "car" causes trouble...
+
+Part of the difficulty I was having with the POST request was confusing the two.
+req.body is a js _object_ - using JSON.parse doent work because it's already an object.
+So - we POST a JSON (string) - express already parses it into an object (req.body) 
+I was attepting to parse it again (assuming req.body was the same string I POSTed) and then convert it to a string!
+So dumb. 
+
+implemented basic/generic express error handling 
+
+declaring
+```javascript
+app.use(function (error, req, res, next){
+	if ( error === 'invalid json') {
+	res.sendStatus(400);
+	}
+});
+```
+means that any express/middleware "error" will be caught - here we check if the error was from body-parser sending the value "invalid json"
+if so - send a 400. this catches any clients that attempt to POST non JSON.
+
+next we should implemnt a check of the POSTed JSON/object to see it has the right fields, then proceed to split it and store it in the db.
+
 

@@ -16,9 +16,16 @@ var app = express();
 var nano = require('nano')('http://127.0.0.1:5984');
 var db = nano.use('patterns');
 
+
 //we need this to parse and retreive the POST .body text
 app.use(bodyParser.json());
 
+//handle errors if we POST bad json... ie. body-parser returns Error: invalid json
+app.use(function (error, req, res, next){
+	if ( error === 'invalid json') {
+	res.sendStatus(400);
+	}
+});
 
 var server = app.listen(3000, function() {
 	var host = server.address().address;
@@ -902,29 +909,33 @@ app.get('/new', function(req, res){
 //*********************************************
 app.post('/new', function(req, res){
 	console.log("were posting!");
-	//first check we can parse it OK
-	if (JSON.stringify(req.body)){
-		//might as well
-		var payload = JSON.stringify(req.body);
-		//double chcek its good JSON
-		if (validator.isJSON(payload)){
-			var payload = JSON.stringify(req.body, null, 2);
-			res.send(payload);
-		}
-		else{
-			console.log('failed second test');
-			goTo400();
-		}
-	}
-	else {
-		console.log("failed first test");
-		goTo400();
-	}
+	//nire body-parser should check for valid JSON first.
+	//if OK it is parsed into req.body object.
+
+	//copy req.body object to payload
+	var payload = req.body;
+
+	//check to see if object converts to valid JSON
+//	var check = JSON.stringify(payload);
+//		if (validator.isJSON(check)){
+//			console.log("passed isJSON test");
+//			console.log("and we can access payload object context "+payload['context']);
+//			res.send("OK!")
+//		}
+//		else{
+//			console.log('failed test - isJSON');
+//			goTo400();
+//		}
+//	}
+//	else {
+//		console.log("failed first test");
+//		goTo400();
+//	}
 	
-	function goTo400(err){
-		console.log("doesnt appear to be proper JSON or a newpattern doc");
-		res.sendStatus(400);
-	} 
+//	function goTo400(err){
+//		console.log("doesnt appear to be proper JSON or a newpattern doc");
+//		res.sendStatus(400);
+//	} 
 });
 
 

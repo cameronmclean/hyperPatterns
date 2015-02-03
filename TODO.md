@@ -128,5 +128,7 @@ sanitise or check params on all GET routes
 
 ensure JSON strings are cleaned and sanitised before POSTing - eg remove /n etc
 
-test POSTing garbage to make sure it's handled properly
+test POSTing garbage to make sure it's handled properly - implement error handling		YEP - kinda - if body-parser fails we catch and return 400 bad request
+
+
 
