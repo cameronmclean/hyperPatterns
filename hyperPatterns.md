@@ -592,3 +592,14 @@ implemetned /patterns/:id/diagram/:img to return binary of pattern diagram
 
 implemented /patterns/:id/force/:num/:img to return binary force pictogram
 
+---
+
+added new class of docytypes to coucdh - 'schema' - these represent blank objects that can be sent upon a GET request to say
+/patterns/new  the idea is the client can then fill in the blanks and POST back to say /patterns/protopatterns and the JSON is parsed, split into docs (flagged as prototype) and stored for futher editing and retreival (perhaps same as "published" pattern, but with value int\_id = null  - when we publish we set the current incremetn for int\_id, also flip a field published=true ?)
+
+created mock "instatiated" new.json to POST and attempt to split and wrange into appropriate docs.
+currently it takes references as an array of strings, with each string being a bibTEX citation. (from google scholar - cite > bibTEX > copy/paste)
+
+//so why didn't I just make one pattern doc for all the parts, and have node.js fetch the doc, internally wrange it to spit out whater /pattern/{path} requires?? 
+
+
