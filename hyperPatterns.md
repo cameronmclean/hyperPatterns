@@ -587,3 +587,5 @@ Idea is back to original plan - have a 'staging' area where patterns can go back
 So the API is getting more and more coupled to the client at this state - this is fine - we must remember given time and resource constraints that the focus should be on pattern representation and use as a knowledge strucutre, not API and REST theory..
 
 Implemented /patterns/:id/:img route to return the binary (couchdb attachemnt) of a pattern pic.
+
+implemetned /patterns/:id/diagram/:img to return binary of pattern diagram
