@@ -89,8 +89,15 @@ Routes implemented so far
 
 /patterns/:num/evidence/:num			GET - returns JSON-LD of pattern reference
 
+/patterns/:num/:img 					GET - return binary encoding of pattern pictogram
+
 -----
 TODO
+
+
+/patterns/:num/diagram/:img 			GET - return binary encoding of pattern diagram
+
+/patterns/:num/force/:num/:img 			GET - return binary encoding of force pictorgram
 
 /patterns								GET - return a list of patterns
 
@@ -102,6 +109,6 @@ TODO
 /patterns/new 							POST - create a new pattern
 
 ??
-/patterns/update/:num					GET - return a populated template for editing 
+/patterns/edit/:num:rev					GET - return a populated template/object for editing // note we only allow clients to edit certain fields.
 
-/patterns/update/:num					POST - wrangle and update changes.
+/patterns/edit/		 					POST - wrangle and update changes // accepts a JSON with the appropriate edited pattern _content_ - we examine the structure and content to see what to do with couchdb.

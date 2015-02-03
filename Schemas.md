@@ -22,6 +22,7 @@ the final JSON-LD and representations that are sent.
 	"doctype": "pattern",
 	"int_id": integer,
 	"name": string,
+	"pic": url,
 	"author": ['_id'],
 	"context": string,
 	"problem": string,

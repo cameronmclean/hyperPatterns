@@ -93,7 +93,7 @@ eg
 - ...
 
 
-manually add whole pattern into couch so tests look pretty
+manually add whole pattern into couch so tests look pretty							YEP
 
 sanitize POST requests before doing anything with them
 
@@ -109,3 +109,17 @@ add additional info to JSON-LD response for
 	- explicit parent pattern - as above
 (note we must also think about the context docs and semantics here too)
 doing the above makes these resources proper linked data.
+
+implement pattern versioning.
+change routes so that
+/patterns/integer - gets latest version
+/patterns/interger_integer gets specific version.
+(/patterns) should also get list of all latest versions...
+
+draw-up and document a versioning schema
+
+draw the schemas, links, actions that are needed to keep everything in track
+
+figure a mechanism/convention for POSTing new and updated patterns
+
+write the db views to retreive and emit, ID, doc_id, _rev...

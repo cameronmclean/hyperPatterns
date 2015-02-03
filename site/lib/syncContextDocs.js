@@ -82,6 +82,7 @@ var forceContext = {
 	}
 };
 
+
 var contextDocs = [bibTEXContext, contributorContex, patternContext, forceContext];
 
 //note this function uses an Immediately Invoked Function expression to 

@@ -520,3 +520,70 @@ Nedd to fix or modify this later.
  implemented /pattern/:num/evidence/:num GET route. <-- note starting to duplicate code now
  consider refactoring many of the functions within each GET route 
  eg, make a general addContex(listOfContexts) etc.
+
+so - at the moment the API only responds to GET requests, and returns static representations of the resources.
+There are no links that drive applcation and how we might change the state.
+For this we need hyrda to describe the links, and new routes in the API that change the resource state - eg accept a POST and modify or create new resources. 
+
+#####20150128
+
+thinking about how to handle the post request.
+
+first idea is to provide a "form" from "/patterns/new" - a custom JSON with blank fields.
+This object can then be manipulated by the client and POSTED to /patterns
+One tricky thing to keep in mind - the POST doesent have to look anything like the GET of a design pattern.
+IF we keep the POST to accept application/JSON, handling images is tricky
+we can base64encode them in the client, add metadata, and then decode and save as attachemnt in couch back in the server.
+
+what about editing a pattern? - this should send a "populated" form, and POST
+
+perhaps try putting current pattern in an "editable" object.
+note - the editable object is application/JSON, not JSON-LD...?
+
+how to handle the delete of a composite obect?
+
+note : it is possible to use couchdb's _rev as document versioning *if you don't compact* the db
+http://jchris.ic.ht/drl/_design/sofa/_list/post/post-page?startkey=%5B%22Versioning-docs-in-CouchDB%22%5D
+
+just a thought - I could implement a pattern version field (described with Prov) and have it populated by the integer part of "_rev".
+
+any time a patter is edited, I would have to update the main pattern doc "_rev", even if only changes to other docs were required..
+Perhaps an easy way to do this is to just db.instert() the whole POSTed update across all internal docs..
+
+arrgh - another headache - how to handle "new" forces, references, contributors on edits.
+and if a pattern say 'deletes' a  force - it needs to be removed from the current represenation but still available for older "versions".
+And if we 'refine' the defintion of a force = we have changed its meaning, but the URL is the same - this creates inconsistency
+
+patterns need to be updatable, but we need goverance around this process. a versioning system 
+
+what if we allow creation of patterns, but not editing, add discussion forums on the website to coordinate changes, defer the process of addressing these hard issues to future work - focus on _using_ these strucutured representations rather than their creation, evolution, community, etc. 
+we envision a github style system - pattern owners have control, but all are free to clone, fork, develop, add new, and make "pull" request.
+strike a balance between stability and freedom
+because we envision use of patterns as a pragamtic vocabulary and knowledge struntureing tool (not just data in their own right) this has implications for the stability and semantics of pattern resources. Changes to a pattern that affect or modifiy pattern instances require the creation of new URIs or a new pattern to allow gracefull evoutlion and consistency of linked data.
+
+
+what if...
+We currently limit the functionality of the API to create, and get.
+Reserve delete and update for future work - this is because of the complexity of propagatign changes to design patterns that affect their meaning.
+
+significant changes to a design pattern 
+
+changes to a design pattern - can be trivial such as typos, or significant new classes (eg force) can be added - this doesn't affect exising instnces, but classes can also be deleted or change definition, this does affect exisitng instances
+
+#####20150129
+OK - decided to implement a simple incremental versioning for patterns - any time one is edited(updated) a new rev# is generated.
+We never actually delete anyting from the db, we just remove or add references to the main pattern doc, and create any new authors, forces, images, references etc.
+so every doc needs to keep 1) a rev (we get this for free if we use the hacky coucdb _rev), and 2) a list of its parents
+the main pattern scheama needs to expose its int\_id and rev, and track force, reference both docID _and_ rev to keep things matched.
+
+#####20150130
+gah, OK - if we go with versioned pattern docs emitted by the API, we should implement a proper versioning strategy for all the couchdbdocs.
+Edits should create a whole new (revised) copy of the relevant docs, and increment the rev number. (not couchdb's "_rev")
+
+#####20152013
+So maybe we dont worry about versioing after all - run with a static/permanent representation and revist later.
+Idea is back to original plan - have a 'staging' area where patterns can go back and forth in a nacent stage, when ready "publish" them so they get proper URIs and can be served as JSON-LD - we use the 'published' versions to go on an develop an exalplificaiton framework for.
+
+So the API is getting more and more coupled to the client at this state - this is fine - we must remember given time and resource constraints that the focus should be on pattern representation and use as a knowledge strucutre, not API and REST theory..
+
+Implemented /patterns/:id/:img route to return the binary (couchdb attachemnt) of a pattern pic.
