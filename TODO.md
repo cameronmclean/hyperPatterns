@@ -124,4 +124,9 @@ figure a mechanism/convention for POSTing new and updated patterns
 
 write the db views to retreive and emit, ID, doc_id, _rev...
 
-sanatise or check params on all GET routes
+sanitise or check params on all GET routes
+
+ensure JSON strings are cleaned and sanitised before POSTing - eg remove /n etc
+
+test POSTing garbage to make sure it's handled properly
+

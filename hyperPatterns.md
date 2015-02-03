@@ -627,3 +627,13 @@ But its still a good idea to never trust user input... :)
 Added a check for GET requests for /patterns/:num /patterns/:num/force/:num and patterns/:num/evidence/:num
 to check if params are numbers - if not, go straigt to 404
 used `if (isNaN(:num)) goToError();` i.e if the params are anthing other than numeric - don't even bother.
+
+---
+Started working on POST for /new
+First lesson - we need to strip new line characters from JSON stings or else it's not valid.
+This tripped me up becase pasting in bibTEX citations from google schoalr includes such formatting characters.
+Be sure to wrangle/sanitise such strings in angular before POSTing to /new etc
+
+got to first step - confirming post reqiet body is JSON, formating it, shoving it into a variable for further wrangling.
+NB - remember POST requests must have headers set to `"Content-type": "application/json"`
+

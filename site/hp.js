@@ -900,3 +900,31 @@ app.get('/new', function(req, res){
 });
 
 //*********************************************
+app.post('/new', function(req, res){
+	console.log("were posting!");
+	//first check we can parse it OK
+	if (JSON.stringify(req.body)){
+		//might as well
+		var payload = JSON.stringify(req.body);
+		//double chcek its good JSON
+		if (validator.isJSON(payload)){
+			var payload = JSON.stringify(req.body, null, 2);
+			res.send(payload);
+		}
+		else{
+			console.log('failed second test');
+			goTo400();
+		}
+	}
+	else {
+		console.log("failed first test");
+		goTo400();
+	}
+	
+	function goTo400(err){
+		console.log("doesnt appear to be proper JSON or a newpattern doc");
+		res.sendStatus(400);
+	} 
+});
+
+
