@@ -145,6 +145,12 @@ app.post('/patterns/contributor', function(req, res){
 //**********************************************************************************
 
 app.get('/patterns/:pNum/evidence/:eNum', function(req, res){
+	//check that pNum and eNum are numbers - save dblookup if its garbage
+	if (isNaN(req.params.pNum) || isNaN(req.params.eNum)){
+	 goToError();
+	}
+	
+	else {
 	var pNum = req.params.pNum;
 	var eNum = req.params.eNum;
 	var listOfReferences = [];
@@ -260,6 +266,7 @@ app.get('/patterns/:pNum/evidence/:eNum', function(req, res){
 			}
 		});
 	}
+}//closes else at top of route
 	
 	function goToError(err){
 		console.log("**********error getting pattern doc "+pNum+" and evidence "+eNum+" ... "+err);
@@ -271,6 +278,12 @@ app.get('/patterns/:pNum/evidence/:eNum', function(req, res){
 //**********************************************************************************
 
 app.get('/patterns/:pNum/force/:fNum', function(req, res){
+	//check that pNum and fNum are numbers - save dblookup if its garbage
+	if (isNaN(req.params.pNum) || isNaN(req.params.fNum)){
+	 goToError();
+	}
+	
+	else {
 	var pNum = req.params.pNum;
 	var fNum = req.params.fNum;
 	var listOfForces = [];
@@ -388,6 +401,7 @@ app.get('/patterns/:pNum/force/:fNum', function(req, res){
 			}
 		});
 	}
+}//closes else at top
 
 	function goToError(err){
 		console.log("**********error getting pattern doc "+pNum+" and force "+fNum+" ... "+err);
@@ -401,9 +415,8 @@ app.get('/patterns/:pNum/force/:fNum', function(req, res){
 //**********************************************************************************
 
 app.get('/patterns/:intID', function(req, res){
-	//check that intID is a number
-	console.log(req.params.intID);
-
+	
+	//check that intID is a number - save dblookup if its garbage
 	if (isNaN(req.params.intID)){
 	 goToError();
 	}

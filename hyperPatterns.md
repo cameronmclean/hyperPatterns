@@ -623,3 +623,6 @@ Stop press - nope - the error was actually becuase I had a code fragment where I
 removed offending code.
 
 But its still a good idea to never trust user input... :)
+
+Added a check for GET requests for /patterns/:num /patterns/:num/force/:num and patterns/:num/evidence/:num
+to check if params are numbers - if not, go straigt to 404
