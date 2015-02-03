@@ -8,6 +8,7 @@ var async = require('async');
 var _ = require('underscore');
 var fs = require('fs');
 var bibtexParse = require('bibtex-parser-js');
+var validator = require('validator');
 
 var app = express();
 
@@ -26,7 +27,6 @@ var server = app.listen(3000, function() {
 	console.log("App listening at http://%s:%s", host, port);
 
 }) ;
-
 
 
 //routes
@@ -140,13 +140,7 @@ app.post('/patterns/contributor', function(req, res){
 	}
 	
 });
-//**********************************************************************************
 
-app.get('/patterns/new', function(req, res){
-
-	db.get
-
-});
 
 //**********************************************************************************
 
@@ -407,6 +401,14 @@ app.get('/patterns/:pNum/force/:fNum', function(req, res){
 //**********************************************************************************
 
 app.get('/patterns/:intID', function(req, res){
+	//check that intID is a number
+	console.log(req.params.intID);
+
+	if (isNaN(req.params.intID)){
+	 goToError();
+	}
+	
+	else {
 	var intID = req.params.intID;
 	var progress = 0;
 	var docToSend = {};
@@ -417,7 +419,7 @@ app.get('/patterns/:intID', function(req, res){
 
 
 	function getPattern(num){
-		// a list of all pattern nums and id in the db
+			// a list of all pattern nums and id in the db
 		db.get('_design/patterns/_view/getPatternByNum', function(err, body){
 			if(!err){
 				var list = body['rows'];
@@ -455,6 +457,7 @@ app.get('/patterns/:intID', function(req, res){
 				goToError(err);
 			}
 		});
+	 
 	}
 
 
@@ -589,6 +592,7 @@ app.get('/patterns/:intID', function(req, res){
 		 }
 		);
 	}
+}//end else at top
 
 	function goToError(err){
 		console.log("**********error getting pattern doc "+intID+" ... "+err);
@@ -860,3 +864,26 @@ app.get('/patterns/:pNum/force/:fNum/:img', function(req, res){
 	}
 
 });
+
+//*****************************************
+app.get('/new', function(req, res){
+
+	console.log("yay! someone is requesting a new pattern!");
+
+	//get the new/blank schema from the db, change a few fields and send.
+	//note = changes to the 'patternSchema' doc are set in the helper script syncSchemaDocs.js
+	db.get('patternSchema', function(err, body){
+		if (!err) {
+			delete body['_id'];
+			delete body['_rev'];
+			body['doctype'] = 'newpattern';
+			res.send(body);
+		}
+		else
+		{
+			res.sendStatus(404);
+		}
+	});
+});
+
+//*********************************************

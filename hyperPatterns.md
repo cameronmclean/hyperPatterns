@@ -600,6 +600,26 @@ added new class of docytypes to coucdh - 'schema' - these represent blank object
 created mock "instatiated" new.json to POST and attempt to split and wrange into appropriate docs.
 currently it takes references as an array of strings, with each string being a bibTEX citation. (from google scholar - cite > bibTEX > copy/paste)
 
+we can use `https://www.npmjs.com/package/bibtex-parser-js` on the server side at _publishing_ time to format the strings into the doc fields.
+
+did `mpm install --save bibtex-parser-js` and added `bibtexParse = require('bibtex-parser-js')`
+NOTE: we need to call the parser via `bibtexParse.toJSON('string')` and enusre there are no carrage returns in the string. 
+
 //so why didn't I just make one pattern doc for all the parts, and have node.js fetch the doc, internally wrange it to spit out whater /pattern/{path} requires?? 
 
+created route `/new` where a GET request will send back an empty JSON object to be instantiated and POSTed back.
+we delete the dbfields _id, _rev and set 'doctype': "newpattern", ready for POSTing back.
 
+NOTE - originally tried to make the route /patterns/new - but this clashes with /patterns/:num - found bug where I didnt check for :num === integer. better to move /new further up the URI anyway... 
+
+#### It is important to check and sanitize all GET and POST parameters.
+
+Using validator.js
+https://github.com/chriso/validator.js
+`npm install --save validator` and `var validator = require('validator');`
+
+Stop press - nope - the error was actually becuase I had a code fragment where I had started a app.get('patterns/new'){} and left it hanging.
+
+removed offending code.
+
+But its still a good idea to never trust user input... :)

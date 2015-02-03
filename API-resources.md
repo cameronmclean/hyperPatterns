@@ -95,24 +95,23 @@ Routes implemented so far
 
 /patterns/:num/force/:num/:img 			GET - return binary encoding of force pictorgram
 
+/new 									GET - returns a blank JSON ready to be populated by the client to create a new pattern
+
 
 -----
 TODO
 
-
-
-
+/new 									POST - accepts an instantiated JSON of "doctype": "newpattern"
 
 /patterns								GET - return a list of patterns
 
-/patterns/contributor					GET - return list of authors
+/contributors							GET - return list of authors
+
 
 ??
-/patterns/new 							GET - return a blank template
+proto/patterns/:num						GET - return a populated template/object for editing // note we only allow clients to edit certain field?
 
-/patterns/new 							POST - create a new pattern
+proto/patterns/:num		 				POST - wrangle and update changes // accepts a JSON with the appropriate edited pattern _content_ - we examine the structure and content to see what to do with couchdb. also chech pattern num matches request num
 
-??
-/patterns/edit/:num:rev					GET - return a populated template/object for editing // note we only allow clients to edit certain fields.
-
-/patterns/edit/		 					POST - wrangle and update changes // accepts a JSON with the appropriate edited pattern _content_ - we examine the structure and content to see what to do with couchdb.
+how to handle "publishing" ?? set flag published = true/fase - determines namespace it is visible under the API (and hence how it is served - as linked data or not...)?
+Add a conditional in dbviews if (doc.published === true) etc.
