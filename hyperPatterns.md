@@ -626,3 +626,4 @@ But its still a good idea to never trust user input... :)
 
 Added a check for GET requests for /patterns/:num /patterns/:num/force/:num and patterns/:num/evidence/:num
 to check if params are numbers - if not, go straigt to 404
+used `if (isNaN(:num)) goToError();` i.e if the params are anthing other than numeric - don't even bother.
