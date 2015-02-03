@@ -7,6 +7,8 @@ var express = require('express');
 var async = require('async');
 var _ = require('underscore');
 var fs = require('fs');
+var bibtexParse = require('bibtex-parser-js');
+
 var app = express();
 
 //couch db settings
@@ -24,6 +26,8 @@ var server = app.listen(3000, function() {
 	console.log("App listening at http://%s:%s", host, port);
 
 }) ;
+
+
 
 //routes
 //*******************************************************************************
