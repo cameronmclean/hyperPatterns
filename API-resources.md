@@ -91,13 +91,17 @@ Routes implemented so far
 
 /patterns/:num/:img 					GET - return binary encoding of pattern pictogram
 
+/patterns/:num/diagram/:img 			GET - return binary encoding of pattern diagram
+
+/patterns/:num/force/:num/:img 			GET - return binary encoding of force pictorgram
+
+
 -----
 TODO
 
 
-/patterns/:num/diagram/:img 			GET - return binary encoding of pattern diagram
 
-/patterns/:num/force/:num/:img 			GET - return binary encoding of force pictorgram
+
 
 /patterns								GET - return a list of patterns
 

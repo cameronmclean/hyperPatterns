@@ -589,3 +589,6 @@ So the API is getting more and more coupled to the client at this state - this i
 Implemented /patterns/:id/:img route to return the binary (couchdb attachemnt) of a pattern pic.
 
 implemetned /patterns/:id/diagram/:img to return binary of pattern diagram
+
+implemented /patterns/:id/force/:num/:img to return binary force pictogram
+

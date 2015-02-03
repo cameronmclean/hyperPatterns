@@ -737,3 +737,122 @@ app.get('/patterns/:intID/diagram/:img', function(req, res){
 
 });
 
+//**********************************************************************************
+
+app.get('/patterns/:pNum/force/:fNum/:img', function(req, res){
+	var pNum = req.params.pNum;
+	var fNum = req.params.fNum;
+	var img = req.params.img;
+	var listOfForces = [];
+	var forceMatch = {};
+	var progress = 0; 
+
+	//console.log("you tried to get pattern "+pNum+" force "+fNum);
+
+	//first - try to get pattern with pNum
+	getPattern(pNum);
+	
+	function getPattern(num){
+		// a list of all pattern nums and id in the db
+		db.get('_design/patterns/_view/getPatternByNum', function(err, body){
+			if(!err){
+				var list = body['rows'];
+				var counter = 0; // counter available outside of for loop
+	
+				//test to see if :pNum matches a patter doc on the list
+				//if so get it							
+				for (var x=0; x < list.length; x++){
+					//console.log("list.length = "+list.length);
+					//console.log("before if, x = "+x);
+					
+					if (String(list[x].value) === num){
+						db.get(list[x].id, function(err, body){
+							if(body.force){ //make sure body.force is defined
+								listOfForces = body.force;
+							//	console.log("force list passed to getForces()"+listOfForces[0]);
+								progress++;
+							//	console.log('progress from getPattern = '+progress);
+								getForces(listOfForces); //<------------if all done (pattern doc exists, move to next function
+							}
+							else{ // body.force err
+								goToError("error getting force list from pattern");
+							}
+						});
+					}
+					else {
+						counter++;
+					//	console.log("counter = "+counter+" progress = "+progress);
+					}
+				}
+				
+				// if we have been through the for loop and found nothing....
+				if (counter === list.length && progress < 1){
+				//	console.log("no match!");
+					goToError("pattern doc not found in db list!");
+				 }
+
+			}
+			
+			else{
+				goToError(err);
+			}
+		});
+	}
+
+	function getForces(array){
+				// a list of all force nums and id in the db
+		db.get('_design/patterns/_view/getForceByNum', function(err, body){
+			if(!err){
+				var list = body['rows']; //list of force numbers to check
+				//console.log(body['rows']);
+				var counter = 0; // counter available outside of for loop
+	
+				//test to see if :fNum matches a force doc on the list
+				//if so get it							
+				for (var x=0; x < list.length; x++){
+
+					if (String(list[x].value) === fNum){
+						db.get(list[x].id, function(err, body){
+							if ( body._attachments && img in body._attachments ) { 
+								console.log("img exists!");
+								var docName = body._id;
+								db.attachment.get(docName, img, function(err, body){
+									if(!err){
+										fs.write(img, body);
+										res.send(body);
+									}
+								});
+								progress++;
+							}
+							else{
+								goToError("image not found!");
+							}
+						});
+					}
+					else {
+						counter++;
+						//console.log("counter = "+counter+" progress = "+progress);
+					}
+				}
+				
+				// if we have been through the for loop and found nothing....
+				if (counter === list.length && progress < 2){
+					//console.log("no match!");
+					goToError("force doc not found in db list!");
+				 }
+
+			}
+			
+			else{
+				goToError(err);
+			}
+		});
+	}
+
+
+	function goToError(err){
+		console.log("**********error getting pattern doc "+pNum+" and force "+fNum+" pictogram "+img+"   "+err);
+		res.sendStatus(404);
+	}
+
+});
