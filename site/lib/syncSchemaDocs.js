@@ -40,9 +40,52 @@ var newPatternSchema = {
 	],
 };
 
+var validationSchema = {
+	"_id": "validationSchema",
+	"doctype": "schema",
+	"title": "New pattern validation schema",
+	"type": "object",
+	"properties": {
+		"doctype":{
+			"type": "string"
+		},
+		"name": {
+			"type": "string"
+		},
+		"pic": {
+			"type": "object"
+		},
+		"author": {
+			"type": "array"
+		},
+		"context": {
+			"type": "string"
+		},
+		"problem": {
+			"type": "string"
+		},
+		"force": {
+			"type": "array"
+		},
+		"solution": {
+			"type": "string"
+		},
+		"rationale": {
+			"type": "string"
+		},
+		"diagram": {
+			"type": "object"
+		},
+		"evidence": {
+			"type": "array"
+		}
+		
+	}
+};
 
 
-var schemaDocs = [newPatternSchema];
+
+var schemaDocs = [newPatternSchema, validationSchema];
 
 //note this function uses an Immediately Invoked Function expression to 
 // allow async call-back funtions to close properly within the 

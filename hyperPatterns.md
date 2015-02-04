@@ -663,4 +663,7 @@ if so - send a 400. this catches any clients that attempt to POST non JSON.
 
 next we should implemnt a check of the POSTed JSON/object to see it has the right fields, then proceed to split it and store it in the db.
 
+we can use tv4 https://github.com/geraintluff/tv4 and supply a schaema to validate the the POSTed json is what it claims to be.
+JSON schema info - http://json-schema.org/ http://spacetelescope.github.io/understanding-json-schema/ http://json-schema.org/latest/json-schema-core.html
 
+added a validation scheama to the syncSchemaDocs.js - remember to remove the _id and _rev fields from the db object before using to validate POSTed json.
