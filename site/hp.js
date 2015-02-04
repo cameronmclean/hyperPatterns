@@ -914,8 +914,8 @@ app.get('/new', function(req, res){
 
 //*********************************************
 app.post('/new', function(req, res){
-	console.log("were posting!");
-	//nire body-parser should check for valid JSON first.
+	console.log("were posting to new!");
+	//note body-parser should check for valid JSON first.
 	//if OK it is parsed into req.body object.
 
 	//copy req.body object to payload
@@ -923,34 +923,73 @@ app.post('/new', function(req, res){
 
 	checkPayload(payload);
 
+	//validate payload against schema for newly sumbitted pattern
 	function checkPayload(postInput){
-		db.get('validationSchema', function(err, body){
+		db.get('newPatternValidationSchema', function(err, body){
 			if(!err){
 				var schema = body;
+				//remove db specific fields from schema
 				delete schema["_id"];
 				delete schema["_rev"];
 				delete schema['doctype'];
 
-				console.log(payload);
+				console.log(postInput);
 
-				var valid = tv4.validate(JSON.stringify(payload), JSON.stringify(schema));
+				var valid = tv4.validate(JSON.stringify(postInput), JSON.stringify(schema));
 
 				if (valid === true){
 					console.log("payload validates! "+valid);
-					res.send("OK!");
+					//res.send("OK!");
 					//go to wrangle next
+					saveNewProtoPattern(postInput);
 				}
 				else{
-					console.log("validation returned "+valid);
+					console.log("nope - validation returned "+valid);
+					res.sendStatus(400);
 				}
 
+			}
+			else{
+				console.log("error getting validation schema from db"+err);
+				goToError();
 			}
 		});
 	}
 
-	function wranglePayload(input){
-		//code to split POST here
+	// if checkpayload validates, this is called to persist data as proto pattern to couchdb
+	function saveNewProtoPattern(input){
+
+		var newID = null;
+		//get the 
+		//modify fields in preparation for save to db
+		//note this is the first time we save/create a protopattern doc - _id and _rev dont exist yet..
+		input['doctype'] = "protopattern";
+		input['revision'] = 1;
+		//fetch the number of pattern and protopattern docs - set new int_id to one higher than the highest
+		db.get('_design/patterns/_view/getLastIntID', function(err, body){
+			//console.log(body.rows.length);
+			var listOfResults = body.rows;
+			var listOfValues = [];
+			for (x in listOfResults){
+				listOfValues.push(listOfResults[x].value);
+			}
+			newID = Math.max.apply(Math, listOfValues)+1;
+			//console.log("latest Int ID = "+newID);
+			//now set the new unique int_id for this pattern
+			input['int_id'] = newID;
+
+			//now save the newly created protopattern 
+			db.insert(input, null, function(err, body){
+				if(!err){
+					res.send("saved OK!");
+				}
+				else{
+					goToError(err);
+				}
+			});
+		});
 	}
+
 	//check to see if object converts to valid JSON
 //	var check = JSON.stringify(payload);
 //		if (validator.isJSON(check)){
@@ -974,7 +1013,7 @@ app.post('/new', function(req, res){
 //	} 
 	function goToError(err){
 		console.log(err);
-		res.SendStatus(500);
+		res.sendStatus(500);
 	}
 });
 

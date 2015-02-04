@@ -41,7 +41,7 @@ var newPatternSchema = {
 };
 
 var validationSchema = {
-	"_id": "validationSchema",
+	"_id": "newPatternValidationSchema",
 	"doctype": "schema",
 	"$schema": "http://json-schema.org/schema#",
 	"title": "New pattern validation schema",

@@ -122,7 +122,7 @@ draw the schemas, links, actions that are needed to keep everything in track
 
 figure a mechanism/convention for POSTing new and updated patterns
 
-write the db views to retreive and emit, ID, doc_id, _rev...
+write the db views to retreive and emit, ID, doc_id, _rev...						Sorta - we can now emit int\_id from the list of all "pattern" and "prototype" docs. 
 
 sanitise or check params on all GET routes
 

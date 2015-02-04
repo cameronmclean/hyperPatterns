@@ -97,21 +97,27 @@ Routes implemented so far
 
 /new 									GET - returns a blank JSON ready to be populated by the client to create a new pattern
 
+/new 									POST - accepts an instantiated JSON of "doctype": "newpattern" - saves to db with unique 												int_id
 
 -----
 TODO
 
-/new 									POST - accepts an instantiated JSON of "doctype": "newpattern"
 
 /patterns								GET - return a list of patterns
 
 /contributors							GET - return list of authors
 
+/prototype								GET - return a list of all protopatterns
 
+/prototype/:num							GET - return latest version of prototype
+
+/prototype/:num							POST - save new doc with revision+1
+
+
+/publish 								POST - accepts a doctype: protopattern JSON - splits and wrangles, persists to db as final docs - now .
 ??
-proto/patterns/:num						GET - return a populated template/object for editing // note we only allow clients to edit certain field?
+prototype/:num							GET - return a populated template/object for editing // note we only allow clients to edit certain field?
 
-proto/patterns/:num		 				POST - wrangle and update changes // accepts a JSON with the appropriate edited pattern _content_ - we examine the structure and content to see what to do with couchdb. also chech pattern num matches request num
 
 how to handle "publishing" ?? set flag published = true/fase - determines namespace it is visible under the API (and hence how it is served - as linked data or not...)?
 Add a conditional in dbviews if (doc.published === true) etc.

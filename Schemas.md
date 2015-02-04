@@ -1,7 +1,6 @@
 Schemas for *couchdb*
 
-here is the interal representation of all pattern documents that node and couchdb wrangle into
-the final JSON-LD and representations that are sent.
+here is the internal representation of all pattern documents that node and couchdb wrangle into protopatterns or the final JSON-LD and representations that are sent.
 
 *@Context Doc*
 {
@@ -82,4 +81,24 @@ the final JSON-LD and representations that are sent.
 	"url": string,
 	"volume": string,
 	"year": string
+}
+
+*Proto Pattern Doc*
+{
+	//the stored protodoc
+}
+
+*New pattern doc*
+{
+	//the empty patttern 'object'
+}
+
+*new pattern schema*
+{
+	//for validating the newly POSTed pattern
+}
+
+*editied protopatern schema*
+{
+	//for validating edited protopatterns
 }

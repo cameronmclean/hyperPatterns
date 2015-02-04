@@ -669,3 +669,14 @@ JSON schema info - http://json-schema.org/ http://spacetelescope.github.io/under
 added a validation scheama to the syncSchemaDocs.js - remember to remove the _id and _rev doctype fields from the db object before using to validate POSTed json.
 
 hmmm - implemented tv4 validation against schema, but any old JSON seems to validate.. Need to fix, this, but for now will continue as if it was valid and deal with splitting and storing.
+
+OK - decided to save - "new" patterns as a doctype "protopattern" - this is stored as a whole document, and is meant to be passed back and forth as monolithin JSON between the angualr based web(page) client. we dont attempt here to split all the docs or wrange for final publication. these docs and representations are meant soley for pushing simply back and forth between the creating editing client.
+
+Once a "new" pattern has been fetched and posted, it should then becomes available via the /prototype:/num route...
+so to implement this next.... :)
+
+Note - we have settled here on a incrementing integer scheme to identify pattern and protopattern docs. This is of course a fundamentally broken model, but its faster to persist with it now for the prototype, than to implemnent a better one.
+The main reason for this nameing scheme was to facilitate human understanding of the URIs, we dont anticipate many patterns, concurrent users, etc. Of course we know many decisions in what we are buldign here probably wont work well inthe real world.
+This is a consequence of my "flying by the seat of my pants" - learning web programming concurrently as we build our representation framework...
+
+
