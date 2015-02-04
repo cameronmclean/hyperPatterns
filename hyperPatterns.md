@@ -666,4 +666,6 @@ next we should implemnt a check of the POSTed JSON/object to see it has the righ
 we can use tv4 https://github.com/geraintluff/tv4 and supply a schaema to validate the the POSTed json is what it claims to be.
 JSON schema info - http://json-schema.org/ http://spacetelescope.github.io/understanding-json-schema/ http://json-schema.org/latest/json-schema-core.html
 
-added a validation scheama to the syncSchemaDocs.js - remember to remove the _id and _rev fields from the db object before using to validate POSTed json.
+added a validation scheama to the syncSchemaDocs.js - remember to remove the _id and _rev doctype fields from the db object before using to validate POSTed json.
+
+hmmm - implemented tv4 validation against schema, but any old JSON seems to validate.. Need to fix, this, but for now will continue as if it was valid and deal with splitting and storing.

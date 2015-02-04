@@ -114,7 +114,7 @@ implement pattern versioning.
 change routes so that
 /patterns/integer - gets latest version
 /patterns/interger_integer gets specific version.
-(/patterns) should also get list of all latest versions...
+(/patterns) should also get list of all latest versions...							nope - wont fix
 
 draw-up and document a versioning schema
 
@@ -130,5 +130,6 @@ ensure JSON strings are cleaned and sanitised before POSTing - eg remove /n etc
 
 test POSTing garbage to make sure it's handled properly - implement error handling		YEP - kinda - if body-parser fails we catch and return 400 bad request
 
-
+fix tv4 validation of PSOTed JSON - something is wrong with schema or function
+and json is validating....
 

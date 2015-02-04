@@ -23,8 +23,13 @@ app.use(bodyParser.json());
 
 //handle errors if we POST bad json... ie. body-parser returns Error: invalid json
 app.use(function (error, req, res, next){
-	if ( error === 'invalid json') {
+	console.log("error called "+error);
+	if ( error.message === 'invalid json') {
 	res.sendStatus(400);
+	}
+	else{
+		console.log(error);
+		res.sendStatus(500);
 	}
 });
 
@@ -916,17 +921,36 @@ app.post('/new', function(req, res){
 	//copy req.body object to payload
 	var payload = req.body;
 
-	function checkPayload(postInput){
-		var requriredFields = ["doctype", "name", "force", "pic", "diagram", "author", "context", "problem", "solution", "rationale", "evidence", "int_id"]
+	checkPayload(payload);
 
-		for (x in postInput){
-			if (x in requriredFields){
+	function checkPayload(postInput){
+		db.get('validationSchema', function(err, body){
+			if(!err){
+				var schema = body;
+				delete schema["_id"];
+				delete schema["_rev"];
+				delete schema['doctype'];
+
+				console.log(payload);
+
+				var valid = tv4.validate(JSON.stringify(payload), JSON.stringify(schema));
+
+				if (valid === true){
+					console.log("payload validates! "+valid);
+					res.send("OK!");
+					//go to wrangle next
+				}
+				else{
+					console.log("validation returned "+valid);
+				}
 
 			}
-
-		}
+		});
 	}
 
+	function wranglePayload(input){
+		//code to split POST here
+	}
 	//check to see if object converts to valid JSON
 //	var check = JSON.stringify(payload);
 //		if (validator.isJSON(check)){
@@ -948,6 +972,10 @@ app.post('/new', function(req, res){
 //		console.log("doesnt appear to be proper JSON or a newpattern doc");
 //		res.sendStatus(400);
 //	} 
+	function goToError(err){
+		console.log(err);
+		res.SendStatus(500);
+	}
 });
 
 

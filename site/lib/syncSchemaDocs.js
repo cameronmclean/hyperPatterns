@@ -43,43 +43,47 @@ var newPatternSchema = {
 var validationSchema = {
 	"_id": "validationSchema",
 	"doctype": "schema",
+	"$schema": "http://json-schema.org/schema#",
 	"title": "New pattern validation schema",
 	"type": "object",
-	"properties": {
-		"doctype":{
-			"type": "string"
+	"items": {
+		"type": "object",
+		"properties": {
+			"doctype":{
+				"type": "string"
+			},
+			"name": {
+				"type": "string"
+			},
+			"pic": {
+				"type": "object"
+			},
+			"author": {
+				"type": "array"
+			},
+			"context": {
+				"type": "string"
+			},
+			"problem": {
+				"type": "string"
+			},
+			"force": {
+				"type": "array"
+			},
+			"solution": {
+				"type": "string"
+			},
+			"rationale": {
+				"type": "string"
+			},
+			"diagram": {
+				"type": "object"
+			},
+			"evidence": {
+				"type": "array"
+			}
 		},
-		"name": {
-			"type": "string"
-		},
-		"pic": {
-			"type": "object"
-		},
-		"author": {
-			"type": "array"
-		},
-		"context": {
-			"type": "string"
-		},
-		"problem": {
-			"type": "string"
-		},
-		"force": {
-			"type": "array"
-		},
-		"solution": {
-			"type": "string"
-		},
-		"rationale": {
-			"type": "string"
-		},
-		"diagram": {
-			"type": "object"
-		},
-		"evidence": {
-			"type": "array"
-		}
-		
+		"required": ["doctype", "name", "pic", "author", "context", "problem", "force", "solution", "rationale", "diagram", "evidence"]
 	}
 };
 
