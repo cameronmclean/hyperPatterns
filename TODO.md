@@ -133,3 +133,10 @@ test POSTing garbage to make sure it's handled properly - implement error handli
 fix tv4 validation of PSOTed JSON - something is wrong with schema or function
 and json is validating....
 
+implement GET and POST on /prototype/:num 
+
+redo namespace, API URLs (which are also patter URIs)
+AND think of good unique ID - couchdb ID? revsion_int+\_id?
+
+Add rdf:label to JSON-LD representations
+

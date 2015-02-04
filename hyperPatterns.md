@@ -679,4 +679,9 @@ Note - we have settled here on a incrementing integer scheme to identify pattern
 The main reason for this nameing scheme was to facilitate human understanding of the URIs, we dont anticipate many patterns, concurrent users, etc. Of course we know many decisions in what we are buldign here probably wont work well inthe real world.
 This is a consequence of my "flying by the seat of my pants" - learning web programming concurrently as we build our representation framework...
 
+#####20150205
 
+OK - so realistion. URIs, URLs, . My inital URI scheme for pattern concepts was tied up with the URL scheme for the API.
+This was causing headaches and confusion.
+eg - /patterns/:num/force/:num is a great URL scheme for an API.
+But its a bad URI scheme for linked data. We should separate the individual pattern concepts out from the hierarchial pattern URL(URI) - instead of encoding implciit semantics in the URI/L use opaque strings for the URIs (which also happen to be http URLs), and have the linkages explicitly encoded in the representations i.e JSON-LD.
