@@ -9,6 +9,7 @@ var _ = require('underscore');
 var fs = require('fs');
 var bibtexParse = require('bibtex-parser-js');
 var validator = require('validator');
+var tv4 = require('tv4');
 
 var app = express();
 
@@ -914,6 +915,17 @@ app.post('/new', function(req, res){
 
 	//copy req.body object to payload
 	var payload = req.body;
+
+	function checkPayload(postInput){
+		var requriredFields = ["doctype", "name", "force", "pic", "diagram", "author", "context", "problem", "solution", "rationale", "evidence", "int_id"]
+
+		for (x in postInput){
+			if (x in requriredFields){
+
+			}
+
+		}
+	}
 
 	//check to see if object converts to valid JSON
 //	var check = JSON.stringify(payload);
