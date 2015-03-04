@@ -107,11 +107,13 @@ TODO
 
 /contributors							GET - return list of authors
 
-/prototype								GET - return a list of all protopatterns
+/prototype								GET - return a list of all protopatterns (most recent)
 
 /prototype/:num							GET - return latest version of prototype
 
 /prototype/:num							POST - save new doc with revision+1
+
+/publish 								POST - push prototype to stable linked-data form
 
 
 /publish 								POST - accepts a doctype: protopattern JSON - splits and wrangles, persists to db as final docs - now .
@@ -121,3 +123,13 @@ prototype/:num							GET - return a populated template/object for editing // not
 
 how to handle "publishing" ?? set flag published = true/fase - determines namespace it is visible under the API (and hence how it is served - as linked data or not...)?
 Add a conditional in dbviews if (doc.published === true) etc.
+
+
+-------------
+
+OKOKOK
+
+The new new URI naming strategy
+
+We distingiush between the conceptual entities that patterns descibe (including the name of the pattern as a whole), and the documents that describe these entites. We also provide URIs for _sets_ of pattern concepts or documents that follow the URI pattern.
+

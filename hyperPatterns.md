@@ -653,7 +653,7 @@ implemented basic/generic express error handling
 declaring
 ```javascript
 app.use(function (error, req, res, next){
-	if ( error === 'invalid json') {
+	if ( error.message === 'invalid json') {
 	res.sendStatus(400);
 	}
 });
@@ -685,3 +685,37 @@ OK - so realistion. URIs, URLs, . My inital URI scheme for pattern concepts was 
 This was causing headaches and confusion.
 eg - /patterns/:num/force/:num is a great URL scheme for an API.
 But its a bad URI scheme for linked data. We should separate the individual pattern concepts out from the hierarchial pattern URL(URI) - instead of encoding implciit semantics in the URI/L use opaque strings for the URIs (which also happen to be http URLs), and have the linkages explicitly encoded in the representations i.e JSON-LD.
+Use rdf:label too to help with extracting human readable info.
+
+ALSO - i need to revist cool URIs for the semantic web - I have been overloading my URIs - to refer to both concepts and documents about the concept. re-read, get it straigt and design a proper URI stratege for the API/docs and the concepts. Map it out, and fix the implementation...
+
+So - we need to distinguish between informational and non-informational resources - our design patterns are firstmost informational resources - i.e. documents that dsecribe things in the world, but simultaneously, we wish to extract from these docuemtns, the useful concepts and real-world things the pattern docuemnts talk about, and denote these with unique identfiers, so we can talk about and make assertions with these concepts (not the documetns that describe them) on the web. Thus, publishing a design pattern via our API results in the creation of a number of new URIs - both informational and non-informational. 
+As per the cool URIs for the Semantic Web - we adopt a 303 redirect strategy when requests are made to non-informational resources, and forward the client to a JSON-LD representation (doc) that describes the resource, and maintain explict links between the URIs.
+
+list 
+
+	Non-informational (cenceptual)		Informational
+	/pattern/:id 						/jsonld/pattern/:id
+	/pattern/:id/force/id 				/jsonld/pattern/:id/force/:id
+
+and give example - e.g. bob tries to do x, gets y etc...
+
+NOTE - under this scheme, the '@id's in my JSON-LDs should be the non-informational resouce URIs,
+
+Also - the missing reference I couldn't find for ages  - http://ceur-ws.org/Vol-929/paper10.pdf
+what we are trying to do here has many parallels to building ontologies using re-engineering patterns - or rather we are combining modes of transformation here - population, t-box, a-box. The APIservice and /publish function effectively achieves 
+1) initial creation of a protopattern (an 'non-ontological' at this stage from a semweb point of view)
+2) the population of the pattern ontology - we assert new instances of Patters and force classes
+3) a/t box transformation - named forces become subclasses of Pattern:Force - themselves ontologial resources.
+4) the subsequent publishing of all these.
+
+#####20150303
+
+OK - slooowly getting back to making this hyperPatterns API thing.
+
+1st thing - revisiting the lab pattern ontology.
+In trying to draw it, I realised some n00b mistakes.
+Between various ideas about what should be a object or literal etc.. I had failed to distingusish in my mind the difference between class > individual > literal and mixed up ObjectProperty and DataTypeProperty
+http://stackoverflow.com/questions/17724983/how-can-i-recognize-object-properties-vs-datatype-properties
+sooo.... redrawing in cmap the upper pattern ontology (classes), individuals (patterns), and literal data....
+thn go back and 

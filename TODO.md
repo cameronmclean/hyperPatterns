@@ -138,5 +138,9 @@ implement GET and POST on /prototype/:num
 redo namespace, API URLs (which are also patter URIs)
 AND think of good unique ID - couchdb ID? revsion_int+\_id?
 
-Add rdf:label to JSON-LD representations
+Add rdf:label to JSON-LD representations for each of the "@id"s
+* also ensure the "@id"s map to the proper URI schema 
+- eg /ontology/.. or /resource/...
 
+craft the routes for /ontology and /resource
+note /ontology anything should 303 to /resource..xy/..z
