@@ -39,7 +39,7 @@ var contributorContex = {
 	"_id": "contributor",
 	"doctype": "context",
 	"@context": {
-	"ORCID": { "@id": "http://purl.org/spar/scoro/hasORCID",
+	"ORCID": { "@id": "http://vivoweb.org/ontology/core#orcidId",
 			   "@type": "@id"
 			 },
 	"authorName": "http://xmlns.com/foaf/0.1/name"
