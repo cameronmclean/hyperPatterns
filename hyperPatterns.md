@@ -719,3 +719,34 @@ Between various ideas about what should be a object or literal etc.. I had faile
 http://stackoverflow.com/questions/17724983/how-can-i-recognize-object-properties-vs-datatype-properties
 sooo.... redrawing in cmap the upper pattern ontology (classes), individuals (patterns), and literal data....
 thn go back and 
+
+#####20150310
+
+Ayyyyyy! So - tidied up pattern ontology - now at a stable v0.3.
+Four classes
+-DesignPattern
+-Reference
+-Force
+-Contributor
+
+One ObjectProperty
+-hasForce
+
+Four DatatypeProperties
+-hasContext
+-hasSolution
+-hasRationale
+-hasProblem
+
+. wrote it as a hash URI scheme in .ttl
+. used any23 (web) to transform to xml/rdf
+. hosted it on gh-pages branch of github
+. created a PURL www.purl.org/NET/labpatterns
+to do a 303 see also redirect to point to the rdf/xml
+. a curl GET -v shows that the content type is correctly served, and gh accepts \*/* so all good.
+.labpattern ontology is now live on the web - woohoo!
+
+now to write up in chap4, get node.js URIs, routes, @context up to date...
+
+Bueno!
+
