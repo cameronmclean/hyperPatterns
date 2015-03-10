@@ -53,11 +53,11 @@ var patternContext = {
 	"doctype": "context",
 	"@context": {
 	"name": "http://schema.org/name",
-	"context": "http://purl/ontology/lp#hasContext",
-	"problem": "http://purl/ontology/lp#hasProblem",
-	"force": "http://purl/ontology/lp#hasForce",
-	"solution": "http://purl/ontology/lp#hasSolution",
-	"rationale": "http://purl/ontology/lp#hasRationale",
+	"context": "http://purl/NET/labpatterns#hasContext",
+	"problem": "http://purl/NET/labpatterns#hasProblem",
+	"force": "http://purl/NET/labpatterns#hasForce",
+	"solution": "http://NET/labpatterns#hasSolution",
+	"rationale": "http://NET/labpatterns#hasRationale",
 	"diagram": {"@id": "http://schema.org/image",
 		"@type": "@id"
 	    },
