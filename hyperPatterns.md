@@ -740,11 +740,10 @@ Four DatatypeProperties
 
 . wrote it as a hash URI scheme in .ttl
 . used any23 (web) to transform to xml/rdf
-. hosted it on gh-pages branch of github
-. created a PURL www.purl.org/NET/labpatterns
-to do a 303 see also redirect to point to the rdf/xml
-. a curl GET -v shows that the content type is correctly served, and gh accepts \*/* so all good.
-.labpattern ontology is now live on the web - woohoo!
+. hosted rdf/xml on a gh-pages branch of github - http://cameronmclean.github.io/pattern-ontology/pattern-ontology.rdf
+. created a PURL www.purl.org/NET/labpatterns to do a 303 "see also" redirect to point to the rdf/xml above.
+. a curl GET -v shows that the content type is correctly served as application/rdf+xml , and gh accepts \*/* so all good.
+. labpattern ontology is now live on the web - woohoo!
 
 now to write up in chap4, get node.js URIs, routes, @context up to date...
 
