@@ -65,6 +65,13 @@ app.get('/id/pattern/:pid/force/:fid', function(req,res){
 	res.end();
 });
 
+app.get('/id/pattern/:pid/ref/:rid', function(req, res){
+	res.writeHead(303, {
+		'Location': 'http://127.0.0.1:3000/doc/pattern/'+req.params.pid+'/ref/'+req.params.rid
+	});
+	res.end();
+});
+
 app.get('/id/contributor/:cid', function(req, res){
 	res.writeHead(303, {
 		'Location': 'http://127.0.0.1:3000/doc/contributor/'+req.params.cid
@@ -195,7 +202,7 @@ app.post('/patterns/contributor', function(req, res){
 
 //**********************************************************************************
 
-app.get('/patterns/:pNum/evidence/:eNum', function(req, res){
+app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 	//check that pNum and eNum are numbers - save dblookup if its garbage
 	if (isNaN(req.params.pNum) || isNaN(req.params.eNum)){
 	 goToError();

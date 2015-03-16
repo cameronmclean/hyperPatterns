@@ -146,6 +146,8 @@ Add rdf:label to JSON-LD representations for each of the "@id"s
 craft the routes for /id and /doc
 note /id anything should 303 to /doc..xy/..z
 
-add partOf relation to indiv force representations in JSON-LD
+add partOf relation to indiv force and reference representations in JSON-LD
 
+add list of patterns that a contributor made when getting a contributor doc
 
+update URIs for images and pictograms - doc namespace?
