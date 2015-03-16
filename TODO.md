@@ -1,6 +1,7 @@
 ##TODO
 
 ####Task/reseach topic																DONE?
+
 how to template POSTs for JSON(-LD)
 
 fill out design sheet
@@ -140,7 +141,11 @@ AND think of good unique ID - couchdb ID? revsion_int+\_id?
 
 Add rdf:label to JSON-LD representations for each of the "@id"s
 * also ensure the "@id"s map to the proper URI schema 
-- eg /ontology/.. or /resource/...
+- eg /id/.. or /doc/...
 
-craft the routes for /ontology and /resource
-note /ontology anything should 303 to /resource..xy/..z
+craft the routes for /id and /doc
+note /id anything should 303 to /doc..xy/..z
+
+add partOf relation to indiv force representations in JSON-LD
+
+

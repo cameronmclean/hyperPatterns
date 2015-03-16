@@ -45,7 +45,43 @@ var server = app.listen(3000, function() {
 //routes
 //*******************************************************************************
 
-app.get('/patterns/contributor/:orcid', function(req, res){
+
+//*************************************
+//* Redirects for conceptal resources *
+//*************************************
+
+// sets up the 303 redirect if folks try to dereference the pattern concept.
+app.get('/id/pattern/:pid', function(req, res){
+	res.writeHead(303, {
+		'Location': 'http://127.0.0.1:3000/doc/pattern/'+req.params.pid
+	});
+	res.end();
+});
+
+app.get('/id/pattern/:pid/force/:fid', function(req,res){
+	res.writeHead(303, {
+		'Location': 'http://127.0.0.1:3000/doc/pattern/'+req.params.pid+'/force/'+req.params.fid
+	});
+	res.end();
+});
+
+app.get('/id/contributor/:cid', function(req, res){
+	res.writeHead(303, {
+		'Location': 'http://127.0.0.1:3000/doc/contributor/'+req.params.cid
+	});
+	res.end();
+});
+
+
+//app.get('/doc/patterns/:pid', function(req, res){
+//	res.send("redirected to pattern doc resource"+req.params.pid);
+//});
+
+//***************************
+//* Informational resources *
+//***************************
+
+app.get('/doc/contributor/:orcid', function(req, res){
 	
 	var docID = req.params.orcid;
 	
@@ -138,6 +174,8 @@ app.get('/patterns/contributor/:orcid', function(req, res){
 
 
 //*******************************************************************************
+
+// note this is temp / for testing - we dont need to implement a POST to /contribitor.
 
 app.post('/patterns/contributor', function(req, res){
 	
@@ -290,7 +328,7 @@ app.get('/patterns/:pNum/evidence/:eNum', function(req, res){
 
 //**********************************************************************************
 
-app.get('/patterns/:pNum/force/:fNum', function(req, res){
+app.get('/doc/pattern/:pNum/force/:fNum', function(req, res){
 	//check that pNum and fNum are numbers - save dblookup if its garbage
 	if (isNaN(req.params.pNum) || isNaN(req.params.fNum)){
 	 goToError();
@@ -427,7 +465,7 @@ app.get('/patterns/:pNum/force/:fNum', function(req, res){
 
 //**********************************************************************************
 
-app.get('/patterns/:intID', function(req, res){
+app.get('/doc/pattern/:intID', function(req, res){
 	
 	//check that intID is a number - save dblookup if its garbage
 	if (isNaN(req.params.intID)){
