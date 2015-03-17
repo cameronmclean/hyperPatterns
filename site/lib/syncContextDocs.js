@@ -32,7 +32,7 @@ var bibTEXContext = {
 	"volume": "http://sw-portal.deri.org/ontologies/swportal#isVolume",
 	"year": "http://purl.org/spar/fabio/hasPublicationYear",
 	"partOf": { "@id": "http://purl.org/dc/terms/isPartOf",
-		"type": "@id"
+		"@type": "@id"
 	    }
 	}
 };
@@ -83,7 +83,7 @@ var forceContext = {
 	"@type": "@id"
 	 	},
 	"partOf": { "@id": "http://purl.org/dc/terms/isPartOf",
-	"type": "@id"
+	"@type": "@id"
 	    }
 	}
 };

@@ -452,7 +452,7 @@ app.get('/doc/pattern/:pNum/force/:fNum', function(req, res){
 			match['@context'] = body['@context'];
 			match['@id'] = 'http://labpatterns.org/id/pattern/'+pNum+"/force/"+fNum; // <--------- we add @id of resource to the JSONLD here
 			match['@type'] = 'http://purl.org/NET/labpatterns#Force'; //<----------- and declare that this resource is type Force
-			match['partOf'] = 'http:labpatterns.org/id/pattern/'+pNum;
+			match['partOf'] = 'http://labpatterns.org/id/pattern/'+pNum;
 			progress++
 			//console.log('progress from addContext = '+progress);
 			//if forceDoc content already done
