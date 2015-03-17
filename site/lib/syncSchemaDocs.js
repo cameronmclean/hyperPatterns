@@ -36,10 +36,11 @@ var newPatternSchema = {
 		"b64encoding": "",
 		"filename": ""
 	},
-	"evidence": [ ""
+	"evidence": [ {}
 	],
 };
 
+//schema for vaidating POST to new or PUT to /prototype
 var validationSchema = {
 	"_id": "newPatternValidationSchema",
 	"doctype": "schema",
