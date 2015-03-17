@@ -753,3 +753,7 @@ Bueno!
 
 updated routes in hp.js to match chapter 4 URI scheme.
 Still twiddling about how to deal with images and pictogram URIs+namespaces, and in general the use of /id or /doc in linked data when referring to concepts.
+
+Added in a quick link back for representations of single forces or reference - used dcterms isPartOf to point to the parent pattern.
+These feilds are added at runtime, hardcoded in hte node.js app.get routes.
+Didnt implement the same link backs in a whole pattern representation - thye are aleady connected and I didn't want loops 

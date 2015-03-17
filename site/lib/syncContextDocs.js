@@ -13,7 +13,7 @@ var bibTEXContext = {
 	"@context": {
 	"address": "http://purl.org/net/nknouf/ns/bibtex#hasAddress",
 	"author": "http://purl.org/dc/terms/creator",
-	"booktitle": "http://purl.org/dc/terms/title",
+	"booktitle": "http://purl.org/net/nknouf/ns/bibtex#hasBookTitle",
 	"chapter": "http://purl.org/ontology/bibo/chapter",
 	"doi": "http://purl.org/ontology/bibo/doi",
 	"edition": "http://purl.org/ontology/bibo/edition",
