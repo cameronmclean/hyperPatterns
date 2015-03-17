@@ -31,7 +31,9 @@ var bibTEXContext = {
 		},
 	"volume": "http://sw-portal.deri.org/ontologies/swportal#isVolume",
 	"year": "http://purl.org/spar/fabio/hasPublicationYear",
-	"partOf": "http://purl.org/dc/terms/isPartOf"
+	"partOf": { "@id": "http://purl.org/dc/terms/isPartOf",
+		"type": "@id"
+	    }
 	}
 };
 
@@ -78,9 +80,11 @@ var forceContext = {
 	"forceName": "http://schema.org/name",
 	"description": "http://purl.org/dc/terms/description",
 	"pic": {"@id": "http://xmlns.com/foaf/0.1/depiction",
-	"@type": "@id",
-	"partOf": "http://purl.org/dc/terms/isPartOf"
-	 	}
+	"@type": "@id"
+	 	},
+	"partOf": { "@id": "http://purl.org/dc/terms/isPartOf",
+	"type": "@id"
+	    }
 	}
 };
 
