@@ -749,4 +749,7 @@ now to write up in chap4, get node.js URIs, routes, @context up to date...
 
 Bueno!
 
+######20150317
 
+updated routes in hp.js to match chapter 4 URI scheme.
+Still twiddling about how to deal with images and pictogram URIs+namespaces, and in general the use of /id or /doc in linked data when referring to concepts.

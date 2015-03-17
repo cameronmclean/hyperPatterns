@@ -316,6 +316,7 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 			match['@context'] = body['@context'];
 			match['@id'] = 'http://labpatterns.org/id/pattern/'+pNum+"/ref/"+eNum; // <--------- we add @id of resource to the JSONLD here
 			match['@type'] = 'http://purl.org/NET/labpatterns#Reference'; //<----------- and declare that this resource is type Reference
+			match['partOf'] = 'http://labpatterns.org/id/pattern/'+pNum;
 			progress++
 			//console.log('progress from addContext = '+progress);
 			//if forceDoc content already done
@@ -451,6 +452,7 @@ app.get('/doc/pattern/:pNum/force/:fNum', function(req, res){
 			match['@context'] = body['@context'];
 			match['@id'] = 'http://labpatterns.org/id/pattern/'+pNum+"/force/"+fNum; // <--------- we add @id of resource to the JSONLD here
 			match['@type'] = 'http://purl.org/NET/labpatterns#Force'; //<----------- and declare that this resource is type Force
+			match['partOf'] = 'http:labpatterns.org/id/pattern/'+pNum;
 			progress++
 			//console.log('progress from addContext = '+progress);
 			//if forceDoc content already done
@@ -544,6 +546,7 @@ app.get('/doc/pattern/:intID', function(req, res){
 				if(!err){
 				body['@id'] = "http://labpatterns.org/id/pattern/"+intID+"/force/"+body.int_id;
 				body['@type'] = "http://purl.org/NET/labpatterns#Force";
+				//body['partOf'] = "http://labpatterns.org/id/pattern/"+intID;
 				delete body['_id'];
 				delete body['_rev'];
 				delete body['doctype'];
@@ -611,6 +614,7 @@ app.get('/doc/pattern/:intID', function(req, res){
 				if(!err){
 					body['@id'] = "http://labpatterns.org/id/pattern/"+intID+"/ref/"+body.int_id;
 					body['@type'] = "http://purl.org/NET/labpatterns#Reference";
+					//body['partOf'] = "http://labpatterns.org/pattern"+intID;
 					delete body['_id'];
 					delete body['_rev'];
 					delete body['int_id'];
@@ -674,7 +678,7 @@ app.get('/doc/pattern/:intID', function(req, res){
 
 //************************************************************
 
-app.get('/patterns/:intID/:img', function(req, res){
+app.get('/doc/pattern/:intID/:img', function(req, res){
 
 	var intID = req.params.intID;
 	var img = req.params.img;
@@ -746,7 +750,7 @@ app.get('/patterns/:intID/:img', function(req, res){
 
 //************************************************************
 
-app.get('/patterns/:intID/diagram/:img', function(req, res){
+app.get('/doc/pattern/:intID/diagram/:img', function(req, res){
 
 	var intID = req.params.intID;
 	var img = req.params.img;
@@ -818,7 +822,7 @@ app.get('/patterns/:intID/diagram/:img', function(req, res){
 
 //**********************************************************************************
 
-app.get('/patterns/:pNum/force/:fNum/:img', function(req, res){
+app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 	var pNum = req.params.pNum;
 	var fNum = req.params.fNum;
 	var img = req.params.img;

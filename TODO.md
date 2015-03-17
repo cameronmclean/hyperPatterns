@@ -151,3 +151,6 @@ add partOf relation to indiv force and reference representations in JSON-LD
 add list of patterns that a contributor made when getting a contributor doc
 
 update URIs for images and pictograms - doc namespace?
+How to add and specify images in linked data - at publication time - save the appropriate fields with URIs?
+
+
