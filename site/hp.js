@@ -131,7 +131,7 @@ app.get('/doc/contributor/:orcid', function(req, res){
 		}
 
 		// add subject to JSON-LD - prevent top level blank node
-		doc['@id'] = "http://patterns.org/contributor/"+docID;
+		doc['@id'] = "http://labpatterns.org/id/contributor/"+docID;
 		doc['@type'] = "http://purl.org/NET/labpatterns#Contributor";
 
 		// then remove the db specific fields
@@ -314,7 +314,7 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 	function addContext(match){
 		db.get('bibTEX', function(err, body){
 			match['@context'] = body['@context'];
-			match['@id'] = 'http://patterns/'+pNum+"/evidence/"+eNum; // <--------- we add @id of resource to the JSONLD here
+			match['@id'] = 'http://labpatterns.org/id/pattern/'+pNum+"/ref/"+eNum; // <--------- we add @id of resource to the JSONLD here
 			match['@type'] = 'http://purl.org/NET/labpatterns#Reference'; //<----------- and declare that this resource is type Reference
 			progress++
 			//console.log('progress from addContext = '+progress);
@@ -449,7 +449,7 @@ app.get('/doc/pattern/:pNum/force/:fNum', function(req, res){
 	function addContext(match){
 		db.get('force', function(err, body){
 			match['@context'] = body['@context'];
-			match['@id'] = 'http://patterns/'+pNum+"/force/"+fNum; // <--------- we add @id of resource to the JSONLD here
+			match['@id'] = 'http://labpatterns.org/id/pattern/'+pNum+"/force/"+fNum; // <--------- we add @id of resource to the JSONLD here
 			match['@type'] = 'http://purl.org/NET/labpatterns#Force'; //<----------- and declare that this resource is type Force
 			progress++
 			//console.log('progress from addContext = '+progress);
@@ -542,7 +542,7 @@ app.get('/doc/pattern/:intID', function(req, res){
 		async.each(listOfForceDocs, function(force, callback){
 			db.get(force, function(err, body){
 				if(!err){
-				body['@id'] = "http://patterns.org/patterns/"+intID+"/force/"+body.int_id;
+				body['@id'] = "http://labpatterns.org/id/pattern/"+intID+"/force/"+body.int_id;
 				body['@type'] = "http://purl.org/NET/labpatterns#Force";
 				delete body['_id'];
 				delete body['_rev'];
@@ -577,7 +577,7 @@ app.get('/doc/pattern/:intID', function(req, res){
 		async.each(listOfContributors, function(contrib, callback){
 			db.get(contrib, function(err, body){
 				if(!err){
-					body['@id'] = "http://patterns.org/patterns/contributor/"+body.ORCID.slice(-19);
+					body['@id'] = "http://labpatterns.org/id/contributor/"+body.ORCID.slice(-19);
 					body["@type"] = "http://purl.org/NET/labpatterns#Contributor";
 					delete body['_id'];
 					delete body['_rev'];
@@ -609,7 +609,7 @@ app.get('/doc/pattern/:intID', function(req, res){
 		async.each(listOfReferences, function(ref, callback){
 			db.get(ref, function(err, body){
 				if(!err){
-					body['@id'] = "http://patterns.org/patterns/"+intID+"/evidence/"+body.int_id;
+					body['@id'] = "http://labpatterns.org/id/pattern/"+intID+"/ref/"+body.int_id;
 					body['@type'] = "http://purl.org/NET/labpatterns#Reference";
 					delete body['_id'];
 					delete body['_rev'];
@@ -648,7 +648,7 @@ app.get('/doc/pattern/:intID', function(req, res){
 		 function(err){
 		 	if(!err){
 		 		docToSend['@context'] = contextDetails;
-		 		docToSend['@id'] = "http://patterns.org/patterns/"+intID;
+		 		docToSend['@id'] = "http://labpatterns.org/id/pattern/"+intID;
 		 		docToSend['@type'] = "http://purl.org/NET/labpatterns#DesignPattern";
 		 		delete docToSend['_id'];
 		 		delete docToSend['_rev'];
