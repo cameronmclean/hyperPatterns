@@ -763,3 +763,42 @@ A GET to /new would give the _alpaca_ schema for web forms, and the client would
 
 ok - kinda got it working - just need to sort out CORS for testing.
 Wont be a problem on real server becase requests will be made to the same origin...
+
+#####20150319
+
+OK - so alpaca forms are both great and not so great.
+I can probably get them working - but the documentation is shit and it works in hacky/weird way.
+for example - just spent an hour trying to render a upload file button.
+instead of having a direct "schema": like so
+
+```
+ "pic": {
+ 	"type": "file"
+}
+```
+
+we need to specify in an "options" and then in "schema"
+
+```
+{
+	"options": {
+		"fields": {
+			"pic": {
+				"type": "file"
+		}
+	 }
+   },
+   "schema": {
+   		...
+   		"pic": {
+   			"type": "string",
+   			"format": "uri"
+   	    }
+   }
+}
+```
+
+makes absolutely no sense, but it seems to work.
+lets hope alpaca hangs around long enough to get through...
+i should defo figure out how to do the local build from source so I can serve/rely on my own copy of bootstrap, css, js, everything...
+

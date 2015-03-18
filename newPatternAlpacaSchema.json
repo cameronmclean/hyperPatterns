@@ -1,0 +1,46 @@
+{
+"options":{
+	"fields": {
+		"pic": {
+			"type": "file",
+			"label": "Pictogram",
+			"helper": "Upload a pictogram to represent this pattern."
+		}
+	}
+ },
+"schema": {
+	"title": "Enter a new Design Pattern",
+	"description": "New Pattern Form",
+	"type": "object",
+	"properties": {
+		"name": {
+			"title": "Name",
+			"description": "Enter the name of this pattern.",
+			"type": "string",
+			"required": true
+		},
+		"author": {
+			"title": "Authors",
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"title": "Name",
+						"type": "string"
+					},
+					"orcid": {
+						"title": "ORCID",
+						"type": "string"
+					}
+				}
+			}
+		},
+		"pic": {
+			"type": "string",
+			"format": "uri"
+
+		}
+   }	
+ }
+}
