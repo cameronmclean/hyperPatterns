@@ -10,6 +10,7 @@ var fs = require('fs');
 var bibtexParse = require('bibtex-parser-js');
 var validator = require('validator');
 var tv4 = require('tv4');
+var cors = require('cors');
 
 var app = express();
 
@@ -20,6 +21,9 @@ var db = nano.use('patterns');
 
 //we need this to parse and retreive the POST .body text
 app.use(bodyParser.json());
+
+//enable CORS on all routes
+app.use(cors());
 
 //handle errors if we POST bad json... ie. body-parser returns Error: invalid json
 app.use(function (error, req, res, next){
@@ -32,6 +36,7 @@ app.use(function (error, req, res, next){
 		res.sendStatus(500);
 	}
 });
+
 
 var server = app.listen(3000, function() {
 	var host = server.address().address;
@@ -947,12 +952,14 @@ app.get('/new', function(req, res){
 
 	//get the new/blank schema from the db, change a few fields and send.
 	//note = changes to the template 'patternSchema' doc are set in the helper script syncSchemaDocs.js
-	db.get('patternSchema', function(err, body){
+	db.get('alpaca', function(err, body){
 		if (!err) {
 			delete body['_id'];
 			delete body['_rev'];
-			body['doctype'] = 'newpattern';
+			//body['doctype'] = 'newpattern';
+
 			res.send(body);
+			
 		}
 		else
 		{
@@ -960,6 +967,8 @@ app.get('/new', function(req, res){
 		}
 	});
 });
+
+
 
 //*********************************************
 app.post('/new', function(req, res){

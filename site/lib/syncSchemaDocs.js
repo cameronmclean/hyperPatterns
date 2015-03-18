@@ -39,6 +39,23 @@ var newPatternSchema = {
 	"evidence": [ {}
 	],
 };
+var alpaca = {
+	"_id": "alpaca",
+	"schema": {
+		"title": "Create a new Pattern!",
+		"type": "object",
+		"properties": {
+ 			"title": {
+				"type": "string",
+				"title": "Title"
+			},
+		"image": {
+			"type": "string",
+			"title": "Select an image to upload..."
+ 			}
+        }
+     }
+ };
 
 //schema for vaidating POST to new or PUT to /prototype
 var validationSchema = {
@@ -90,7 +107,7 @@ var validationSchema = {
 
 
 
-var schemaDocs = [newPatternSchema, validationSchema];
+var schemaDocs = [newPatternSchema, validationSchema, alpaca];
 
 //note this function uses an Immediately Invoked Function expression to 
 // allow async call-back funtions to close properly within the 

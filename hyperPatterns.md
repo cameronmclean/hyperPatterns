@@ -757,3 +757,9 @@ Still twiddling about how to deal with images and pictogram URIs+namespaces, and
 Added in a quick link back for representations of single forces or reference - used dcterms isPartOf to point to the parent pattern.
 These feilds are added at runtime, hardcoded in hte node.js app.get routes.
 Didnt implement the same link backs in a whole pattern representation - thye are aleady connected and I didn't want loops 
+
+looking alpaca to render forms for new patterns on the client - this could replce the newPatternSchema to an alpacaSchema.
+A GET to /new would give the _alpaca_ schema for web forms, and the client would wrangle it back into an appropriate JSON for valiation on the server. 
+
+ok - kinda got it working - just need to sort out CORS for testing.
+Wont be a problem on real server becase requests will be made to the same origin...
