@@ -802,3 +802,20 @@ makes absolutely no sense, but it seems to work.
 lets hope alpaca hangs around long enough to get through...
 i should defo figure out how to do the local build from source so I can serve/rely on my own copy of bootstrap, css, js, everything...
 
+
+OK - sooo populating an alpaca form is pretty simple - just give `$("#form").alpaca();` a JSON with
+```
+{
+	"dataSource": {..."field": value(s)},
+	"options": {...},
+	"schema": {}
+} 
+```
+etc...
+
+Ohhh - I get why the file thing was tricky now - the "schema": part must conform to official JSON schema.
+In "options" we specify the HTML5 etc flavour of what we need that field to be...
+
+also http://json-schema.org/implementations.html has useful info.
+I could try other valiators and front end forms/widgets if alpaca ends up being too difficult.
+https://github.com/jdorn/json-editor in particular might be more lightweight?

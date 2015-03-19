@@ -5,8 +5,63 @@
 			"type": "file",
 			"label": "Pictogram",
 			"helper": "Upload a pictogram to represent this pattern."
+		},
+		"context": {
+			"type": "textarea",
+			"placeholder": "Describe the context for this pattern. What is the situation in which this pattern occurs?",
+			"rows": 6
+		},
+		"problem": {
+			"type": "textarea",
+			"placeholder": "A concise description of the problem this pattern addresses. Define the problem as a conflict of 'forces' that dominate the situation.",
+			"rows": 3
+		},
+		"forces": {
+			"fields": {
+				"item": {
+					"fields": {
+						"definition": {
+							"placeholder": "Describe this force as clearly and precisely as possible",
+							"rows": 2
+						},
+						"pic": {
+							"type": "file",
+							"label": "Pictogram",
+							"helper": "Upload a pictogram to represent this force."
+						}
+					}
+				}
+			}
+		},
+		"solution":{
+			"type": "textarea",
+			"placeholder": "Describe concisely how to balance the forces that create the problem.",
+			"rows": 3
+		},
+		"rationale": {
+			"type": "textarea",
+			"placeholder": "Elaborate on the reasoning behind how the solution balances the 'forces'. Note theoretical or empirical support.",
+			"rows": 6
+		},
+		"diagram": {
+			"type": "file",
+			"label": "Diagram",
+			"helper": "Upload a diagram that summarises the forces and their interactions involved in this pattern."
+		},
+		"ref": {
+			"fields": {
+				"item": {
+					"fields": {
+						"reference": {
+							"type": "textarea",
+							"placeholder": "Insert a reference in bibTeX format",
+							"rows": 6
+						}
+					}
+				}
+			}
 		}
-	}
+	}	
  },
 "schema": {
 	"title": "Enter a new Design Pattern",
@@ -40,6 +95,62 @@
 			"type": "string",
 			"format": "uri"
 
+		},
+		"context": {
+			"type": "textarea",
+			"format": "string",
+			"title": "Context"
+		},
+		"problem": {
+			"type": "textarea",
+			"format": "string",
+			"title": "Problem",
+		},
+		"forces": {
+			"title": "Forces",
+			"type": "array",
+			"items": {
+				"type": "object",
+				"properties": {
+					"name": {
+						"title": "Name",
+						"type": "string"
+					},
+					"definition": {
+						"title": "Definition",
+						"type": "string"
+					},
+					"pic": {
+						"type": "string",
+						"type": "uri"
+					}
+				}	
+			}
+		},
+		"solution": {
+			"type": "string",
+			"title": "Solution"
+		},
+		"rationale": {
+			"type": "string",
+			"title": "Support and rationale"
+		},
+		"diagram": {
+			"type": "string",
+			"format": "uri"
+		},
+		"ref": {
+			"type": "array",
+			"title": "Evidence",
+			"items": {
+				"type": "object",
+				"properties": {
+					"reference": {
+						"title": "Reference",
+						"type": "string"
+					}
+				}
+			}
 		}
    }	
  }
