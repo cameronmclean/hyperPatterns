@@ -819,3 +819,38 @@ In "options" we specify the HTML5 etc flavour of what we need that field to be..
 also http://json-schema.org/implementations.html has useful info.
 I could try other valiators and front end forms/widgets if alpaca ends up being too difficult.
 https://github.com/jdorn/json-editor in particular might be more lightweight?
+
+OK - so also built local version of the alpaca stuff /alpaca2/build has the bootstrap etc .css, .js files.
+but note, we also still need to load the following dependencies for alpaca in our HTML.
+although of course, we will now probably use jQuery 1.11.1 and bootstrap 3.3.2 for all our client stuff now - just to make it easy...
+
+```  
+<!-- jquery -->
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+     
+    <!-- bootstrap -->
+    <link type="text/css" rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
+    <script type="text/javascript" src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+     
+    <!-- handlebars -->
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/1.3.0/handlebars.js"></script>
+ ```
+
+So, also discovered httpbin.org - super useful for testing!
+Annnnd, submitting JSON with alpaca is really quite simple.
+to the "options": {} JSON add a 
+```
+"form":{
+		"attributes": {
+			"action": "http://httpbin.org/post",
+			"method": "post"
+		},
+		"buttons": {
+			"submit": {}
+		}
+```
+and voila - httbin.org/post lets us see the resulting POSTed JSON - can work from there...
+note - need to set method=POST and enctype=multiplart/form-data on the form?
+also, enc type is not set - set to UTF-8...
+
+Still, progress!

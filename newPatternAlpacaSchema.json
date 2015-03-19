@@ -1,5 +1,15 @@
 {
 "options":{
+	"form":{
+		"attributes": {
+			"action": "http://httpbin.org/post",
+			"method": "POST",
+			"enctype": "multipart/form-data"
+		},
+		"buttons": {
+			"submit": {}
+		}
+	},
 	"fields": {
 		"pic": {
 			"type": "file",
