@@ -881,3 +881,9 @@ WE do this by creating `/public` dir in the `/site` dir, and telling express to 
 
 I put an index.html in /public, so now, even without specifying a route in express, a GET request to 127.0.0.1:3000/ by defaut serves up this index.html.
 I'll build the jQuery web page app in index.html to handle the ajax calls and dynamic DOM manipualtion for interacting with patterns. 
+
+made a html dir, put in alpaca2.html which is the blank form page for creating a new pattern.
+used jQuery to link up a button click from index.html to load alpca.html into a `<div id='centerstage'>` within index.html.
+
+next is to make the submit button do an ajax post to /new
+AND note under the current plan, we dont need to do a GET to /new

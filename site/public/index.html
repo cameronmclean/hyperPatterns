@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 	<head>
-		  <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
      
     <!-- bootstrap -->
     <link type="text/css" rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" />
@@ -17,11 +17,14 @@
 	</head>
 	<body>
 		<p>Welcome to the world of patterns!</p>
-		<div id="newform"></div>
-		<button type="button" id='addnew'>Add a new pattern</button>
+		
+		<div id="centerstage">
+			<button type="button" id='addnew'>Add a new pattern</button>
+		</div>
+		
 		<script>
 			$('#addnew').click(function(){
-				$('#newform').load("./html/alpaca2.html");
+				$('#centerstage').load("./html/alpaca2.html");
 			});
 			</script>
 
