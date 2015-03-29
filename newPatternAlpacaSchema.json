@@ -7,7 +7,13 @@
 			"enctype": "multipart/form-data"
 		},
 		"buttons": {
-			"submit": {}
+			"submit": {
+				"click": function(){
+					var formdata = this.getValue();
+					console.log(formdata);
+					console.log(formdata[forces]);
+				}
+			}
 		}
 	},
 	"fields": {

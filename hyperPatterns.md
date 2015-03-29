@@ -854,3 +854,20 @@ note - need to set method=POST and enctype=multiplart/form-data on the form?
 also, enc type is not set - set to UTF-8...
 
 Still, progress!
+
+#####20150323
+
+OK - so handling file input in forms in an ajaxy/JOSNy way is a pain.
+In the interests of time, proabably stick to multipart/form-data format for POSTing to /new
+seeing as we GET a alpaca schema anyway, it doesnt really matter that it's not a JSON for posting - we are coupled to the alpaca front end.
+Will need to implement some logic on node.js to wrange the post into stucutres for storing into prototypes.
+might need a hidden field to keep track of patter/prototype ID when sending back and forth for editing.
+>https://github.com/mscdex/busboy   looks helpful
+
+so, need to ensure
+1) /new GET gives a alpaca schema
+2) /new POST receives multipart/form-data, which is then wranged into a prototype.
+3) /prototype/{id} - GETs a JSON
+4) /prototype/{id} POST receives multipart/form-data - we can check serverside that formID = urlID
+
+need to sort out - JSONparse vs busboy for the differnet routes - and how will I "publish?" - i.e set flag isPublished = true

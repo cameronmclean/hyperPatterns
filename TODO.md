@@ -144,7 +144,7 @@ Add rdf:label to JSON-LD representations for each of the "@id"s
 - eg /id/.. or /doc/...
 
 craft the routes for /id and /doc
-note /id anything should 303 to /doc..xy/..z
+note /id anything should 303 to /doc..xy/..z										YEP
 
 add partOf relation to indiv force and reference representations in JSON-LD
 

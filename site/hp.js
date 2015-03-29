@@ -979,7 +979,13 @@ app.post('/new', function(req, res){
 	//copy req.body object to payload
 	var payload = req.body;
 
-	checkPayload(payload);
+	console.log(Object.keys(payload));
+	for (var x in payload){
+		console.log(x);
+	}
+	res.send(payload);
+
+//	checkPayload(payload);
 
 	//validate payload against schema for newly sumbitted pattern
 	function checkPayload(postInput){
