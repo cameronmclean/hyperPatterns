@@ -2,7 +2,8 @@
 // trying to avoid other middleware / libraries that were causing toruble.
 
 
-var bodyParser = require('body-parser');
+//var bodyParser = require('body-parser');
+var busboy = require('busboy');
 var express = require('express');
 var async = require('async');
 var _ = require('underscore');
@@ -20,7 +21,11 @@ var db = nano.use('patterns');
 
 
 //we need this to parse and retreive the POST .body text
-app.use(bodyParser.json());
+// *** commented out here and above - using busboy multipart/form-data instead?
+
+//app.use(bodyParser.json());
+//app.use(busboy());
+
 
 //enable CORS on all routes
 app.use(cors());
@@ -976,6 +981,30 @@ app.get('/new', function(req, res){
 			res.sendStatus(500);
 		}
 	});
+});
+
+
+//********************
+app.post('/new2', function(req, res){
+	console.log("hey look, a form!");
+	
+	//create a new busboy object to stream the req object to
+	var form = new busboy({headers: req.headers});
+
+	//define the events to parse/action
+	form.on('file', function(fieldname, file, filename, encoding, mimetype){
+		console.log(filename+"****"+file);
+	});
+
+	//pipe the req to be processed
+	req.pipe(form);
+	
+	//pu this inside loop when done to say OK!
+	//NB - add call back to index jQuery to redirect/change/update DOM if we get 201.
+	res.writeHead('201', {
+		"Location": "http://127.0.0.1:3000/"
+	});
+	res.end();
 });
 
 

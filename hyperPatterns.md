@@ -887,3 +887,8 @@ used jQuery to link up a button click from index.html to load alpca.html into a 
 
 next is to make the submit button do an ajax post to /new
 AND note under the current plan, we dont need to do a GET to /new
+
+using /new2 to write test code to process POST of new pattern form.
+
+Installed `npm install --save busboy` and required() it, commented out body-parser.
+currently piping the POST req object into a new busboy object, ready for wranging and saving as JSON/alpaca data.
