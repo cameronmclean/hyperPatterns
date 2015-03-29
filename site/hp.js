@@ -25,6 +25,10 @@ app.use(bodyParser.json());
 //enable CORS on all routes
 app.use(cors());
 
+//look for static files under the /public dir
+app.use(express.static('public'));
+
+
 //handle errors if we POST bad json... ie. body-parser returns Error: invalid json
 app.use(function (error, req, res, next){
 	console.log("error called "+error);
@@ -85,9 +89,6 @@ app.get('/id/contributor/:cid', function(req, res){
 });
 
 
-//app.get('/doc/patterns/:pid', function(req, res){
-//	res.send("redirected to pattern doc resource"+req.params.pid);
-//});
 
 //***************************
 //* Informational resources *
@@ -945,7 +946,16 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 
 });
 
+//****************************************
+//* Routes for web front-end
 //*****************************************
+
+//app.get('/', function(req, res){
+//	res.sendFile(index.html)
+//});
+
+
+//********************************
 app.get('/new', function(req, res){
 
 	console.log("yay! someone is requesting a new pattern!");
@@ -963,7 +973,7 @@ app.get('/new', function(req, res){
 		}
 		else
 		{
-			res.sendStatus(404);
+			res.sendStatus(500);
 		}
 	});
 });

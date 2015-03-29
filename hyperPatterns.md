@@ -871,3 +871,13 @@ so, need to ensure
 4) /prototype/{id} POST receives multipart/form-data - we can check serverside that formID = urlID
 
 need to sort out - JSONparse vs busboy for the differnet routes - and how will I "publish?" - i.e set flag isPublished = true
+
+#####20150330
+
+So, still fiddling with alpaca forms - will go with multipart/form-data and alpaca scheama for sending back and forth between /new
+
+In order to start thinking about the front end - need to get express to serve normal or static html/js/css etc
+WE do this by creating `/public` dir in the `/site` dir, and telling express to serve anthing in or under the public dir by specifying `app.use(express.static('./public'));` in hp.js
+
+I put an index.html in /public, so now, even without specifying a route in express, a GET request to 127.0.0.1:3000/ by defaut serves up this index.html.
+I'll build the jQuery web page app in index.html to handle the ajax calls and dynamic DOM manipualtion for interacting with patterns. 
