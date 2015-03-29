@@ -118,7 +118,7 @@
             "type": "file",
             "id": "pic",
             "label": "Pictogram",
-            "helper": "Upload a pictogram to represent this pattern."
+            "helper": "Upload a pictogram to represent this pattern"
         },
         "context": {
             "type": "textarea",
@@ -127,15 +127,19 @@
         },
         "problem": {
             "type": "textarea",
-            "placeholder": "A concise description of the problem this pattern addresses. Define the problem as a conflict of 'forces' that dominate the situation.",
+            "placeholder": "A concise description of the problem this pattern addresses. Define the problem as a conflict of 'forces' that dominate the situation",
             "rows": 3
         },
         "forces": {
             "fields": {
                 "item": {
                     "fields": {
+                        "name": {
+                            "placeholder": "Enter a short name to identify this force"
+                        },
                         "definition": {
                             "placeholder": "Describe this force as clearly and precisely as possible",
+                            "type": "textarea",
                             "rows": 2
                         },
                         "pic": {
@@ -149,18 +153,18 @@
         },
         "solution":{
             "type": "textarea",
-            "placeholder": "Describe concisely how to balance the forces that create the problem.",
+            "placeholder": "Describe concisely how to balance the forces that create the problem",
             "rows": 3
         },
         "rationale": {
             "type": "textarea",
-            "placeholder": "Elaborate on the reasoning behind how the solution balances the 'forces'. Note theoretical or empirical support.",
+            "placeholder": "Elaborate on the reasoning behind how the solution balances the 'forces'. Note theoretical or empirical support",
             "rows": 6
         },
         "diagram": {
             "type": "file",
             "label": "Diagram",
-            "helper": "Upload a diagram that summarises the forces and their interactions involved in this pattern."
+            "helper": "Upload a diagram that summarises the forces and their interactions involved in this pattern"
         },
         "ref": {
             "fields": {
@@ -184,7 +188,7 @@
     "properties": {
         "name": {
             "title": "Name",
-            "description": "Enter the name of this pattern.",
+            "description": "Enter the name of this pattern",
             "type": "string",
             "required": true
         },
