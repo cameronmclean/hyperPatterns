@@ -998,9 +998,10 @@ app.post('/new2', function(req, res){
 	});
 
 	//remove tmp files
-	function tidyUp(){
+	function tidyUp(callback){
 		rimraf("./tmp/"+session, function(err){
-			if(err) console.log(err);
+			if(err) callback(err);
+			callback(null);
 		});
 	}
 	
@@ -1023,7 +1024,13 @@ app.post('/new2', function(req, res){
 	form.on('finish', function(){
 		//finished parsing form
 		//insert code here to save things to db
-		tidyUp();
+		tidyUp(function(err){
+			if(!err){
+				fs.openSync('./tmp/.keep', 'w');
+			} else {
+				console.log(err);
+			}
+		});
 		res.writeHead(302, {"Location": "/"});
 		res.end();					
 	});

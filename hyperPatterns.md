@@ -23,7 +23,7 @@ use /Projects/hyperPatterns/site for the app and keep related project notes, doc
 9) Need cors `npm install --save cors` to enable cross-origin resource sharing `app.use('/api', require('cors')());`
 
 10) Use connect-rest `npm install --save connect-rest` to create APIs
-
+//> NB not useing connect-rest at the moment - plain old express :)
 
 
 #####20141215
@@ -906,4 +906,8 @@ SO to the rescue again http://stackoverflow.com/questions/9407892/how-to-generat
 
 for each POST we generate a tmp dir with `fs.mkdir(session, ...)` store all the stuff there, then delete the session dir with `rimraf()` - see https://github.com/isaacs/rimraf
 
-> so then concurrent POSTs sorted for now! :)
+> so then,...  concurrent POSTs sorted for now! :)
+
+#####20150331
+
+changed tidyUp() function to accept a callback and add an empty  `.keep` file to `./tmp` so that git tracks the "empty" dir. Needed only if someday someone tries to clone and run this thing - the code expects a `./tmp` in `/site` for the handling of files submitted by forms. To write the empty file - `fs.openSync('filepath', 'w');` the 'w' flag truncates or overwrites...

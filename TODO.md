@@ -146,7 +146,7 @@ Add rdf:label to JSON-LD representations for each of the "@id"s
 craft the routes for /id and /doc
 note /id anything should 303 to /doc..xy/..z										YEP
 
-add partOf relation to indiv force and reference representations in JSON-LD
+add partOf relation to indiv force and reference representations in JSON-LDs 		YEP
 
 add list of patterns that a contributor made when getting a contributor doc
 
@@ -155,5 +155,6 @@ How to add and specify images in linked data - at publication time - save the ap
 
 removed node_modules that we end up not using - bodyparser??
 
-save tmp files for POSTs to a sha1 time hash, to avoid concurrency issues when POSTing new/prototype edits...
+save tmp files for POSTs to a sha1 time hash, to avoid concurrency
+issues when POSTing new/prototype edits...										YEP!
 
