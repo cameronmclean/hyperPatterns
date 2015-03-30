@@ -14,7 +14,7 @@ var validator = require('validator');
 var tv4 = require('tv4');
 var cors = require('cors');
 var rimraf = require('rimraf');
-
+var crypto = require('crypto');
 var app = express();
 
 //couch db settings
@@ -990,8 +990,16 @@ app.get('/new', function(req, res){
 app.post('/new2', function(req, res){
 	console.log("hey look, a form!");
 
+	//get a random ID for this POST
+	var session = crypto.randomBytes(20).toString('hex');
+	var saveTo = "./tmp/"+session;
+	fs.mkdir(saveTo, function(err){
+		if(err) console.log(err);
+	});
+
+	//remove tmp files
 	function tidyUp(){
-		rimraf("./tmp/*", function(err){
+		rimraf("./tmp/"+session, function(err){
 			if(err) console.log(err);
 		});
 	}
@@ -1004,11 +1012,10 @@ app.post('/new2', function(req, res){
 	//get the files and save them to /tmp - prefix the filename with "formfield__"
 	form.on('file', function(fieldname, file, filename, encoding, mimetype){
 		console.log(fieldname+"****"+filename+"***"+encoding);
-		var saveTo = "./tmp/";
 		file.on('data', function(data){
-			fs.writeFile(saveTo+fieldname+"__"+filename, data, function(err){
+			fs.writeFile(saveTo+"/"+fieldname+"__"+filename, data, function(err){
 				if(err) console.log(err);
-				console.log("File saved? @ "+saveTo+fieldname+"__"+filename);
+				console.log("File saved? @ "+saveTo+"/"+fieldname+"__"+filename);
 			});	
 		});			
 	});
@@ -1016,7 +1023,7 @@ app.post('/new2', function(req, res){
 	form.on('finish', function(){
 		//finished parsing form
 		//insert code here to save things to db
-	//	tidyUp();
+		tidyUp();
 		res.writeHead(302, {"Location": "/"});
 		res.end();					
 	});

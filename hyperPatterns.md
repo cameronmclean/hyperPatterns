@@ -898,3 +898,12 @@ OK - so got busboy to save all files that are posted into `./tmp` prepended with
 I also need to clean the tmp dir after a successful dbsave/all the POST is wrapped up.
 can try using rimraf https://www.npmjs.com/package/rimraf to simply the ./tmp `rm -rf` I want to do this so the dir is clean ready for the next POST. Of ocurse there will be concurrency issues here if two users try posting a new form at the same time... but not dealing with that for proof-of-concept...
 > I could gat a sha1 hash of time, and save all POSTed files to tmp/sha1hash each time though :)
+
+yes - actaully even simpler
+did `var crypto = require('crypto')` and get a unique rando number each time POST is called by 
+`var session = crypto.randomBytes(20).toString('hex');`
+SO to the rescue again http://stackoverflow.com/questions/9407892/how-to-generate-random-sha1-hash-to-use-as-id-in-node-js
+
+for each POST we generate a tmp dir with `fs.mkdir(session, ...)` store all the stuff there, then delete the session dir with `rimraf()` - see https://github.com/isaacs/rimraf
+
+> so then concurrent POSTs sorted for now! :)
