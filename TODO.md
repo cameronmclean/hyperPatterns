@@ -153,4 +153,7 @@ add list of patterns that a contributor made when getting a contributor doc
 update URIs for images and pictograms - doc namespace?
 How to add and specify images in linked data - at publication time - save the appropriate fields with URIs?
 
+removed node_modules that we end up not using - bodyparser??
+
+save tmp files for POSTs to a sha1 time hash, to avoid concurrency issues when POSTing new/prototype edits...
 

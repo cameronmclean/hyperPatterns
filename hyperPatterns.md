@@ -892,3 +892,9 @@ using /new2 to write test code to process POST of new pattern form.
 
 Installed `npm install --save busboy` and required() it, commented out body-parser.
 currently piping the POST req object into a new busboy object, ready for wranging and saving as JSON/alpaca data.
+
+OK - so got busboy to save all files that are posted into `./tmp` prepended with the `formfield+" __"` I can regex these and then save them as attachments to teh appropriate couchdb as a final step.
+
+I also need to clean the tmp dir after a successful dbsave/all the POST is wrapped up.
+can try using rimraf https://www.npmjs.com/package/rimraf to simply the ./tmp `rm -rf` I want to do this so the dir is clean ready for the next POST. Of ocurse there will be concurrency issues here if two users try posting a new form at the same time... but not dealing with that for proof-of-concept...
+> I could gat a sha1 hash of time, and save all POSTed files to tmp/sha1hash each time though :)

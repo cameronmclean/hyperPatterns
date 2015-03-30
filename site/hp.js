@@ -8,10 +8,12 @@ var express = require('express');
 var async = require('async');
 var _ = require('underscore');
 var fs = require('fs');
+var path = require('path');
 var bibtexParse = require('bibtex-parser-js');
 var validator = require('validator');
 var tv4 = require('tv4');
 var cors = require('cors');
+var rimraf = require('rimraf');
 
 var app = express();
 
@@ -987,24 +989,47 @@ app.get('/new', function(req, res){
 //********************
 app.post('/new2', function(req, res){
 	console.log("hey look, a form!");
+
+	function tidyUp(){
+		rimraf("./tmp/*", function(err){
+			if(err) console.log(err);
+		});
+	}
 	
 	//create a new busboy object to stream the req object to
 	var form = new busboy({headers: req.headers});
 
 	//define the events to parse/action
+
+	//get the files and save them to /tmp - prefix the filename with "formfield__"
 	form.on('file', function(fieldname, file, filename, encoding, mimetype){
-		console.log(filename+"****"+file);
+		console.log(fieldname+"****"+filename+"***"+encoding);
+		var saveTo = "./tmp/";
+		file.on('data', function(data){
+			fs.writeFile(saveTo+fieldname+"__"+filename, data, function(err){
+				if(err) console.log(err);
+				console.log("File saved? @ "+saveTo+fieldname+"__"+filename);
+			});	
+		});			
 	});
 
+	form.on('finish', function(){
+		//finished parsing form
+		//insert code here to save things to db
+	//	tidyUp();
+		res.writeHead(302, {"Location": "/"});
+		res.end();					
+	});
+		
 	//pipe the req to be processed
 	req.pipe(form);
 	
 	//pu this inside loop when done to say OK!
 	//NB - add call back to index jQuery to redirect/change/update DOM if we get 201.
-	res.writeHead('201', {
-		"Location": "http://127.0.0.1:3000/"
-	});
-	res.end();
+	//res.writeHead('201', {
+	//	"Location": "http://127.0.0.1:3000/"
+	//});
+	//res.end();
 });
 
 
