@@ -20,13 +20,20 @@
 		
 		<div id="centerstage">
 			<button type="button" id='addnew'>Add a new pattern</button>
+			<button type ="button" id='edit'>Edit protopatterns</button>
 		</div>
 		
 		<script>
 			$('#addnew').click(function(){
 				$('#centerstage').load("./html/alpaca2.html");
 			});
-			</script>
+			
+			$("#edit").click(function(){
+				$('#centerstage').load("./html/list.html");
+			});
+
+		</script>
+
 
 	</body>
 </html>

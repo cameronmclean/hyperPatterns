@@ -993,6 +993,12 @@ app.post('/new2', function(req, res){
 	//get a random ID for this POST
 	var session = crypto.randomBytes(20).toString('hex');
 	var saveTo = "./tmp/"+session;
+
+	var protoPattern = {}; //blank object to store parsed form fields
+	//var protoForce = {};
+	//var protoRef = {};
+	//var protoAuthor = {};
+	
 	fs.mkdir(saveTo, function(err){
 		if(err) console.log(err);
 	});
@@ -1005,15 +1011,22 @@ app.post('/new2', function(req, res){
 		});
 	}
 	
+
 	//create a new busboy object to stream the req object to
 	var form = new busboy({headers: req.headers});
 
 	//define the events to parse/action
 
+
 	//get the files and save them to /tmp - prefix the filename with "formfield__"
+	
+	var attachments = []; //also save files as array in mem for sendng to couchdb?
+
 	form.on('file', function(fieldname, file, filename, encoding, mimetype){
 		console.log(fieldname+"****"+filename+"***"+encoding);
 		file.on('data', function(data){
+			attachments.push({"name":filename, "data":data, "content_type":mimetype});
+			//console.log(attachments);
 			fs.writeFile(saveTo+"/"+fieldname+"__"+filename, data, function(err){
 				if(err) console.log(err);
 				console.log("File saved? @ "+saveTo+"/"+fieldname+"__"+filename);
@@ -1021,18 +1034,57 @@ app.post('/new2', function(req, res){
 		});			
 	});
 
+	form.on('field', function(fieldname, value, fieldnameTruncated, valTruncated){
+		protoPattern[fieldname] = value;
+	});
+
 	form.on('finish', function(){
+		console.log(protoPattern);
+		//set additional fields to identify pattern
+		protoPattern["doctype"] = "protoPattern";
+		//get next int_id
+		
+		//fetch the number of pattern and protopattern docs - set new int_id to one higher than the highest
+		db.get('_design/patterns/_view/getLastIntID', function(err, body){
+			//console.log(body.rows.length);
+			var listOfResults = body.rows;
+			var listOfValues = [];
+			for (x in listOfResults){
+				listOfValues.push(listOfResults[x].value);
+			}
+			var newID = Math.max.apply(Math, listOfValues)+1;
+			
+			//now set the new unique int_id for this pattern
+			protoPattern['int_id'] = newID;
+
+			console.log(protoPattern);
+			console.log(newID);
+			console.log(attachments);
+		
+			//save to db, then add attachemts
+			db.multipart.insert(protoPattern, attachments, function(err, body){
+				console.log("we are trying to insert");
+				if(!err) {
+					console.log('protopattern saved');
+					tidyUp(function(err){
+						if(!err){
+							fs.openSync('./tmp/.keep', 'w');
+							res.writeHead(302, {"Location": "/"});
+							res.end();
+						} else {
+							console.log("error tydying up "+err);
+						}
+					});
+				}
+				else {
+					console.log("error saving protoPattern to couch  "+err);
+				}
+			});
+
+
 		//finished parsing form
 		//insert code here to save things to db
-		tidyUp(function(err){
-			if(!err){
-				fs.openSync('./tmp/.keep', 'w');
-			} else {
-				console.log(err);
-			}
-		});
-		res.writeHead(302, {"Location": "/"});
-		res.end();					
+		});					
 	});
 		
 	//pipe the req to be processed
