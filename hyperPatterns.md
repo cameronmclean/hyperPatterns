@@ -915,3 +915,19 @@ changed tidyUp() function to accept a callback and add an empty  `.keep` file to
 current status - under form.on('file', ...) we also push the file data into an array in mem for adding to couchdb directly instead of via the filesystem. This seems to work, but having trouble getting nano db.multipart.insert() to work properly - getting http 412 from couchdb - maybe to do with request headers or something already 'exists' in couch db. SOme pre-condition is not matching - need to try inspeacting all the http requests and headers....
 If I can get this to work thouhg, things will be nice a simple.
 also - need to change filenames in attachemts[] to pre-pend form fields for easy matching/ID later...
+
+hmm - so jsut adding the doc seems fine, will try adding attachments after the doc is created in couch
+
+hmmmm - so adding attchments after adding the doc is fine > except I have to get a current _rev each time.
+This is tricky with async calls - using aysnc.each() to add an attachment should work, but it seems every time it still only grabs a doc with _rev : 1-xxxx .... hmmm seems because getting the rev from body2 in the dbget() callback is undefined...
+
+GAH! - it was because the body returned from the various db callbacks is different... a db.get() returns the whole doc, and db.insert() returns just the docID and rev...
+
+fixed now, and async.eachSeries() is a good thing - should use it more often instead of callback hell.
+http://callbackhell.com/
+
+SOOO- now what happens is when we POST to /new2 , the form data gets saved as a single couchdb doc, with key:values matching the form fields (should simplify populating a form to edit prototypes) Files are saved as attachments to the doc in couchdb, with the formfield prepended and separted by double underscore'__'. 
+
+NOTE - i am still saving the files to ./tmp and them deleting them too. I can probably remove this code.
+
+Also, i updated the nano module to 6.1.2... 

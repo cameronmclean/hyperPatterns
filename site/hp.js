@@ -1025,8 +1025,10 @@ app.post('/new2', function(req, res){
 	form.on('file', function(fieldname, file, filename, encoding, mimetype){
 		console.log(fieldname+"****"+filename+"***"+encoding);
 		file.on('data', function(data){
-			attachments.push({"name":filename, "data":data, "content_type":mimetype});
-			//console.log(attachments);
+			//grab all the files and store the deatails an data in array
+			attachments.push({"name":fieldname+"__"+filename, "data":data, "content_type":mimetype});
+			
+			//also write files to ./tmp  <<<<<< can maybe dispense with this >>>>>>>>>>>>>>>
 			fs.writeFile(saveTo+"/"+fieldname+"__"+filename, data, function(err){
 				if(err) console.log(err);
 				console.log("File saved? @ "+saveTo+"/"+fieldname+"__"+filename);
@@ -1039,7 +1041,7 @@ app.post('/new2', function(req, res){
 	});
 
 	form.on('finish', function(){
-		console.log(protoPattern);
+	//	console.log(protoPattern);
 		//set additional fields to identify pattern
 		protoPattern["doctype"] = "protoPattern";
 		//get next int_id
@@ -1056,34 +1058,52 @@ app.post('/new2', function(req, res){
 			
 			//now set the new unique int_id for this pattern
 			protoPattern['int_id'] = newID;
-
-			console.log(protoPattern);
-			console.log(newID);
-			console.log(attachments);
 		
 			//save to db, then add attachemts
-			db.multipart.insert(protoPattern, attachments, function(err, body){
-				console.log("we are trying to insert");
+			db.insert(protoPattern, function(err, body){
 				if(!err) {
-					console.log('protopattern saved');
-					tidyUp(function(err){
-						if(!err){
-							fs.openSync('./tmp/.keep', 'w');
-							res.writeHead(302, {"Location": "/"});
-							res.end();
+					console.log('protopattern saved... now to add attachments...');
+				
+					//add all the attachments grabbed from form.on('files', ...)
+					async.eachSeries(attachments, function(file, callback){
+						db.get(body.id, function(err, body2){
+							if (!err){
+								db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
+									if(!err) {
+										console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
+										callback();
+									} else {
+									 console.log("error attaching file "+file+"***"+err);
+									}
+								});
+							} else {
+								console.log("error getting newly created doc "+err);
+							}
+						})
+					}, function(err){
+						if(err) {
+							console.log("something wrong with async");
 						} else {
-							console.log("error tydying up "+err);
+							//remove tmp files , send response >>>technically should be 201, but we are coupled to the front end here, do what makes sense for the user
+							console.log("tidyUP!");
+							tidyUp(function(err){
+								if(!err){
+									fs.openSync('./tmp/.keep', 'w');
+									res.writeHead(302, {"Location": "/"});
+									res.end();
+								} else {
+									console.log("error tydying up "+err);
+								}
+							
+							});
 						}
-					});
+					});  									
+				
 				}
 				else {
 					console.log("error saving protoPattern to couch  "+err);
 				}
 			});
-
-
-		//finished parsing form
-		//insert code here to save things to db
 		});					
 	});
 		
