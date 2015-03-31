@@ -957,9 +957,6 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 //* Routes for web front-end
 //*****************************************
 
-//app.get('/', function(req, res){
-//	res.sendFile(index.html)
-//});
 
 
 //********************************
@@ -987,7 +984,7 @@ app.get('/new', function(req, res){
 
 
 //********************
-app.post('/new2', function(req, res){
+app.post('/new', function(req, res){
 	console.log("hey look, a form!");
 
 	//get a random ID for this POST
@@ -1121,7 +1118,7 @@ app.post('/new2', function(req, res){
 
 
 //*********************************************
-app.post('/new', function(req, res){
+app.post('/json-new', function(req, res){
 	console.log("were posting to new!");
 	//note body-parser should check for valid JSON first.
 	//if OK it is parsed into req.body object.
