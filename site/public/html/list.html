@@ -5,8 +5,7 @@
  		console.log(data);
  		var list = data.list;
  		for (x in list){
- 			//NB! currently goes through the list and keeps overwriting #proto
- 		$('#proto').html("<p>"+list[x]['name']+"</p");
+ 		$('#proto').append("<p><a href='/prototype/"+list[x]['id']+"'>"+list[x]['name']+"</a></p");
  		}	
  });
 </script>
