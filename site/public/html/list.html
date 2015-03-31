@@ -1,1 +1,12 @@
 <div id='proto'>A clickable list of protopatterns</div>
+<script>
+// /prototypes gets a JSON wich contains an array of prototype pattern info
+ $.getJSON("/prototypes", function(data){
+ 		console.log(data);
+ 		var list = data.list;
+ 		for (x in list){
+ 			//NB! currently goes through the list and keeps overwriting #proto
+ 		$('#proto').html("<p>"+list[x]['name']+"</p");
+ 		}	
+ });
+</script>

@@ -158,3 +158,6 @@ removed node_modules that we end up not using - bodyparser??
 save tmp files for POSTs to a sha1 time hash, to avoid concurrency
 issues when POSTing new/prototype edits...										YEP!
 
+remove code that saves uploaded files (now done in memory)
+
+removed unused routes

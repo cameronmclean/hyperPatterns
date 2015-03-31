@@ -20,6 +20,9 @@ var views = {
 		},
 		'getLastIntID': {
 			"map": "function(doc){ if(doc.doctype==='pattern' || doc.doctype==='protoPattern'){ emit('int_id', doc.int_id);}}"
+		},
+		'getPrototypes': {
+			"map": "function(doc){ if(doc.doctype==='protoPattern'){ emit('doc_id', doc._id);}}"
 		}
 	}
 };

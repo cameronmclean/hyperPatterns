@@ -958,29 +958,61 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 //*****************************************
 
 
+//****************************************
+app.get('/prototypes', function(req, res){
+	//query the db for an array of prototype objects
+	db.get('_design/patterns/_view/getPrototypes', function(err, body){
+		
+		var listOfPrototypes = body['rows'];
+		var titles = [];
+		console.log(listOfPrototypes);
+		async.eachSeries(listOfPrototypes, function(proto, callback){
+			//for each element in the array listOfPrototypes, fetch the doc in series
+			//push the protopattern name and id to an array (titles)
+			db.get(proto['id'], function(err, data){
+				var thingy = {};
+				thingy['name'] = data['name'];
+				thingy['id'] = data['int_id'];
+				titles.push(thingy);
+			callback();
+			});
+		}, function(err){
+			if(!err) {
+				//We are done getting all the prototypes, send the list of titles and IDs as an array within a JSON.
+				//console.log("call me");
+				var titlesToSend = {};
+				titlesToSend['list'] = titles;
+				res.send(titlesToSend);
+			}
+		}
+		);
+	});
+
+});
+
 
 //********************************
-app.get('/new', function(req, res){
-
-	console.log("yay! someone is requesting a new pattern!");
-
+//app.get('/new', function(req, res){
+//
+//	console.log("yay! someone is requesting a new pattern!");
+//
 	//get the new/blank schema from the db, change a few fields and send.
 	//note = changes to the template 'patternSchema' doc are set in the helper script syncSchemaDocs.js
-	db.get('alpaca', function(err, body){
-		if (!err) {
-			delete body['_id'];
-			delete body['_rev'];
-			//body['doctype'] = 'newpattern';
-
-			res.send(body);
-			
-		}
-		else
-		{
-			res.sendStatus(500);
-		}
-	});
-});
+//	db.get('alpaca', function(err, body){
+//		if (!err) {
+//			delete body['_id'];
+//			delete body['_rev'];
+//			//body['doctype'] = 'newpattern';
+//
+//			res.send(body);
+//			
+//		}
+//		else
+//		{
+//			res.sendStatus(500);
+//		}
+//	});
+//});
 
 
 //********************
@@ -1115,8 +1147,8 @@ app.post('/new', function(req, res){
 	//res.end();
 });
 
-
-
+//*********************************************
+//* /json-new is no longer needed!! delete this route once we are happy with the app.
 //*********************************************
 app.post('/json-new', function(req, res){
 	console.log("were posting to new!");

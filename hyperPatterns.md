@@ -930,4 +930,10 @@ SOOO- now what happens is when we POST to /new2 , the form data gets saved as a 
 
 NOTE - i am still saving the files to ./tmp and them deleting them too. I can probably remove this code.
 
-Also, i updated the nano module to 6.1.2... 
+Also, i updated the nano module to 6.1.2...
+
+
+Next - created GET /prototypes route that returns a list of all the prototype pattern names and int_ids
+list.html will need some jQuery wrangling to display them all nicely, but it can at least get them all for now.
+
+Next we want to also show the pattern pic, make them clickable, implemnt a /prototype/:id route that loads a populated alpaca schema / data  
