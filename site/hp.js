@@ -990,6 +990,28 @@ app.get('/prototypes', function(req, res){
 
 });
 
+//*********************************
+app.get('/prototype/:intID', function(req, res){
+	var protoID = req.params.intID;
+
+	db.get('_design/patterns/_view/getPrototypes', function(err, body){
+		if(err) console.log("error getting protopattern list from couch"+err);
+		
+		var listOfPrototypes = body['rows'];
+				
+		for (var x = 0; x < listOfPrototypes.length; x++){
+			
+			if (String(listOfPrototypes[x]['value']) === protoID){ //remember req.prams is a string
+			//	console.log("match!");
+				db.get(listOfPrototypes[x].id, function(err, doc){
+					if (err) console.log("error getting proto doc" +err);
+					res.send(doc);
+
+				});
+			}
+		}
+	});
+});
 
 //********************************
 //app.get('/new', function(req, res){

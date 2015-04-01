@@ -936,4 +936,14 @@ Also, i updated the nano module to 6.1.2...
 Next - created GET /prototypes route that returns a list of all the prototype pattern names and int_ids
 list.html will need some jQuery wrangling to display them all nicely, but it can at least get them all for now.
 
-Next we want to also show the pattern pic, make them clickable, implemnt a /prototype/:id route that loads a populated alpaca schema / data  
+Next we want to also show the pattern pic, make them clickable, implemnt a /prototype/:id route that loads a populated alpaca schema / data .. and then hook up a post (and publish! ) button that saves the revised schema, (or publishes it!)  
+
+
+#####20150401
+
+started on /prototype/:intID
+
+now looks up all protoPattern docs, loops thorough until int_id === :intID and returns the whole doc.
+next to implement logic to wrangle it into alpaca form data....
+
+
