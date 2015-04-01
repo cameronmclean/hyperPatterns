@@ -18,10 +18,11 @@
     <div id="form" style='width:70%; margin:0 auto'></div>
     <script type="text/javascript">
         $(document).ready(function() {
+         //   var id = $.url().param('protopattern');
             $.support.cors = true;
             $("#form").alpaca(
 {
-"dataSource": "http://127.0.0.1:3000/prototype/4",
+"dataSource": "http://127.0.0.1:3000/prototype/4", //+id,
 
 "options":{
 

@@ -962,3 +962,8 @@ a little trick - instead of looping within loops for every check, - to see if an
 seee http://stackoverflow.com/questions/1181575/javascript-determine-whether-an-array-contains-a-value
 
 
+GAH - ok - so pre-populating file input fields on forms is not allowed - for security reasons duh/
+This means that I need to implement logic on the server to see if new files are added, overwite exisiting attachement, and generally keep the _attachments metadata intact for PUT/POSTing i.e updating the protopattern doc back in couchdb...
+
+also - need to figure out a way to pass the proto-pattern id to the get request to bring in the edit.html.
+presumably we can do this using URL query params, and write some JS on the edit.html to grab it, and fetch the correct prototype data.

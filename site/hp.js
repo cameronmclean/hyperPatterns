@@ -1009,7 +1009,10 @@ app.get('/prototype/:intID', function(req, res){
 		wrangled['ref'] = [];
 
 		var keys = Object.keys(doc);
+		var attachmentInfo = doc['_attachments'];
+
 		
+
 		//allow up to 20 for each authors/ref/forces -cycle through , push to array, then add to wrangled
 		for (var x = 0; x < 20; x++){
 	//		console.log("looping");
@@ -1027,6 +1030,20 @@ app.get('/prototype/:intID', function(req, res){
 				var forces = {};
 				forces['name'] = doc['forces_'+String(x)+'_name'];
 				forces['definition'] = doc['forces_'+String(x)+'_definition'];
+				//is there an attachement?
+				var re = new RegExp("^forces_"+String(x)+"_pic"), item;
+				for (item in attachmentInfo){
+					console.log(item);
+					if (re.test(item)){
+						console.log("regex match!");
+						forces['pic'] = "./"+item;
+					}
+
+				}
+				//if (attachmentInfo['forces_'+String(x)+'_pic']){
+				//	console.log('attached file found!');
+
+				//}
 				wrangled['forces'].push(forces);
 			}
 		
