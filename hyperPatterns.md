@@ -946,4 +946,19 @@ started on /prototype/:intID
 now looks up all protoPattern docs, loops thorough until int_id === :intID and returns the whole doc.
 next to implement logic to wrangle it into alpaca form data....
 
+OK - so  - getting data back into forms where there are multiple instances of say, author - probably need to squish say ref\_0_reference back into an array of reference: [] or author: [{},{},{}...] ??
+kinda implicit in these examples - eg address > street
+http://www.alpacajs.org/demos/bootstrap/customer-profile/edit-custom-view-form.html
+http://www.alpacajs.org/demos/bootstrap/customer-profile/data.json
+
+yes - as above.
+
+but wrangling all the fields back into a suitable arry is tricky.
+decidied to loop through integers up to 20, and if author, ref, force match, grab the appropriate fields, put them in an object, and push them into an array in the wranged data to be sent back to alpaca forms.
+we can use the reverse logic when spliting docs to store for final pattern publishing.
+
+a little trick - instead of looping within loops for every check, - to see if an item is in array use
+`array.indexOf(thing) > -1` 
+seee http://stackoverflow.com/questions/1181575/javascript-determine-whether-an-array-contains-a-value
+
 

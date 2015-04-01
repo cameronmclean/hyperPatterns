@@ -991,8 +991,59 @@ app.get('/prototypes', function(req, res){
 });
 
 //*********************************
+//to return alpaca forms data
 app.get('/prototype/:intID', function(req, res){
 	var protoID = req.params.intID;
+
+
+	function wrangleAlpacas(doc){
+		var wrangled = {}; // to store and return modified doc
+		//assign the easy fields
+		wrangled['name'] = doc['name'];
+		wrangled['contex'] = doc['context'];
+		wrangled['problem'] = doc['problem'];
+		wrangled['solution'] = doc['solution'];
+		wrangled['rationale'] = doc['rationale'];
+		wrangled['author'] = [];
+		wrangled['forces'] = [];
+		wrangled['ref'] = [];
+
+		var keys = Object.keys(doc);
+		
+		//allow up to 20 for each authors/ref/forces -cycle through , push to array, then add to wrangled
+		for (var x = 0; x < 20; x++){
+	//		console.log("looping");
+	//		console.log(keys.indexOf('author_'+String(x)+'_name'));
+			if ( (keys.indexOf('author_'+String(x)+'_name') > -1) && (keys.indexOf('author_'+String(x)+'_orcid') > -1)){
+	//			console.log('keys match');
+				var author = {};
+				author['name'] = doc['author_'+String(x)+'_name'];
+				author['orcid'] = doc['author_'+String(x)+'_orcid'];
+				wrangled['author'].push(author);
+			}
+
+			//todo add fillenames from doc._attachments
+			if( (keys.indexOf('forces_'+String(x)+'_name') > -1) && (keys.indexOf('forces_'+String(x)+'_definition') > -1) ){
+				var forces = {};
+				forces['name'] = doc['forces_'+String(x)+'_name'];
+				forces['definition'] = doc['forces_'+String(x)+'_definition'];
+				wrangled['forces'].push(forces);
+			}
+		
+			if( (keys.indexOf('ref_'+String(x)+'_reference') > -1) ){
+				var ref = {};
+				ref['reference'] = doc['ref_'+String(x)+'_reference'];
+				wrangled['ref'].push(ref);
+			}
+
+
+		}
+
+		return wrangled;
+	}
+
+
+
 
 	db.get('_design/patterns/_view/getPrototypes', function(err, body){
 		if(err) console.log("error getting protopattern list from couch"+err);
@@ -1005,7 +1056,10 @@ app.get('/prototype/:intID', function(req, res){
 			//	console.log("match!");
 				db.get(listOfPrototypes[x].id, function(err, doc){
 					if (err) console.log("error getting proto doc" +err);
-					res.send(doc);
+					//logic to rangle doc into alpaca forms data
+					var wrangledData = wrangleAlpacas(doc);
+
+					res.send(wrangledData);
 
 				});
 			}

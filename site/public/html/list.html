@@ -1,3 +1,4 @@
+
 <div id='proto'>A clickable list of protopatterns</div>
 <script>
 // /prototypes gets a JSON wich contains an array of prototype pattern info
@@ -7,6 +8,7 @@
  		for (x in list){
  		$('#proto').append("<p><a href='/prototype/"+list[x]['id']+"'>"+list[x]['name']+"</a></p");
  		}
+
  		// $('#'+list).click(alert('Hello!)'));	
  });
 
