@@ -967,3 +967,11 @@ This means that I need to implement logic on the server to see if new files are 
 
 also - need to figure out a way to pass the proto-pattern id to the get request to bring in the edit.html.
 presumably we can do this using URL query params, and write some JS on the edit.html to grab it, and fetch the correct prototype data.
+
+#####20150413
+Tinkered with the html+js to make links from protpattern list.html load the edit.html with query string ?id=x 
+edit.html now has some minimal js to parse the query sring and load the appropriate datasource into the alpaca form.
+querystring parsing was a shameless copy and paste from 
+http://www.jquerybyexample.net/2012/05/how-to-get-querystring-value-using.html
+
+NEXT - make the list.html load the populated alpaca form in the centerstage div, not as a new page...
