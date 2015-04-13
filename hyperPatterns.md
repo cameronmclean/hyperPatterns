@@ -975,3 +975,4 @@ querystring parsing was a shameless copy and paste from
 http://www.jquerybyexample.net/2012/05/how-to-get-querystring-value-using.html
 
 NEXT - make the list.html load the populated alpaca form in the centerstage div, not as a new page...
+Need to implement some kind of 'grab the id and pass the value to .click().load()' function in jQuery/js

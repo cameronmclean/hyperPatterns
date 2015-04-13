@@ -1,14 +1,24 @@
 
 <div id='proto'>A clickable list of protopatterns</div>
+	<div id='list'>
+	</div>
 <script>
 // /prototypes gets a JSON wich contains an array of prototype pattern info
  $.getJSON("/prototypes", function(data){
  		console.log(data);
  		var list = data.list;
  		for (x in list){
- 		$('#proto').append("<p><a href='./html/edit.html?id="+list[x]['id']+"'>"+list[x]['name']+"</a></p");
+ 			// $('#list').append("<p><a href='./html/edit.html?id="+list[x]['id']+"'>"+list[x]['name']+"</a></p>");
+ 		$('#list').append("<button type='button' id="+list[x]['id']+">"+list[x]['name']+"</button>");
  		}
 
+ 		//the selectro below wont work because we are now outside of the for loop
+ 		//need to grab all the id's for the button/div in the #list 
+ 		//or make them all clickable, grab the ID when clicked, and pass it to the .load()
+
+ 			$('#'+list[x]["id"]).click(function(){
+				$('#centerstage').load("./html/edit.html?id="+list[x]['id']);
+			});
  		// $('#'+list).click(alert('Hello!)'));	
  });
 
