@@ -976,3 +976,23 @@ http://www.jquerybyexample.net/2012/05/how-to-get-querystring-value-using.html
 
 NEXT - make the list.html load the populated alpaca form in the centerstage div, not as a new page...
 Need to implement some kind of 'grab the id and pass the value to .click().load()' function in jQuery/js
+
+hmmm. seems loading a .html withing a <div> means we cant access the url query string
+http://stackoverflow.com/questions/3180841/jquery-get-querystring-of-loaded-page-in-a-div
+
+I can only access teh query string from the main page , no the loaded html within the div.
+`var sPageURL = window.location.search.substring(1);`
+
+need to find some other way of passing the clicked on ID to the /edit.html load.
+
+One quick fix is just have it load as a new page - and duplicate the scripts/headers/nav of index.html...
+i.e make them standard links again, not jquery selectors that load the edit.html within another div.
+This is dirty and hacky but super quick just to get going...
+
+OK - bit of a mess - have now got list.html jQuery to pick up the id of the clicked on protopattern, then load a whole new page, passing the id to edit.html as a ?id=x query param.
+Need to fix edit.html to resemble index.html and make the nav buttons work etc.
+Then how to parse and submit the editied proto-pattern....
+then then how to "publish"
+sloooly getting there...
+
+

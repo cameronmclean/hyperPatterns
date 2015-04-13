@@ -9,16 +9,32 @@
  		var list = data.list;
  		for (x in list){
  			// $('#list').append("<p><a href='./html/edit.html?id="+list[x]['id']+"'>"+list[x]['name']+"</a></p>");
- 		$('#list').append("<button type='button' id="+list[x]['id']+">"+list[x]['name']+"</button>");
+ 		$('#list').append("<div class='protopattern' id=d"+list[x]['id']+">"+list[x]['name']+" | </div>");
  		}
 
  		//the selectro below wont work because we are now outside of the for loop
  		//need to grab all the id's for the button/div in the #list 
  		//or make them all clickable, grab the ID when clicked, and pass it to the .load()
 
- 			$('#'+list[x]["id"]).click(function(){
-				$('#centerstage').load("./html/edit.html?id="+list[x]['id']);
-			});
+ 		$('#list').on('click', 'div.protopattern', function(e){
+ 			alert('you clicked on'+this.id);
+ 			//split the d from the number... as elemnt id's cannot be numberic
+ 			var number = this.id.substring(1);
+ 			//load a new page with the populated form
+ 			window.location.href='./html/edit.html?id='+number;
+ 		
+ 			//NB - cant do this - cant get URL params from html loaded within div
+ 			//$('#centerstage').load("./html/edit.html?id="+number, function(){
+ 			//	alert('div has loaded with number'+number);
+ 			//});
+ 		});
+ 		
+
+
+ 		//	$('#'+list[x]["id"]).click(function(){
+		//		$('#centerstage').load("./html/edit.html?id="+list[x]['id']);
+		//	});
+ 		
  		// $('#'+list).click(alert('Hello!)'));	
  });
 
