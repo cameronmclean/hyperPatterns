@@ -1025,4 +1025,6 @@ ALSO - noticed that context field is never saved - check hp.jp for typos in this
 
 So the next step is to add _attachments as hidden fields (in a conveinient format), so we can wrangle it for compare and update at POST/couchdb insert.attachment()
 
+#####201504015
+
 

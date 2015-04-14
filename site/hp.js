@@ -1008,6 +1008,7 @@ app.get('/prototype/:intID', function(req, res){
 		wrangled['forces'] = [];
 		wrangled['ref'] = [];
 		wrangled['int_id'] = doc['int_id'];
+		wrangled['_attachments'] = doc['_attachments'];
 
 		var keys = Object.keys(doc);
 		var attachmentInfo = doc['_attachments'];
@@ -1194,7 +1195,7 @@ app.post('/new', function(req, res){
 							if (!err){
 								db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
 									if(!err) {
-										console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
+								//		console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
 										callback();
 									} else {
 									 console.log("error attaching file "+file+"***"+err);
@@ -1209,7 +1210,7 @@ app.post('/new', function(req, res){
 							console.log("something wrong with async");
 						} else {
 							//remove tmp files , send response >>>technically should be 201, but we are coupled to the front end here, do what makes sense for the user
-							console.log("tidyUP!");
+						//	console.log("tidyUP!");
 							tidyUp(function(err){
 								if(!err){
 									fs.openSync('./tmp/.keep', 'w');
