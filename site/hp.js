@@ -1026,7 +1026,7 @@ app.get('/prototype/:intID', function(req, res){
 				wrangled['author'].push(author);
 			}
 
-			//todo add fillenames from doc._attachments
+			
 			if( (keys.indexOf('forces_'+String(x)+'_name') > -1) && (keys.indexOf('forces_'+String(x)+'_definition') > -1) ){
 				var forces = {};
 				forces['name'] = doc['forces_'+String(x)+'_name'];
@@ -1034,10 +1034,11 @@ app.get('/prototype/:intID', function(req, res){
 				//is there an attachement?
 				var re = new RegExp("^forces_"+String(x)+"_pic"), item;
 				for (item in attachmentInfo){
-					console.log(item);
+				//	console.log(item);
 					if (re.test(item)){
-						console.log("regex match!");
-						forces['pic'] = "./"+item;
+						//console.log("regex match!");
+						//get and add the attachment filename
+						forces['pic'] = ""+item;
 					}
 
 				}
@@ -1111,7 +1112,7 @@ app.get('/prototype/:intID', function(req, res){
 
 //********************
 app.post('/new', function(req, res){
-	console.log("hey look, a form!");
+	console.log("hey look, a new pattern!");
 
 	//get a random ID for this POST
 	var session = crypto.randomBytes(20).toString('hex');
@@ -1242,12 +1243,111 @@ app.post('/new', function(req, res){
 });
 
 
+//for posting edited protpatterns via alpaca form data - data sent from edit.html
 //**************************************************
-//*
-//***************************************************
+app.post('/prototype', function(req, res){
 
+	var protoPattern = {}; //blank object to store parsed form fields
 
+	//create a new busboy object to stream the req object to
+	var form = new busboy({headers: req.headers});
 
+	//get the files and save them to /tmp - prefix the filename with "formfield__"
+	var attachments = []; //also save files as array in mem for sendng to couchdb?
+
+	form.on('file', function(fieldname, file, filename, encoding, mimetype){
+		console.log(fieldname+"****"+filename+"***"+encoding);
+		file.on('data', function(data){
+			//grab all the files and store the deatails an data in array in memory
+			attachments.push({"name":fieldname+"__"+filename, "data":data, "content_type":mimetype});
+		});			
+	});
+
+	// next parse and store all the key/value pairs
+	form.on('field', function(fieldname, value, fieldnameTruncated, valTruncated){
+		protoPattern[fieldname] = value;
+	});
+
+	//once done , wrangle and update the protopatten
+	
+	//
+	// TODO - change below from new doc code to update code
+	//
+	form.on('finish', function(){
+	//	console.log(protoPattern);
+		//set additional fields to identify pattern
+		protoPattern["doctype"] = "protoPattern";
+		//get next int_id
+		
+		//fetch the exisitng doc by int_id 
+		//first get list of all prototypes
+		db.get('_design/patterns/_view/getPrototypes', function(err, body){
+			//check for error getting list from db
+			if(err) console.log("error getting protopattern list from couch"+err);
+		
+			var listOfPrototypes = body['rows'];
+				
+			for (var x = 0; x < listOfPrototypes.length; x++){
+			
+				if (String(listOfPrototypes[x]['value']) === String(protoPattern['int_id'])){ 
+					//	console.log("match!");
+					//Get the matching (old) prototype doc if there is a match
+					db.get(listOfPrototypes[x].id, function(err, doc){
+						if (err) console.log("error getting proto doc" +err);
+
+						//set new doc _rev 
+						protoPattern['_rev'] = doc['_rev'];
+						protoPattern['_id'] = doc['_id'];
+				
+						db.insert(protoPattern, function(err, body){
+							if(!err) {
+								console.log('protopattern saved... now to add attachments...');
+				
+								//add all the attachments grabbed from form.on('files', ...)
+								async.eachSeries(attachments, function(file, callback){
+									db.get(body.id, function(err, body2){
+										if (!err){
+											db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
+												if(!err) {
+													console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
+													callback();
+												} else {
+												 console.log("error attaching file "+file+"***"+err);
+												}
+											});
+										} else {
+											console.log("error getting newly created doc "+err);
+										}
+									}); //closes db.gef
+								}, function(err){  //closes async function, defines callback
+									if(err) {
+										console.log("something wrong with async");
+									} else {
+											res.writeHead(302, {"Location": "/updated.html"});
+											res.end();
+										}
+								}); //closes callback and async.each()									
+							}
+							else {
+								console.log("error saving protoPattern to couch  "+err);
+							}
+
+						}); //closes db.insert(protoPattern ...)  
+
+					}); //closes second db.get()
+				
+				} //closes if(String()...)
+			
+			} //closes for loop
+
+		}); //closes first gb.get()
+
+	}); //closes form.on('finish' ...)
+
+	//pipe the req to be processed
+	req.pipe(form);
+}); //closes app.post()
+		
 
 
 
