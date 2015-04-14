@@ -1000,7 +1000,7 @@ app.get('/prototype/:intID', function(req, res){
 		var wrangled = {}; // to store and return modified doc
 		//assign the easy fields
 		wrangled['name'] = doc['name'];
-		wrangled['contex'] = doc['context'];
+		wrangled['context'] = doc['context'];
 		wrangled['problem'] = doc['problem'];
 		wrangled['solution'] = doc['solution'];
 		wrangled['rationale'] = doc['rationale'];
@@ -1288,7 +1288,7 @@ app.post('/prototype', function(req, res){
 			var listOfPrototypes = body['rows'];
 				
 			for (var x = 0; x < listOfPrototypes.length; x++){
-			
+		
 				if (String(listOfPrototypes[x]['value']) === String(protoPattern['int_id'])){ 
 					//	console.log("match!");
 					//Get the matching (old) prototype doc if there is a match
