@@ -46,6 +46,8 @@
                 window.location.href='../';
             });
 
+
+        //function to get and parse the URL params
         function GetQueryStringParams(sParam)
     {
         var sPageURL = window.location.search.substring(1);
@@ -61,13 +63,14 @@
     }
 
 
-
         $(document).ready(function() {
          //   var id = $.url().param('protopattern');
             $.support.cors = true;
+            //get the patter id from the URL params
             var protoid = GetQueryStringParams('id');
-            alert("id passed to edit is"+protoid);
+           // alert("id passed to edit is"+protoid);
 
+           //load the form, using the dataSource/pattern id specified by the URL param
             $("#form").alpaca(
 {
 "dataSource": "http://127.0.0.1:3000/prototype/"+protoid, //+id,
@@ -83,85 +86,6 @@
         },
         "buttons": {
             "submit": { }
-
-            //    "click": function(files, data) {
-       // var fd = new FormData();
-       // fd.append('file', files[0]);
-
-        //console.log(fd);
-
-        //var forms = this.getValue();
-
-        //console.log(forms);
-
-        //$.ajax({
-          //  url: 'http://127.0.0.1:3000/new',
-           // data: fd,
-           // processData: false,
-            //contentType: false,
-            //type: 'POST',
-            //success: function(data){
-              //  alert(data);
-           // }
-    //    });
-   // }
-
-
-
-                //function(){
-                    //var data = $('#pd').serializeArray();
-                    //console.log(data);
-                    //for (var x in data) { 
-                    //console.log(data[x]);
-                 //   var data = this.getValue();
-                  //  console.log(data);
-
-               //   var ajaxData = new FormData();
-
-                 //   jQuery.each($('#pic')[0].files, function(i, file) {
-                  //  ajaxData.append('file-'+i, file);
-                   // });
-
-                   // console.log(Object.keys(ajaxData));
-
-
-
-                //    var data2 = new FormData($('#alpaca5')[0]);
-                   // var test = $('input[type=file]')[0].files;
-                //    var form = document.getElementById('#pd');
-                    
-
-                    //for (var x in test){
-                    //console.log(test[x]);
-                   // }
-
-                    //var data = new FormData();
-                    //data.append
-                    //console.log(data);
-                    //var files = new FormData(document.getElementById('#pd'));
-                    //console.log(test);
-                    //console.log(files);
-                    //var data2 = new FormData();
-                    //data2.append(files, files.files[0]);
-                    //console.log(data2);
-
-
-                  //  var formData = new FormData($('input[type=file]')[0]);
-               //     formData.append('file', $('input[type=file]')[0].files[0]);
-                 //   console.log(formData);
-
-                  //  var formFiles = new FormData();
-                    // get a list of all input type='file'
-                    //store name and "input" in array.
-                    //append as files: to data
-                    //then wrangle in node.js
-                //    $('#pd')function(){
-                //        var formdata = new FormData($(this)[0]);
-               //         console.log(formdata);
-                        // do somthing here to get file and name for each DOM form element.
-                 //   });
-
-                    //console.log(listoffiles);
        }     
         
     },
@@ -249,7 +173,7 @@
     }   
  },
 "schema": {
-    "title": "Enter a new Design Pattern",
+    "title": "Edit Design Pattern",
     "description": "New Pattern Form",
     "type": "object",
     "properties": {
