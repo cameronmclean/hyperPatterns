@@ -1271,7 +1271,7 @@ app.post('/prototype', function(req, res){
 	//once done , wrangle and update the protopatten
 	
 	//
-	// TODO - change below from new doc code to update code
+	// TODO - implement attachment copy/comapre logic
 	//
 	form.on('finish', function(){
 	//	console.log(protoPattern);

@@ -1001,6 +1001,19 @@ need to tidy up code - remove console.logs and alerts too.
 
 OK - so added some hacky bits to allow nav buttons to work between home/new/edit screens, across AJAX <div> html insertion OR new page loads...
 
+Also added two more sattic html pages that are redirected to after a post. These display a "success" message before redirecting back to the home index.html
+- redirect was implemented in js directly in the page
+
+```
+<script language="javascript">
+setTimeout(function(){
+	window.location.href = "/";
+}, 4000);
+
+</script>
+```
+
+
 Added "int_id" to /prototype/:id JSON (alpaca form data), and used as hidden field so when we POST to 
 /prototype we can get the couch db \_rev via int_id and update accordingly.
 
@@ -1008,4 +1021,8 @@ So POST route to /prototype can implement nearly the same logic as /new, except 
 
 OK - so half way there...
 reused much code from POST /new - currently attachments are overwriten upon new POST, so just need to add logic to compare old with new copy metadata over and shoudl be OK.
-ALSO - noticed that context field is never saved - check hp.jp for typos in this key/value wrangling...
+ALSO - noticed that context field is never saved - check hp.jp for typos in this key/value wrangling... << FIXED
+
+So the next step is to add _attachments as hidden fields (in a conveinient format), so we can wrangle it for compare and update at POST/couchdb insert.attachment()
+
+
