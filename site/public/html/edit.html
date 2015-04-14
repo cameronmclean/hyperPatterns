@@ -1,3 +1,4 @@
+<!doctype html>
 <html>
    <head>
     <script type="text/javascript" src="http://code.jquery.com/jquery-1.11.1.min.js"></script>
@@ -29,9 +30,21 @@
             </nav>
 
         </div>
+        <div id='centerstage'>
     <div id="form" style='width:70%; margin:0 auto'></div>
     <script type="text/javascript">
 
+    //jQuery for nav buttons
+        $('#addnew').click(function(){
+                $('#centerstage').load("../html/newform.html");
+            });
+            
+            $("#edit").click(function(){
+                $('#centerstage').load("../html/list.html");
+            });
+            $('#home').click(function(){
+                window.location.href='../';
+            });
 
         function GetQueryStringParams(sParam)
     {
@@ -333,6 +346,7 @@
         });
 
 </script>
+</div>
 </body>
 </html>
 

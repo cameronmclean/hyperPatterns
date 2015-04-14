@@ -1211,7 +1211,7 @@ app.post('/new', function(req, res){
 							tidyUp(function(err){
 								if(!err){
 									fs.openSync('./tmp/.keep', 'w');
-									res.writeHead(302, {"Location": "/"});
+									res.writeHead(302, {"Location": "/created.html"});
 									res.end();
 								} else {
 									console.log("error tydying up "+err);
