@@ -991,7 +991,7 @@ app.get('/prototypes', function(req, res){
 });
 
 //*********************************
-//to return alpaca forms data
+//to return data for alpaca forms in edit.html
 app.get('/prototype/:intID', function(req, res){
 	var protoID = req.params.intID;
 
@@ -1007,6 +1007,7 @@ app.get('/prototype/:intID', function(req, res){
 		wrangled['author'] = [];
 		wrangled['forces'] = [];
 		wrangled['ref'] = [];
+		wrangled['int_id'] = doc['int_id'];
 
 		var keys = Object.keys(doc);
 		var attachmentInfo = doc['_attachments'];
@@ -1239,6 +1240,17 @@ app.post('/new', function(req, res){
 	//});
 	//res.end();
 });
+
+
+//**************************************************
+//*
+//***************************************************
+
+
+
+
+
+
 
 //*********************************************
 //* /json-new is no longer needed!! delete this route once we are happy with the app.
