@@ -1344,15 +1344,17 @@ app.post('/prototype', function(req, res){
 
 									if ( oldPrefix.indexOf(prefix[0]) > -1 ){
 										//then we have a match
+										var doomedAttachment = oldAttachments[oldPrefix.indexOf(prefix[0])];
+										console.log("$$$$ doomed attachment = "+doomedAttachment);
 										console.log("about to replace attachment "+prefix[0]+prefix[1]);
 										db.get(body.id, function(err, moardocs){ // wrap this this in a db.get() so _rev is curren
 											//console.log("why you no delete "+oldAttachments[index]);
-											console.log("deleting attachment"+file['name']);
-											db.attachment.destroy(body.id, file['name'], {"rev": moardocs['_rev']}, function(err, anotherbody){
+											console.log("deleting attachment"+doomedAttachment);
+											db.attachment.destroy(body.id, doomedAttachment, {"rev": moardocs['_rev']}, function(err, anotherbody){
 												if (!err) {
-													console.log("attchment destroyed"+file['name']);
+													console.log("attchment destroyed"+doomedAttachment);
 													//now add attachment
-													console.log("now we shoud add new attachment")
+													console.log("now we shoud add the replacement attachment")
 													db.get(body.id, function(err, body2){
 														if (!err){
 															db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
