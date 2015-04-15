@@ -1008,7 +1008,7 @@ app.get('/prototype/:intID', function(req, res){
 		wrangled['forces'] = [];
 		wrangled['ref'] = [];
 		wrangled['int_id'] = doc['int_id'];
-		wrangled['_attachments'] = doc['_attachments'];
+	//	wrangled['_attachments'] = JSON.stringify(doc['_attachments']);
 
 		var keys = Object.keys(doc);
 		var attachmentInfo = doc['_attachments'];
@@ -1266,7 +1266,20 @@ app.post('/prototype', function(req, res){
 
 	// next parse and store all the key/value pairs
 	form.on('field', function(fieldname, value, fieldnameTruncated, valTruncated){
+			//	console.log(fieldname);
+	//	if ( fieldname === "_attachments"){
+	//		console.log("processing _attachments stubs");
+			//chop off leading and trailing ""
+	//		var processed = value; //.substring(0, value.length-1);
+	//		//console.log(processed);
+	//		processed.replace(/\\\//g, "/");
+	//		protoPattern[fieldname] = processed;
+	//		console.log("Stored as "+protoPattern[fieldname]);
+	//		//console.log(protoPattern["_attachments"]);
+	//	} else {
+	//		console.log("processing field "+fieldname);
 		protoPattern[fieldname] = value;
+	//	}
 	});
 
 	//once done , wrangle and update the protopatten
@@ -1299,6 +1312,10 @@ app.post('/prototype', function(req, res){
 						//set new doc _rev 
 						protoPattern['_rev'] = doc['_rev'];
 						protoPattern['_id'] = doc['_id'];
+						protoPattern['_attachments'] = doc['_attachments'];
+
+						console.log('adding to db');
+						console.log(protoPattern);
 				
 						db.insert(protoPattern, function(err, body){
 							if(!err) {

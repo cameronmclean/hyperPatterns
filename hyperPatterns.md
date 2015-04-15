@@ -1027,4 +1027,16 @@ So the next step is to add _attachments as hidden fields (in a conveinient forma
 
 #####201504015
 
+Hmmm updating docs with attachments and keeping the attchment is turning out to be a real PITA.
+Perhaps refactor to store images as seperate docs and use Alpaca image fields....
 
+OR - forget about it for now - users must re-upload images upon editing...??
+
+Stop press - so it seems that by getting the _attachments just before saving to db, rather than trying to pass them across the web in a hidden form field works!
+Only now need to implement
+	- logic at db.insert/attachment.insert to allow only one pic__ force\__0__ .png etc
+	- remove unneeded hidden form fields
+	- perhaps modify edit form schema to display current images.
+Nice!
+
+> I think the lesson here is that the data was being altered/encoded as it passed from server across the web via forms and back, and ended up transformed in a way couchdb didnt like. 
