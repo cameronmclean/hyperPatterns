@@ -1039,4 +1039,15 @@ Only now need to implement
 	- perhaps modify edit form schema to display current images.
 Nice!
 
-> I think the lesson here is that the data was being altered/encoded as it passed from server across the web via forms and back, and ended up transformed in a way couchdb didnt like. 
+> I think the lesson here is that the data was being altered/encoded as it passed from server across the web via forms and back, and ended up transformed in a way couchdb didnt like? 
+
+OK spent _ages_ in callback hell implementing logic for cheking, deleting (if necessary), and adding new attachments to the protopattern couch db doc.
+working now, but code is quite like a 'christmas tree'... nested 4 callbacks deep :(
+
+but at least does what we need for now.
+
+next - to modify edit forms/schema and GET /prototype/:id to display current pictigrams?
+
+Then all that remains is the PUBLISH logic, and to prettfy, plus a few more "list/browse" views...
+<sigh>
+But nearly there...

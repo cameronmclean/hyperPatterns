@@ -1266,27 +1266,11 @@ app.post('/prototype', function(req, res){
 
 	// next parse and store all the key/value pairs
 	form.on('field', function(fieldname, value, fieldnameTruncated, valTruncated){
-			//	console.log(fieldname);
-	//	if ( fieldname === "_attachments"){
-	//		console.log("processing _attachments stubs");
-			//chop off leading and trailing ""
-	//		var processed = value; //.substring(0, value.length-1);
-	//		//console.log(processed);
-	//		processed.replace(/\\\//g, "/");
-	//		protoPattern[fieldname] = processed;
-	//		console.log("Stored as "+protoPattern[fieldname]);
-	//		//console.log(protoPattern["_attachments"]);
-	//	} else {
-	//		console.log("processing field "+fieldname);
 		protoPattern[fieldname] = value;
 	//	}
 	});
 
 	//once done , wrangle and update the protopatten
-	
-	//
-	// TODO - implement attachment copy/comapre logic
-	//
 	form.on('finish', function(){
 	//	console.log(protoPattern);
 		//set additional fields to identify pattern
@@ -1400,32 +1384,6 @@ app.post('/prototype', function(req, res){
 								}); //close async callback, and async 
 							} //close if
 
-							//		//rather than cycle thrugh, do a isIndexOf()?
-							//		for (var i = 0; i < oldAttachments.length; i++){
-							//		
-							//
-							//
-							//			var oldPrefix = oldAttachments[i].split('__');
-							//			
-							//			(function(index){ //immediately invoked function to give if statement access to for i iterator
-							//				if (prefix[0] === oldPrefix[0]){
-							//					console.log("about to replace "+oldAttachments[index]);
-							//
-							//					db.get(body.id, function(err, moardocs){ // wrap this this in a db.get() so _rev is curren
-							//						//console.log("why you no delete "+oldAttachments[index]);
-							//						db.attachment.destroy(body.id, oldAttachments[index], {"rev": moardocs['_rev']}, function(err, anotherbody){
-							//						if (!err) ///hmmm - deletes whole document!!!! shouldnt!
-							//							console.log("attchment destroyed"+oldAttachments[index]);
-							//						});
-							//					});
-							//				 }
-							//			})(i);
-							//			
-							//		}
-
-									//this gets executed before the above for loop is finished
-								 //closes callback and async.each()									
-						//	}
 							else {
 								console.log("error saving protoPattern to couch  "+err);
 							}
