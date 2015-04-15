@@ -1314,38 +1314,116 @@ app.post('/prototype', function(req, res){
 						protoPattern['_id'] = doc['_id'];
 						protoPattern['_attachments'] = doc['_attachments'];
 
-						console.log('adding to db');
-						console.log(protoPattern);
+					//	console.log('adding to db');
+					//	console.log(protoPattern);
 				
 						db.insert(protoPattern, function(err, body){
 							if(!err) {
 								console.log('protopattern saved... now to add attachments...');
-				
+								
+								console.log(Object.keys(protoPattern['_attachments']));
+
+								//get list of current attachments
+								var oldAttachments = Object.keys(protoPattern['_attachments']);
+
+								//get list of current attachment prefixes
+								var oldPrefix = [];
+								for (var counter = 0; counter < oldAttachments.length; counter++){
+									var holder = oldAttachments[counter].split('__');
+									oldPrefix.push(holder[0]);
+								}
+
 								//add all the attachments grabbed from form.on('files', ...)
 								async.eachSeries(attachments, function(file, callback){
-									db.get(body.id, function(err, body2){
-										if (!err){
-											db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
-												if(!err) {
-													console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
-													callback();
-												} else {
-												 console.log("error attaching file "+file+"***"+err);
+									console.log("inside async for attachment array"+oldPrefix);
+									//get prefix of new file['name'] attachement (the one we just POSTed)
+									var prefix = file['name'].split('__');
+									console.log('prefix[0] ='+prefix[0]);
+									//see if newly posted attachments already have a counterpart in the db. 
+									
+
+									if ( oldPrefix.indexOf(prefix[0]) > -1 ){
+										//then we have a match
+										console.log("about to replace attachment "+prefix[0]+prefix[1]);
+										db.get(body.id, function(err, moardocs){ // wrap this this in a db.get() so _rev is curren
+											//console.log("why you no delete "+oldAttachments[index]);
+											console.log("deleting attachment"+file['name']);
+											db.attachment.destroy(body.id, file['name'], {"rev": moardocs['_rev']}, function(err, anotherbody){
+												if (!err) {
+													console.log("attchment destroyed"+file['name']);
+													//now add attachment
+													console.log("now we shoud add new attachment")
+													db.get(body.id, function(err, body2){
+														if (!err){
+															db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
+																if(!err) {
+																	console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
+																	callback();
+																} else {
+												 					console.log("error attaching file "+file+"***"+err);
+																}
+															});
+														} else {
+														console.log("error getting newly updated doc "+err);
+														}
+													}); //closes db.gef
 												}
 											});
-										} else {
-											console.log("error getting newly created doc "+err);
-										}
-									}); //closes db.gef
+										}); //done deleting and replacing attachment										
+
+										} else { // no mattch - just add attachment
+										db.get(body.id, function(err, body2){
+											if (!err){
+												db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
+													if(!err) {
+														console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
+														callback();
+													} else {
+												 	console.log("error attaching file "+file+"***"+err);
+													}
+												});
+											} else {
+												console.log("error getting updated created doc "+err);
+											}
+										}); //closes db.gef
+										}//closes else if no match
+
 								}, function(err){  //closes async function, defines callback
 									if(err) {
 										console.log("something wrong with async");
 									} else {
 											res.writeHead(302, {"Location": "/updated.html"});
 											res.end();
-										}
-								}); //closes callback and async.each()									
-							}
+									   }
+								}); //close async callback, and async 
+							} //close if
+
+							//		//rather than cycle thrugh, do a isIndexOf()?
+							//		for (var i = 0; i < oldAttachments.length; i++){
+							//		
+							//
+							//
+							//			var oldPrefix = oldAttachments[i].split('__');
+							//			
+							//			(function(index){ //immediately invoked function to give if statement access to for i iterator
+							//				if (prefix[0] === oldPrefix[0]){
+							//					console.log("about to replace "+oldAttachments[index]);
+							//
+							//					db.get(body.id, function(err, moardocs){ // wrap this this in a db.get() so _rev is curren
+							//						//console.log("why you no delete "+oldAttachments[index]);
+							//						db.attachment.destroy(body.id, oldAttachments[index], {"rev": moardocs['_rev']}, function(err, anotherbody){
+							//						if (!err) ///hmmm - deletes whole document!!!! shouldnt!
+							//							console.log("attchment destroyed"+oldAttachments[index]);
+							//						});
+							//					});
+							//				 }
+							//			})(i);
+							//			
+							//		}
+
+									//this gets executed before the above for loop is finished
+								 //closes callback and async.each()									
+						//	}
 							else {
 								console.log("error saving protoPattern to couch  "+err);
 							}
