@@ -11,7 +11,7 @@
 <script>
 // /prototypes gets a JSON wich contains an array of prototype pattern info
  $.getJSON("/prototypes", function(data){
- 		console.log(data);
+ 	//	console.log(data);
  		var list = data.list;
  		//populate the table
  		for (var x = 0; x < list.length; x++){
@@ -28,22 +28,34 @@
 });
 
 
-
 $(document).ready(function(){
 
 		//if clicked on edit
 		$('#prototable tbody').on('click', 'tr td button.edit', function(){
- 			alert("clicky!");
+ 			//alert("clicky!");
  			var number = this.id.substring(1);
  			//load a new page with the populated form
  			window.location.href='../html/edit.html?id='+number;
  		});
 
- 		
+		//if clicked on edit
+		$('#prototable tbody').on('click', 'tr td button.publish', function(){
+ 			//alert("clicky!");
+ 			var number = this.id.substring(1);
+ 			//load a new page with the populated form
+ 		//	window.location.href='../html/view.html?id='+number;
+ 		alert("Stub to publish pattern "+number);
+ 		});
+
+		//if clicked on edit
+		$('#prototable tbody').on('click', 'tr td button.view', function(){
+ 			var number = this.id.substring(1); 			
+ 		//	alert("stub to view pattern "+number);
+ 			//load a new page populating #centrestage div via URL query param
+ 			window.location.href='../html/protoview.html?id='+number;
+ 		});
 });
  
-
-
 
 
 </script>

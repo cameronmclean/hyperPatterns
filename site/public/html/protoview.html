@@ -16,6 +16,8 @@
 
 	</head>
 	<body>
+
+
 		<div>
 			<nav>
 			<button type='button' id='home'>Home</button> |
@@ -30,16 +32,14 @@
 		</div>
 		
 		<p>Welcome to the world of patterns!</p>
-<!--		<div id='nav'><button type='button' id='home'>Home</button> !-->
+
 		<div id="centerstage">
-	<!--	<button type="button" id='addnew'>Add a new pattern</button>
-			<button type ="button" id='edit'>Edit protopatterns</button>
-			!-->
 		</div>
 		
 
 		<!-- jQuery to switch out the main page div with the selected activity/data !-->
 		<script>
+		//handle nav buttons
 			$('#addnew').click(function(){
 				$('#centerstage').load("/html/newform.html");
 			});
@@ -51,8 +51,29 @@
 				window.location.href='/';
 			});
 
+		//function to get and parse the URL params
+        function GetQueryStringParams(sParam) {
+        	var sPageURL = window.location.search.substring(1);
+        	var sURLVariables = sPageURL.split('&');
+        	for (var i = 0; i < sURLVariables.length; i++) {
+            	var sParameterName = sURLVariables[i].split('=');
+            	if (sParameterName[0] == sParam)
+            	{
+                	return sParameterName[1];
+            	}
+        	}
+    	}
+
+    	//fill out #centerstage with view of protopattern
+    	$(document).ready(function(){
+    		  var protoid = GetQueryStringParams('id');
+    		   $.getJSON("/prototype/"+protoid, function(data){
+ 				//console.log(data);
+ 				$("#centerstage").append('<p>'+data['name']+'</p>');
+
+				});
+    		 
+    	});
 		</script>
-
-
 	</body>
 </html>

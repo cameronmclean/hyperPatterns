@@ -1087,31 +1087,8 @@ app.get('/prototype/:intID', function(req, res){
 	});
 });
 
-//********************************
-//app.get('/new', function(req, res){
-//
-//	console.log("yay! someone is requesting a new pattern!");
-//
-	//get the new/blank schema from the db, change a few fields and send.
-	//note = changes to the template 'patternSchema' doc are set in the helper script syncSchemaDocs.js
-//	db.get('alpaca', function(err, body){
-//		if (!err) {
-//			delete body['_id'];
-//			delete body['_rev'];
-//			//body['doctype'] = 'newpattern';
-//
-//			res.send(body);
-//			
-//		}
-//		else
-//		{
-//			res.sendStatus(500);
-//		}
-//	});
-//});
 
-
-//********************
+//*******************************************
 app.post('/new', function(req, res){
 	console.log("hey look, a new pattern!");
 
@@ -1405,6 +1382,9 @@ app.post('/prototype', function(req, res){
 }); //closes app.post()
 		
 
+//*************************************************
+//* /publish - takes the :id and wrangles the couchdb doc into final form for linked data.
+//**************************************************
 
 
 

@@ -1051,3 +1051,17 @@ next - to modify edit forms/schema and GET /prototype/:id to display current pic
 Then all that remains is the PUBLISH logic, and to prettfy, plus a few more "list/browse" views...
 <sigh>
 But nearly there...
+
+####20150416
+
+Added html/jQuery to have the list of protopatterns populate a table, with buttons for view, edit, publish.
+Each button gets an id= prefixed with v, e, p respectivly followed by the protopattern :id
+making dynmaically loaded html elements clickable with jQuery requires _delegation_
+```
+	$('#prototable tbody').on('click', 'tr td button.edit', function(){
+ 	 	var number = this.id.substring(1);
+ 		//load a new page with the populated form
+ 		window.location.href='../html/edit.html?id='+number;
+ 	});
+``` 
+the above selects the closest static anchor, then .on('click' ..) we give the selector of the dynamic html parts, then give the callback function to execute upon detection of a click event.
