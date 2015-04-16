@@ -1,6 +1,6 @@
 
-<div id='proto'>A clickable list of protopatterns</div>
-	<div id='list'>
+<div id='proto'></div>
+	<div class='list-container' id='list'>
 		<table id='prototable' style="width:50%">
 			<tbody>
 				<tr></tr>
@@ -21,7 +21,7 @@
 		//	$('#list').append("<div class='protopattern' id=d"+list[x]['id']+">"+list[x]['name']+" | </div>");
 		//		}
 
-		$('#prototable').append("<tr> class='item'<td>"+list[x]['name']+"</td><td><button type='button' class='view' id='v"+list[x]['id']+"'>View</button></td><td><button type='button' class='edit' id='e"+list[x]['id']+"'>Edit</button></td><td><button type='button' class='publish' id='p"+list[x]['id']+"'>Publish</button></td>");
+		$('#prototable').append("<tr> class='item'<td class='list-text'>"+list[x]['name']+"</td><td><button type='button' class='btn btn-info view' id='v"+list[x]['id']+"'>View</button></td><td><button type='button' class='btn btn-warning edit' id='e"+list[x]['id']+"'>Edit</button></td><td><button type='button' class='btn btn-success publish' id='p"+list[x]['id']+"'>Publish</button></td>");
 		
 		}
 
