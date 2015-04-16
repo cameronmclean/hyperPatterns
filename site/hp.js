@@ -1273,7 +1273,12 @@ app.post('/prototype', function(req, res){
 						//set new doc _rev 
 						protoPattern['_rev'] = doc['_rev'];
 						protoPattern['_id'] = doc['_id'];
-						protoPattern['_attachments'] = doc['_attachments'];
+						if (doc['_attachments']){
+							protoPattern['_attachments'] = doc['_attachments'];
+						} else {
+							protoPattern['_attachments'] = {};
+						}
+						
 
 					//	console.log('adding to db');
 					//	console.log(protoPattern);

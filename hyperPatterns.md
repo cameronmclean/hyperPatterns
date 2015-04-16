@@ -1065,3 +1065,10 @@ making dynmaically loaded html elements clickable with jQuery requires _delegati
  	});
 ``` 
 the above selects the closest static anchor, then .on('click' ..) we give the selector of the dynamic html parts, then give the callback function to execute upon detection of a click event.
+
+Next - started working on a proto-pattern view. This will be a new page, to which a protopattern content can be populated into dynamic html elements.
+
+Note : new bug today -> editing/updating a pattern expects "_attachments" in exisiting protopattern doc
+if we dont add any files when creating a new pattern, this doesn't exist yet...
+I cant force people to attach files, so need to change POST /prototype logic...
+_FIXED!_
