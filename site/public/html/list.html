@@ -15,29 +15,35 @@
  		var list = data.list;
  		//populate the table
  		for (var x = 0; x < list.length; x++){
- 			console.log(list[x]);
- 			// $('#list').append("<p><a href='./html/edit.html?id="+list[x]['id']+"'>"+list[x]['name']+"</a></p>");
+ 		//	console.log(list[x]);
+ 		// $('#list').append("<p><a href='./html/edit.html?id="+list[x]['id']+"'>"+list[x]['name']+"</a></p>");
 
-	//	$('#list').append("<div class='protopattern' id=d"+list[x]['id']+">"+list[x]['name']+" | </div>");
-//		}
+		//	$('#list').append("<div class='protopattern' id=d"+list[x]['id']+">"+list[x]['name']+" | </div>");
+		//		}
 
-		$('#prototable').append("<tr><td>"+list[x]['name']+"</td><td><button type='button' id='view'>View</button></td> <td><button type='button' id='edit'>Edit</button></td> <td><button type='button' id='publish'>Publish</button></td></tr>");
-	}
+		$('#prototable').append("<tr> class='item'<td>"+list[x]['name']+"</td><td><button type='button' class='view' id='v"+list[x]['id']+"'>View</button></td><td><button type='button' class='edit' id='e"+list[x]['id']+"'>Edit</button></td><td><button type='button' class='publish' id='p"+list[x]['id']+"'>Publish</button></td>");
+		
+		}
+
+});
 
 
 
- 		//we dont know the ID of all proto patterns/divs in the #list 
- 		//we make them all clickable, then grab the ID when clicked, and pass it to the .load() to load the edit form with URL param.
+$(document).ready(function(){
 
- 	
- });
-
-	$('#list').on('click', 'div.protopattern', function(e){
- 			//alert('you clicked on'+this.id);
- 			//split the d from the number... as elemnt id's cannot be numberic
+		//if clicked on edit
+		$('#prototable tbody').on('click', 'tr td button.edit', function(){
+ 			alert("clicky!");
  			var number = this.id.substring(1);
  			//load a new page with the populated form
  			window.location.href='../html/edit.html?id='+number;
  		});
+
+ 		
+});
+ 
+
+
+
 
 </script>
