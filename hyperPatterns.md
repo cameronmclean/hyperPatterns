@@ -1052,7 +1052,7 @@ Then all that remains is the PUBLISH logic, and to prettfy, plus a few more "lis
 <sigh>
 But nearly there...
 
-####20150416
+#####20150416
 
 Added html/jQuery to have the list of protopatterns populate a table, with buttons for view, edit, publish.
 Each button gets an id= prefixed with v, e, p respectivly followed by the protopattern :id
@@ -1072,3 +1072,13 @@ Note : new bug today -> editing/updating a pattern expects "_attachments" in exi
 if we dont add any files when creating a new pattern, this doesn't exist yet...
 I cant force people to attach files, so need to change POST /prototype logic...
 _FIXED!_
+
+#####20150417
+
+Workin' on the pretty view for protopatterns.
+Spent _ages_ wondering why `<div>`s in the forces loop were stacking up and not displaying as block elements.
+Turns out its becuse the `<img>` was bigger than the div, messing things up.
+Fixed by adding 
+`overflow:auto;` to the indiv forces class in css
+see http://learnlayout.com/clearfix.html
+uh. anyway, fixed now.

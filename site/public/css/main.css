@@ -9,6 +9,48 @@ td {padding-bottom: 1em; }
 }
 
 .list-text {font-size: 18px;}
+
+.main-data {
+	padding-right: 120px;
+	padding-left: 120px;
+	border-radius: 6px;
+}
+
+.main-data-title{
+	font-size: 24px;
+}
+
+.pretty-link {
+	color: #000000;
+	}
+
+a:hover{
+	color: #FF0000;
+	text-decoration: none;
+}
+
+#authors, #context, #problem, #forces {
+	padding-bottom: 2em;
+}
+
+.force-item {
+	overflow: auto;
+	padding-bottom: 1em;
+}
+
+.force-image {
+    float: left; 
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-bottom: 15px;
+	width: 100px;
+	height: 100px;
+}
+
+
+.problem-text, .solution-text{
+	font-weight: bold;
+}
 .first-banner {
 	padding-right: 60px;
 	padding-left: 60px;

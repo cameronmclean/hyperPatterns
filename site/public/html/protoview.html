@@ -14,7 +14,7 @@
     <link type="text/css" href="http://code.cloudcms.com/alpaca/1.5.8/bootstrap/alpaca.min.css" rel="stylesheet" />
     <script type="text/javascript" src="http://code.cloudcms.com/alpaca/1.5.8/bootstrap/alpaca.min.js"></script>
       <link type="text/css" rel="stylesheet" href="/css/main.css" />
-      
+
 	</head>
 	<body>
 
@@ -26,17 +26,34 @@
                     <button type="button" class="btn btn-default navbar-btn" id='addnew'>New pattern</button>
                     <button type ="button" class="btn btn-default navbar-btn" id='edit'>Proto-patterns</button>
                     <button type='button' class="btn btn-default navbar-btn" id='patterns'>Patterns</button>
-        <!--    <a href='./html/newform.html'>New Pattern</a> |
-            <a hrer='./html/list.html'>Proto-Patterns</a> |
-            <a href='./html/patterns.html'>Patterns</a>         
-            !-->
                 </div>
             </nav>
         </div>
 		
-		<p>Welcome to the world of patterns!</p>
-
+		
+        <!-- divs to append pattern content into !-->
 		<div id="centerstage">
+			<div id='top' class="jumbotron first-banner">
+			</div>
+			<div class='main-data'>
+				<div id='authors'>
+					<p class='main-data-title'>Authors</p>
+				</div>
+				<div id='context'>
+					<p class='main-data-title'>Context</p>
+				</div>
+				<div id='problem'>
+					<p class='main-data-title'>Problem</p>
+				</div>
+				<div id='forces'>
+					<p class='main-data-title'>Forces</p>
+					<div id='force-details' class='force-container'>
+					</div>
+				</div>
+				<div id='solution'>
+					<p class='main-data-title'>Solution</p>
+				</div>
+			</div>
 		</div>
 		
 
@@ -67,12 +84,32 @@
         	}
     	}
 
-    	//fill out #centerstage with view of protopattern
+    	//fill out #centerstage and elements with protopattern data
     	$(document).ready(function(){
     		  var protoid = GetQueryStringParams('id');
     		   $.getJSON("/prototype/"+protoid, function(data){
  				//console.log(data);
- 				$("#centerstage").append('<p>'+data['name']+'</p>');
+ 				
+ 				$("#top").append('<h1>'+data['name']+'</h1>');
+
+ 				for (var i = 0; i < data['author'].length; i++){
+					$("#authors").append('<p><a class="pretty-link" target="_blank" href='+data['author'][i]['orcid']+'>'+data['author'][i]['name']+'</a></p>');
+				}
+				
+				$('#context').append('<p>'+data['context']+'</p>');
+				$('#problem').append('<p class="problem-text">'+data['problem']+'</p>');
+
+				$('#solution').append('<p class="solution-text">'+data['solution']+'</p>');
+
+				for (var i = 0; i < data['forces'].length; i++){
+					//console.log('looping over forces');
+
+					$('#force-details').append('<div class="force-item" id="f'+i+'"></div>')
+					$("#f"+i).append('<img class="force-image" src="" />');
+					$("#f"+i).append('<p class="force-name"><h5>'+data['forces'][i]['name']+'<h5></p>');
+				}
+
+			
 
 				});
     		 

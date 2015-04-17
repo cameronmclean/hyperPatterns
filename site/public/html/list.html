@@ -44,7 +44,10 @@ $(document).ready(function(){
  			var number = this.id.substring(1);
  			//load a new page with the populated form
  		//	window.location.href='../html/view.html?id='+number;
- 		alert("Stub to publish pattern "+number);
+ 		var answer = confirm("Are you sure you want to publish this pattern? \n\nYou can no longer edit this pattern once published.");
+ 		alert("You said "+answer);
+
+ 		//alert("Stub to publish pattern "+number);
  		});
 
 		//if clicked on edit
