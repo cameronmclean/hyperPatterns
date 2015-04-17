@@ -115,8 +115,7 @@ app.get('/doc/contributor/:orcid', function(req, res){
 	function done(){
 		console.log('Final doc assembled for response!');
 		console.log(JSON.stringify(doc, null, 2));
-		res.send(JSON.stringify(doc, null, 2));
-		
+		res.send(JSON.stringify(doc, null, 2));		
 	}
 
 
@@ -1008,7 +1007,7 @@ app.get('/prototype/:intID', function(req, res){
 		wrangled['forces'] = [];
 		wrangled['ref'] = [];
 		wrangled['int_id'] = doc['int_id'];
-	//	wrangled['_attachments'] = JSON.stringify(doc['_attachments']);
+		wrangled['_attachments'] = doc['_attachments'];
 
 		var keys = Object.keys(doc);
 		var attachmentInfo = doc['_attachments'];
@@ -1086,6 +1085,79 @@ app.get('/prototype/:intID', function(req, res){
 		}
 	});
 });
+
+//*******************************************
+app.get('/prototype/:intID/:img', function(req, res){
+	
+	var intID = req.params.intID;
+	var img = req.params.img;
+	var progress = 0;
+
+	getPattern(intID);
+
+	function getPattern(num){
+		// a list of all pattern nums and id in the db
+		db.get('_design/patterns/_view/getProtoPatternByNum', function(err, body){
+			if(!err){
+				var list = body['rows'];
+				var counter = 0; // counter available outside of for loop
+	
+
+				//test to see if :intID matches a patter doc on the list
+				//if so get it							
+				for (var x=0; x < list.length; x++){
+		
+					if (String(list[x].value) === num){
+						db.get(list[x].id, function(err, body){
+							if ( img in body._attachments) { 
+							console.log("img exists!");
+							var docName = body._id;
+							db.attachment.get(docName, img, function(err, body){
+								if(!err){
+									fs.write(img, body);
+									res.send(body);
+								}
+							});
+							//docToSend = JSON.parse(JSON.stringify(body));
+							//console.log(docToSend);
+							progress++;
+							}
+							else {
+								console.log("pattern pic not found");
+								goToError("Image not found");
+							}
+							//var docToPass = JSON.parse(JSON.stringify(docToSend)); //? ? eh?
+							//getPatternForces(docToPass); //<------------if all done, move to next function
+						});
+					}
+					else {
+						counter++;
+						//console.log("counter = "+counter+" progress = "+progress);
+					}
+				}
+				
+				// if we have been through the for loop and found nothing....
+				if (counter === list.length && progress < 1){
+					//console.log("no match!");
+					goToError("doc not found in db list!");
+				 }
+
+			}
+			
+			else{
+				goToError(err);
+			}
+		});
+	}
+
+	function goToError(err){
+		console.log("**********error getting pattern diagram "+img+" ... "+err);
+		res.sendStatus(404);
+	}
+
+});
+
+
 
 
 //*******************************************
