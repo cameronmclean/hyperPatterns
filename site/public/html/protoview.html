@@ -102,9 +102,33 @@
     		  var protoid = GetQueryStringParams('id');
     		   $.getJSON("/prototype/"+protoid, function(data){
  				//console.log(data);
- 				
+ 				var attachments = [];
+ 				var prefix = [];
+ 				//get attachment keys
+ 					//now add all the images
+				if (data['_attachments']){
+					console.log("we have attachements!");
+ 					attachments = Object.keys(data["_attachments"]);					
+ 					var prefix = [];
+ 					//get prefixes
+ 					for (var i = 0; i < attachments.length; i++){
+ 						var temp = attachments[i].split('__');
+ 						prefix.push(temp[0]);
+ 					}
+ 				}
+
  				$("#top").append('<p id="status"><h3>Proto-pattern</h3></p>')
- 				$("#top").append('<img class="pattern-image" src="" />');
+
+ 				//append the pattern pic
+ 				if ( prefix.indexOf("pic") > -1 ){
+ 					console.log("pic match!");
+						//then we have a match
+						var imagename = attachments[prefix.indexOf("pic")];
+						$("#top").append('<img class="pattern-image" src="http://127.0.0.1:3000/prototype/'+protoid+'/'+imagename+'" />');
+
+				}
+
+ 				
  				$("#top").append('<h1>'+data['name']+'</h1>');
 
  				for (var i = 0; i < data['author'].length; i++){
