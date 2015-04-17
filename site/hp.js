@@ -1158,6 +1158,36 @@ app.get('/prototype/:intID/:img', function(req, res){
 });
 
 
+//********************************************
+app.get('/patternlist', function(req, res){
+		db.get('_design/patterns/_view/getPatterns', function(err, body){
+		
+		var listOfPatterns = body['rows'];
+		var titles = [];
+		console.log(listOfPatterns);
+		async.eachSeries(listOfPatterns, function(doc, callback){
+			//for each element in the array listOfPrototypes, fetch the doc in series
+			//push the protopattern name and id to an array (titles)
+			db.get(doc['id'], function(err, data){
+				var thingy = {};
+				thingy['name'] = data['name'];
+				thingy['id'] = data['int_id'];
+				titles.push(thingy);
+			callback();
+			});
+		}, function(err){
+			if(!err) {
+				//We are done getting all the prototypes, send the list of titles and IDs as an array within a JSON.
+				//console.log("call me");
+				var titlesToSend = {};
+				titlesToSend['list'] = titles;
+				res.send(titlesToSend);
+			}
+		}
+		);
+	});
+
+});
 
 
 //*******************************************

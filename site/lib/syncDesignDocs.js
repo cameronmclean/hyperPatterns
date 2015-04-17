@@ -26,7 +26,11 @@ var views = {
 		},
 		'getPrototypes': {
 			"map": "function(doc){ if(doc.doctype==='protoPattern'){ emit('int_id', doc.int_id);}}"
-		}
+		},
+		'getPatterns': {
+			"map": "function(doc){ if(doc.doctype==='pattern'){ emit('int_id', doc.int_id);}}"
+		},
+
 	}
 };
 

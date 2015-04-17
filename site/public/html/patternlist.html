@@ -1,0 +1,46 @@
+
+<div id='proto'></div>
+	<div class='list-container' id='list'>
+		<table id='patterntable' style="width:50%">
+			<tbody>
+				<tr></tr>
+				<tr><td id="table-title">Published Patterns</td></tr>
+				<tr></tr>
+			</tbody>
+		</table>
+	</div>
+
+<script>
+// /prototypes gets a JSON wich contains an array of prototype pattern info
+ $.getJSON("/patternlist", function(data){
+ 	//	console.log(data);
+ 		var list = data.list;
+ 		//populate the table
+ 		for (var x = 0; x < list.length; x++){
+ 		//	console.log(list[x]);
+ 		// $('#list').append("<p><a href='./html/edit.html?id="+list[x]['id']+"'>"+list[x]['name']+"</a></p>");
+
+		//	$('#list').append("<div class='protopattern' id=d"+list[x]['id']+">"+list[x]['name']+" | </div>");
+		//		}
+
+		$('#patterntable').append("<tr> class='item'<td class='list-text'>"+list[x]['name']+"</td><td><button type='button' class='btn btn-info view' id='v"+list[x]['id']+"'>View</button></td>");
+		
+		}
+
+});
+
+
+$(document).ready(function(){
+
+		//if clicked on view
+		$('#patterntable tbody').on('click', 'tr td button.view', function(){
+ 			var number = this.id.substring(1); 			
+ 		//	alert("stub to view pattern "+number);
+ 			//load a new page populating #centrestage div via URL query param
+ 			window.location.href='../html/patternview.html?id='+number;
+ 		});
+});
+ 
+
+
+</script>
