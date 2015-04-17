@@ -53,6 +53,19 @@
 				<div id='solution'>
 					<p class='main-data-title'>Solution</p>
 				</div>
+				<div id='rationale'>
+					<p class='main-data-title'>Support and rationale</p>
+				</div>
+				<div id='diagram'>
+					<p class='main-data-title'>Diagram</p>
+					<div id='pattern-diagram'>
+					</div>
+				</div>
+				<div id='ref'>
+					<p class='main-data-title'>References</p>
+					<div id='ref-container'>
+					</div>
+				</div>
 			</div>
 		</div>
 		
@@ -97,19 +110,24 @@
 				}
 				
 				$('#context').append('<p>'+data['context']+'</p>');
-				$('#problem').append('<p class="problem-text">'+data['problem']+'</p>');
-
-				$('#solution').append('<p class="solution-text">'+data['solution']+'</p>');
+				$('#problem').append('<p class="problem-text alert alert-warning">'+data['problem']+'</p>');
 
 				for (var i = 0; i < data['forces'].length; i++){
 					//console.log('looping over forces');
 
 					$('#force-details').append('<div class="force-item" id="f'+i+'"></div>')
 					$("#f"+i).append('<img class="force-image" src="" />');
-					$("#f"+i).append('<p class="force-name"><h5>'+data['forces'][i]['name']+'<h5></p>');
+					$("#f"+i).append('<p class="force-name"><h4>'+data['forces'][i]['name']+'<h4></p>');
+					$("#f"+i).append('<p class="force-text">'+data['forces'][i]['definition']+'</p>');
 				}
 
-			
+				$('#solution').append('<p class="solution-text alert alert-warning">'+data['solution']+'</p>');
+				$('#rationale').append('<p">'+data['rationale']+'</p>')
+				$('#pattern-diagram').append('<img class="diagram-image" src="" />')
+
+				for (var i = 0; i < data['ref'].length; i++){
+					$("#ref-container").append('<p>'+data['ref'][i]['reference']+'</p>');
+				}
 
 				});
     		 

@@ -11,13 +11,13 @@ td {padding-bottom: 1em; }
 .list-text {font-size: 18px;}
 
 .main-data {
-	padding-right: 120px;
+	padding-right: 350px;
 	padding-left: 120px;
 	border-radius: 6px;
 }
 
 .main-data-title{
-	font-size: 24px;
+	font-size: 28px;
 }
 
 .pretty-link {
@@ -29,7 +29,7 @@ a:hover{
 	text-decoration: none;
 }
 
-#authors, #context, #problem, #forces {
+#authors, #context, #problem, #forces, #solution, #rationale, #diagram {
 	padding-bottom: 2em;
 }
 
@@ -47,9 +47,22 @@ a:hover{
 	height: 100px;
 }
 
+#pattern-diagram {
+	overflow: auto;
+}
+
+.diagram-image{
+	float: left; 
+	padding-left: 15px;
+	padding-right: 15px;
+	padding-bottom: 15px;
+}
 
 .problem-text, .solution-text{
 	font-weight: bold;
+	color: #000000;
+	background-color: #fcfaf2;
+	border: none;
 }
 .first-banner {
 	padding-right: 60px;
