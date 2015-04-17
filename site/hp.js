@@ -964,7 +964,7 @@ app.get('/prototypes', function(req, res){
 		
 		var listOfPrototypes = body['rows'];
 		var titles = [];
-		console.log(listOfPrototypes);
+	//	console.log(listOfPrototypes);
 		async.eachSeries(listOfPrototypes, function(proto, callback){
 			//for each element in the array listOfPrototypes, fetch the doc in series
 			//push the protopattern name and id to an array (titles)
@@ -1164,7 +1164,7 @@ app.get('/patternlist', function(req, res){
 		
 		var listOfPatterns = body['rows'];
 		var titles = [];
-		console.log(listOfPatterns);
+	//	console.log(listOfPatterns);
 		async.eachSeries(listOfPatterns, function(doc, callback){
 			//for each element in the array listOfPrototypes, fetch the doc in series
 			//push the protopattern name and id to an array (titles)
@@ -1192,7 +1192,7 @@ app.get('/patternlist', function(req, res){
 
 //*******************************************
 app.post('/new', function(req, res){
-	console.log("hey look, a new pattern!");
+//	console.log("hey look, a new pattern!");
 
 	//get a random ID for this POST
 	var session = crypto.randomBytes(20).toString('hex');

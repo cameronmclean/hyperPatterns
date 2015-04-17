@@ -1082,3 +1082,23 @@ Fixed by adding
 `overflow:auto;` to the indiv forces class in css
 see http://learnlayout.com/clearfix.html
 uh. anyway, fixed now.
+
+Wrote a bunch of jQuery to get, parse, match prefix and load images for protopattern view.
+
+Protopattern view now complete!
+
+Started on view for published design patterns.
+
+created /patternlist GET route to return list of doc ids and int_ids for all published patterns
+(doctype: "pattern") in couchdb.
+
+patternlist.html grabs the name and puts it in table just as for list.html does for protopatterns
+ next to wrangle the view click to go to say patternview.html?id=?
+ then wrangle all the various AJAXy published pattern docs into a single page view.
+
+ then then to write the publish logic.
+
+ Then v1.0 is complete!!
+
+ 
+ 
