@@ -121,7 +121,7 @@
 
  				//append the pattern pic
  				if ( prefix.indexOf("pic") > -1 ){
- 					console.log("pic match!");
+ 				//	console.log("pic match!");
 						//then we have a match
 						var imagename = attachments[prefix.indexOf("pic")];
 						$("#top").append('<img class="pattern-image" src="http://127.0.0.1:3000/prototype/'+protoid+'/'+imagename+'" />');
@@ -142,14 +142,30 @@
 					//console.log('looping over forces');
 
 					$('#force-details').append('<div class="force-item" id="f'+i+'"></div>')
-					$("#f"+i).append('<img class="force-image" src="" />');
+					if ( prefix.indexOf("forces_"+i+"_pic") > -1 ){
+ 					//console.log("pic match!");
+						//then we have a match
+						var imagename = attachments[prefix.indexOf("forces_"+i+"_pic")];
+						$("#f"+i).append('<img class="force-image" src="http://127.0.0.1:3000/prototype/'+protoid+'/'+imagename+'" />');
+
+					}
+				//	$("#f"+i).append('<img class="force-image" src="" />');
 					$("#f"+i).append('<p class="force-name"><h4>'+data['forces'][i]['name']+'<h4></p>');
 					$("#f"+i).append('<p class="force-text">'+data['forces'][i]['definition']+'</p>');
 				}
 
 				$('#solution').append('<p class="solution-text alert alert-warning">'+data['solution']+'</p>');
 				$('#rationale').append('<p">'+data['rationale']+'</p>')
-				$('#pattern-diagram').append('<img class="diagram-image" src="" />')
+
+				if ( prefix.indexOf("diagram") > -1 ){
+ 					console.log("diagram pic match!");
+						//then we have a match
+						var imagename = attachments[prefix.indexOf("diagram")];
+						console.log(imagename)
+						$("#pattern-diagram").append('<img class="diagram-image" src="http://127.0.0.1:3000/prototype/'+protoid+'/'+imagename+'" />');
+
+				}
+			//	$('#pattern-diagram').append('<img class="diagram-image" src="" />')
 
 				for (var i = 0; i < data['ref'].length; i++){
 					$("#ref-container").append('<p>'+data['ref'][i]['reference']+'</p>');
