@@ -103,6 +103,8 @@
     		   $.getJSON("/prototype/"+protoid, function(data){
  				//console.log(data);
  				
+ 				$("#top").append('<p id="status"><h3>Proto-pattern</h3></p>')
+ 				$("#top").append('<img class="pattern-image" src="" />');
  				$("#top").append('<h1>'+data['name']+'</h1>');
 
  				for (var i = 0; i < data['author'].length; i++){
