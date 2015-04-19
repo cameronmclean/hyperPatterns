@@ -1337,7 +1337,7 @@ app.get("/publish/:intID", function(req, res){
 			newDoc['forceName'] = force['name'];
 			newDoc['description'] = force['definition'];
 			newDoc['int_id'] = forceCounter;
-			newDoc['pic'] = "http://127.0.0.1:3000/doc/pattern/"+doc['int_id']+"/force/"+forceCounter+"/"+filenames[forceCounter];
+			newDoc['pic'] = "http://127.0.0.1:3000/doc/pattern/"+doc['int_id']+"/force/"+forceCounter+"/"+force['pic'];
 		//	newDoc['pic'] = forces['pic'];
 			newDoc['parentPattern'] = doc['_id'];
 			forceCounter++;
@@ -1360,8 +1360,8 @@ app.get("/publish/:intID", function(req, res){
 				console.log("we saved some new forces! but havnt added attachemnts yet");
 				for (var i = 0; i < newForceDocs.length; i++){
 					console.log(newForceDocs[i]);			
-					callback2(null);
 				}
+				callback2(null);
 		    } else {
 		    	console.log("something wrong with add Forces async "+err);
 		    	callback2(err);
@@ -1414,7 +1414,7 @@ app.get("/publish/:intID", function(req, res){
 						} 
 						else{
 							console.log("error "+err);
-							//res.sendStatus(500);
+							res.sendStatus(500);
 						}
 					})
 
