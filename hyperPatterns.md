@@ -1105,4 +1105,11 @@ got pattern view all sorted.
 note trickyness with getting images - currently the image is stored as an attachemnt with either the pattern or force document and also specified by the URL "http://localhost:3000/doc/pattern/:id/:img .. /:id/force/:id/:img" etc. This might be a headache to wrangle upon publish logic - getting the attachments, copy to new doc, add field to describe the attachemts again... but whateves. 
 
 So, just to do the publish logic now (and maybe add helpers for protopattern existing files...)
+
+Soooo, the whole restful thing is rapidly going south -
+to implement a quick and dirty "publishing" logic, i set up a GET route "/publish/:intID"  - this will grab the intID, check for an exisiting protopattern, if OK - do the publish logic, else, return 404.
+The list.html jQuery grabs the intID from the publish button click and makes an AJAX get to /publish/:intID.
+If theres a 200 OK!, we go on to publish.html for 3 secs to keep the user busy while we wrangle.
+IF the AJAX request fails - we alert "error and just return to the list."
+NEXT is to do the publish logic from the node side....
  

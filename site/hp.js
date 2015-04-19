@@ -1190,6 +1190,17 @@ app.get('/patternlist', function(req, res){
 });
 
 
+//********************
+//flip it for publishing
+//***********************************
+app.get("/publish/:intID", function(req, res){
+	var intID = req.params.intID
+	console.log("someone tried to publish pattern "+intID);
+	res.send("OK!");
+
+});
+
+
 //*******************************************
 app.post('/new', function(req, res){
 //	console.log("hey look, a new pattern!");

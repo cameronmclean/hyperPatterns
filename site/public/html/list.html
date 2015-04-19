@@ -13,18 +13,12 @@
 <script>
 // /prototypes gets a JSON wich contains an array of prototype pattern info
  $.getJSON("/prototypes", function(data){
- 	//	console.log(data);
- 		var list = data.list;
+ 	 	var list = data.list;
+ 		
  		//populate the table
  		for (var x = 0; x < list.length; x++){
- 		//	console.log(list[x]);
- 		// $('#list').append("<p><a href='./html/edit.html?id="+list[x]['id']+"'>"+list[x]['name']+"</a></p>");
-
-		//	$('#list').append("<div class='protopattern' id=d"+list[x]['id']+">"+list[x]['name']+" | </div>");
-		//		}
-
-		$('#prototable').append("<tr> class='item'<td class='list-text'>"+list[x]['name']+"</td><td><button type='button' class='btn btn-info view' id='v"+list[x]['id']+"'>View</button></td><td><button type='button' class='btn btn-warning edit' id='e"+list[x]['id']+"'>Edit</button></td><td><button type='button' class='btn btn-success publish' id='p"+list[x]['id']+"'>Publish</button></td>");
-		
+ 		
+		$('#prototable').append("<tr> class='item'<td class='list-text' id='t"+list[x]['id']+"'>"+list[x]['name']+"</td><td><button type='button' class='btn btn-info view' id='v"+list[x]['id']+"'>View</button></td><td><button type='button' class='btn btn-warning edit' id='e"+list[x]['id']+"'>Edit</button></td><td><button type='button' class='btn btn-success publish' id='p"+list[x]['id']+"'>Publish</button></td>");
 		}
 
 });
@@ -37,27 +31,37 @@ $(document).ready(function(){
  			//alert("clicky!");
  			var number = this.id.substring(1);
  			//load a new page with the populated form
- 			window.location.href='../html/edit.html?id='+number;
+ 			window.location.href='/html/edit.html?id='+number;
  		});
 
-		//if clicked on edit
+		//if clicked on PUBLISH
 		$('#prototable tbody').on('click', 'tr td button.publish', function(){
  			//alert("clicky!");
  			var number = this.id.substring(1);
+ 			var text = $('#t'+number).text();
  			//load a new page with the populated form
  		//	window.location.href='../html/view.html?id='+number;
- 		var answer = confirm("Are you sure you want to publish this pattern? \n\nYou can no longer edit this pattern once published.");
- 		alert("You said "+answer);
+ 		var answer = confirm("Are you sure you want to publish\n\n"+text+"\n\nYou can no longer edit this pattern once published.");
+ 		
+ 		if (answer === true ){
+ 			$.get("http://127.0.0.1:3000/publish/"+number, function(){	
+ 					window.location.href='/published.html?id='+number;
+ 				})
+ 				.fail(function(){
+ 					alert("error publishing pattern \n\n"+text);
+ 				});
+ 		}
+ 		
 
- 		//alert("Stub to publish pattern "+number);
+ 		
  		});
 
-		//if clicked on edit
+		//if clicked on View
 		$('#prototable tbody').on('click', 'tr td button.view', function(){
  			var number = this.id.substring(1); 			
  		//	alert("stub to view pattern "+number);
  			//load a new page populating #centrestage div via URL query param
- 			window.location.href='../html/protoview.html?id='+number;
+ 			window.location.href='/html/protoview.html?id='+number;
  		});
 });
  
