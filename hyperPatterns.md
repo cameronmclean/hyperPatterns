@@ -1116,4 +1116,9 @@ NEXT is to do the publish logic from the node side....
 got publish working on first round of putMainDoc
 NOTE - we are getting server side errors TypeError: Cannot read property 'length' of undefined when we try to view incomplete patterns
 - this is likely because we havent finsihed updating all the doc bits yet..
+
+ended day halfway throgh putForces logic.
+Doesnt seem to be picking up the "pic" string to hardcode to the new force doc "pic": URL.
+Sort this next > as _attachement deets/filenames need to be db.get.attachment , saved to mem and copied to corresponding nre force docs as attachments .
+ NB - write a fucntion that does this, and call it from the first putForces() async.eachSerial callback... (to avoid deep nesting/readability)
  
