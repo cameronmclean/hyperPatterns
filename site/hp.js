@@ -1194,9 +1194,234 @@ app.get('/patternlist', function(req, res){
 //flip it for publishing
 //***********************************
 app.get("/publish/:intID", function(req, res){
+
 	var intID = req.params.intID
-	console.log("someone tried to publish pattern "+intID);
-	res.send("OK!");
+
+	var putMainDoc = function(doc, callback){
+	//console.log("putMainDoc "+doc['name']);
+
+	var newDoc = {}; //copy over parts into new "doc" we use to progressivly overwrite the old one
+					//the remaing bits we need _attachments etc should still be in mem via the first db.get doc object 
+
+	
+	var prefix = [];	
+
+
+	newDoc['_id'] = doc['_id'];
+	newDoc['_rev'] = doc['_rev'];
+	newDoc['doctype'] = "pattern";
+	newDoc['name'] = doc['name'];
+	newDoc['authors'] = []; //will be an array of coucdb doc _id - added during cleanUp
+	newDoc['context'] = doc['contex'];
+	newDoc['problem'] = doc['problem'];
+	newDoc['solution'] = doc['solution'];
+	newDoc['rationale'] = doc['rationale'];
+	newDoc['evidence'] = []; //will be an array of other couchdb doc _id - added during cleanUp
+	newDoc['int_id'] = doc['int_id'];
+	newDoc['force'] = []; //will be an array of other couchdb doc _id - added during cleanUp
+	newDoc['_attachments'] = doc['_attachments'];
+
+	//we need to get the pic and diagram filenames from the attachments
+	
+	if (doc['_attachments']) {
+
+		var files = Object.keys(doc['_attachments']);
+
+		//get a matching array of filename prefixes
+		for (var i = 0; i < files.length; i++){
+			var holder = files[i].split("__");
+			prefix.push(holder[0]);
+		}
+
+
+		//see if 'pic' exists, if so encode the location
+	 	var picPlace = prefix.indexOf("pic"); 
+	 	if (picPlace != -1){
+	 		newDoc["pic"] = "http://127.0.0.1:3000/doc/pattern/"+doc['int_id']+"/"+files[picPlace];
+	 	} else {
+	 		newDoc["pic"] = null;
+		 }
+	 	//do the same for diagram
+	 	var diagramPlace = prefix.indexOf("diagram");
+	 	if (diagramPlace != -1){
+	 		newDoc["diagram"] = "http://127.0.0.1:3000/doc/pattern/"+doc['int_id']+"/diagram/"+files[picPlace];
+	 	} else {
+	 		newDoc['diagram'] = null;
+		 }
+
+	}
+	//update the protopattern to pattern, still not done though...
+	db.insert(newDoc, function(err, body){
+		if(!err) { 
+
+			callback(null);
+			// db.get(body.id, function(err, body2){
+			// 	//console.log("new doc rev "+body2._rev);
+			// 	callback(null);
+			// })
+		}
+		else {
+			console.log("error in putMainDoc "+err)
+			callback(err);
+		}
+	});
+	
+	}
+
+	var putForces = function(doc, callback2){
+		//console.log("putForces doc number "+doc['int_id']);
+		//get arrary of force pics to save as attachemnts
+			
+		var keys = Object.keys(doc);
+
+		var attachmentInfo = {};
+		if (doc['_attachments']) {
+			var attachmentInfo = doc['_attachments']
+		} 
+		
+		// for (var i =0; i < keys.length; i++){
+		// 	console.log("the doc keys are "+i+" "+keys[i]);
+		// }
+
+		//subset the keys that relate to forces, and group them in an array of objects to send to async.forEach
+		var forceList = [];
+		//we allow up to 20 forces
+		for (var x = 0; x < 20; x++){
+	//		console.log("looping");
+	//		console.log(keys.indexOf('author_'+String(x)+'_name'));
+			
+			if( (keys.indexOf('forces_'+String(x)+'_name') > -1) && (keys.indexOf('forces_'+String(x)+'_definition') > -1) ){
+				var forces = {};
+				forces['name'] = doc['forces_'+String(x)+'_name'];
+				forces['definition'] = doc['forces_'+String(x)+'_definition'];
+				//is there an attachement?
+				var re = new RegExp("^forces_"+String(x)+"_pic"), item;
+				for (item in attachmentInfo){
+				//	console.log(item);
+					if (re.test(item)){
+						//console.log("regex match!");
+						//get and add the attachment filename
+						forces['pic'] = ""+item;
+					}
+
+				}
+				//if (attachmentInfo['forces_'+String(x)+'_pic']){
+				//	console.log('attached file found!');
+
+				//}
+				forceList.push(forces);
+			}
+
+		}
+
+	
+  //   	//create new force docs for each force
+ 	// 	var forceList = [];
+	 //    forceList = doc['forces'];
+		// for (var i=0; i < forceList.length; i++){
+		// console.log("trying to access force names from doc "+forceList[i]['name']);
+		// }
+	    var newForceDocs = []; //to store _id of newly created force docs
+
+		//get array of filenames for force pics
+		var filenames = [];
+		for (var i =0; i < forceList; i++){
+			filenames.push(forceList[i]["pic"]);
+		}
+
+		var forceCounter = 1; // to be incremented each time through the async.eachSeries
+
+		async.eachSeries(forceList, function(force, callback){
+			var newDoc = {};
+			newDoc['doctype'] = "force";
+			newDoc['forceName'] = force['name'];
+			newDoc['description'] = force['definition'];
+			newDoc['int_id'] = forceCounter;
+			newDoc['pic'] = "http://127.0.0.1:3000/doc/pattern/"+doc['int_id']+"/force/"+forceCounter+"/"+filenames[forceCounter];
+		//	newDoc['pic'] = forces['pic'];
+			newDoc['parentPattern'] = doc['_id'];
+			forceCounter++;
+			
+			db.insert(newDoc, function(err, body){
+				if (err) {
+					console.log("error creating new force doc "+err);
+				} else {
+					// var newdockeys = Object.keys(body);
+					// for (var i=0; i < newdockeys.length; i++){
+					// 	console.log("newdoc keys "+newdockeys[i]);
+					// }
+				newForceDocs.push(body.id);
+				callback();
+				}
+			});
+
+		}, function(err){ //callback for when async.eachSeries is finished
+			if (!err){
+				console.log("we saved some new forces! but havnt added attachemnts yet");
+				for (var i = 0; i < newForceDocs.length; i++){
+					console.log(newForceDocs[i]);			
+					callback2(null);
+				}
+		    } else {
+		    	console.log("something wrong with add Forces async "+err);
+		    	callback2(err);
+		    }//if (!err)
+		  } //end final callback function
+		);// end putForces async
+
+	} //end putForces()
+
+	var putAuthors = function(doc, callback){
+		console.log("putAuthors eg- "+doc['author']);
+		callback(null);
+	}
+
+	var putReferences = function(doc, callback){
+		console.log('need to parse the refs');
+		callback(null);
+	}
+
+	var cleanUp = function(doc, callback){
+		console.log("we're done!");
+		callback(null);
+
+	}
+
+	var functionList = [putMainDoc, putForces, putAuthors, putReferences, cleanUp];
+
+	//get prototypes and see if :intID exists
+	db.get('_design/patterns/_view/getPrototypes', function(err, body){
+		if(err) {
+			console.log("error getting protopattern list from couch"+err);
+			res.sendStatus(500);
+		}
+
+		var listOfPrototypes = body['rows'];
+				
+		for (var x = 0; x < listOfPrototypes.length; x++){
+			
+			if (String(listOfPrototypes[x]['value']) === intID){ //remember req.prams is a string
+			//	console.log("match!");
+				db.get(listOfPrototypes[x].id, function(err, doc){
+					if (err) console.log("error getting proto doc" +err);
+					
+					//logic to rangle doc into published versions
+					//note we have to retreive the doc again within each function to get a current _rev
+					async.applyEachSeries(functionList, doc, function(err, done){
+						if (!err) {
+							console.log("made it through the list! ");							
+							res.sendStatus(200);
+						} 
+						else{
+							console.log("error "+err);
+							//res.sendStatus(500);
+						}
+					})
+
+				});
+			}
+		}
+	});
 
 });
 

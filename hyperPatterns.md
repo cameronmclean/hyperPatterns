@@ -1112,4 +1112,8 @@ The list.html jQuery grabs the intID from the publish button click and makes an 
 If theres a 200 OK!, we go on to publish.html for 3 secs to keep the user busy while we wrangle.
 IF the AJAX request fails - we alert "error and just return to the list."
 NEXT is to do the publish logic from the node side....
+
+got publish working on first round of putMainDoc
+NOTE - we are getting server side errors TypeError: Cannot read property 'length' of undefined when we try to view incomplete patterns
+- this is likely because we havent finsihed updating all the doc bits yet..
  
