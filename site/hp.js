@@ -713,7 +713,7 @@ app.get('/doc/pattern/:intID/:img', function(req, res){
 					if (String(list[x].value) === num){
 						db.get(list[x].id, function(err, body){
 							if ( img in body._attachments) { 
-							console.log("img exists!");
+							//console.log("img exists!");
 							var docName = body._id;
 							db.attachment.get(docName, img, function(err, body){
 								if(!err){
@@ -785,7 +785,7 @@ app.get('/doc/pattern/:intID/diagram/:img', function(req, res){
 					if (String(list[x].value) === num){
 						db.get(list[x].id, function(err, body){
 							if ( img in body._attachments) { 
-							console.log("img exists!");
+						//	console.log("img exists!");
 							var docName = body._id;
 							db.attachment.get(docName, img, function(err, body){
 								if(!err){
@@ -909,7 +909,7 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 					if (String(list[x].value) === fNum){
 						db.get(list[x].id, function(err, body){
 							if ( body._attachments && img in body._attachments ) { 
-								console.log("img exists!");
+								//console.log("img exists!");
 								var docName = body._id;
 								db.attachment.get(docName, img, function(err, body){
 									if(!err){
@@ -1110,7 +1110,7 @@ app.get('/prototype/:intID/:img', function(req, res){
 					if (String(list[x].value) === num){
 						db.get(list[x].id, function(err, body){
 							if ( img in body._attachments) { 
-							console.log("img exists!");
+							//console.log("img exists!");
 							var docName = body._id;
 							db.attachment.get(docName, img, function(err, body){
 								if(!err){

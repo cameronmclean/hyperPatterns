@@ -5,6 +5,10 @@ body {
 
 td {padding-bottom: 1em; }
 
+code, pre {
+	border: none;
+	background-color: #fcf3f2;
+}
 .list-container {
 	padding-right: 120px;
 	padding-left: 120px;

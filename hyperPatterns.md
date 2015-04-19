@@ -1100,5 +1100,9 @@ patternlist.html grabs the name and puts it in table just as for list.html does 
 
  Then v1.0 is complete!!
 
- 
+#####20150419
+got pattern view all sorted.
+note trickyness with getting images - currently the image is stored as an attachemnt with either the pattern or force document and also specified by the URL "http://localhost:3000/doc/pattern/:id/:img .. /:id/force/:id/:img" etc. This might be a headache to wrangle upon publish logic - getting the attachments, copy to new doc, add field to describe the attachemts again... but whateves. 
+
+So, just to do the publish logic now (and maybe add helpers for protopattern existing files...)
  
