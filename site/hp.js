@@ -9,7 +9,8 @@ var async = require('async');
 var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
-var bibtexParse = require('bibtex-parser-js');
+//var bibtexParse = require('bibtex-parser-js'); // using bibtex-parse-js <- not parse'r'
+var bibtexParse = require('bibtex-parse-js');
 var validator = require('validator');
 var tv4 = require('tv4');
 var cors = require('cors');
@@ -1542,9 +1543,78 @@ app.get("/publish/:intID", function(req, res){
 
 //*****************************************************************************
 
-	var putReferences = function(doc, callback){
+	var putReferences = function(doc, callback2){
 		console.log('need to parse the refs');
-		callback(null);
+		//allow 20 refs  - loop throgh and get the keys
+		var refList = []; //to store objects and loop through with async.eachSeries
+		var newRefDocs = []; //to store list of author docs to update "pattern" doc
+		var keys = Object.keys(doc);
+
+		//allow 20 authors - grab keys and deets and store in authorList
+		for (var x = 0; x < 20; x++){
+				if ( (keys.indexOf('ref_'+String(x)+'_reference') > -1) ){
+	//			console.log('keys match');
+				var pref = bibtexParse.toJSON(doc['ref_'+String(x)+'_reference']);
+				console.log("pref is class "+pref);
+				//console.log(JSON.stringify(ref, null, 4));
+				//if parse error?
+				
+				var ref = {};
+				ref['entrytype'] = pref[0]['entryType'];
+				for (entry in pref[0]['entryTags']){
+					ref[entry] = pref[0][entry];
+				}
+				ref['int_id'] = x+1;
+				ref['doctype'] = "evidence";
+				ref['parentPattern'] = doc["_id"];
+				refList.push(ref);
+				}
+		}
+
+
+		var addRefDocs = function(ref, callback3){
+			db.insert(ref, function(err, body){
+				if(err){
+					console.log("bugger creating ref doc "+err);
+					callback3(err);
+				} else {
+					newRefDocs.push(body.id);
+					callback3(null);
+				}
+			});
+		};
+
+		var updateMainDoc = function(doc, newRefDocs){
+				db.get(doc["_id"], function(err, maindoc){
+					maindoc['evidence'] = newRefDocs;
+					db.insert(maindoc, function(err, finalcall){
+					if (err) {
+						console.log("bugger updating main doc with newRef doc list "+err);
+						callback2(err);
+					} else {
+						console.log("ref updated in maindoc");
+						callback2(null);
+					}
+				});
+			});
+		}
+
+		async.eachSeries(refList, function(ref, callback){
+			addRefDocs(ref, function(err){
+				if (!err){
+					callback();
+				}
+			});//close add refs()
+		}, function(err){
+			if (err) {
+				console.log("bugger in putRefs "+err);
+				callback2(err);
+			} else {
+				updateMainDoc(doc, newRefDocs);
+			}
+		});//end async
+
+		//callback(null);
 	}
 //*****************************************************************************
 
