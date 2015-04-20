@@ -917,18 +917,19 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 					if (String(body["int_id"]) === fNum){
 						console.log("match fNum = "+fNum+" int_id = "+body["int_id"]);
 						
-					//	db.attachment.get(doc, img).pipe(res);
-						db.attachment.get(doc, img, function(err, data){
-							if (err) {
-								callback2(err);
-							} else {
-								console.log("sending img "+img);
-								fs.write(img, data);
-								res.send(data);
-								res.end();
-								//callback2(null);
-							}
-						});
+						db.attachment.get(doc, img).pipe(res);
+						// db.attachment.get(doc, img, function(err, data){
+						// 	if (err) {
+						// 		callback2(err);
+						// 	} else {
+						// 		console.log("sending img "+img);
+						// 		console.log(data);
+						// 		fs.write(img, data);
+						// 		res.send(data);
+						// 		res.end();
+						// 		//callback2(null);
+						// 	}
+						// });
 					} else {
 						callback2(null);
 					}
@@ -1249,7 +1250,7 @@ app.get("/publish/:intID", function(req, res){
 	 	//do the same for diagram
 	 	var diagramPlace = prefix.indexOf("diagram");
 	 	if (diagramPlace != -1){
-	 		newDoc["diagram"] = "http://127.0.0.1:3000/doc/pattern/"+doc['int_id']+"/diagram/"+files[picPlace];
+	 		newDoc["diagram"] = "http://127.0.0.1:3000/doc/pattern/"+doc['int_id']+"/diagram/"+files[diagramPlace];
 	 	} else {
 	 		newDoc['diagram'] = null;
 		 }

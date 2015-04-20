@@ -1150,3 +1150,7 @@ OK - slowly working on wrangling
 NOTE: when we define functions as var asdf = function(){}; vs just function asdf(){}; this matters as to the order of when the function is defined and callable...
 
 ARRRR - wwhy can't get the GET /doc/pattern routes to return the right things.... 
+
+OK narrowed down getting force images problem to the fact that when we copy over the attachments, we are getting 0 byte files.
+If i can sort the fs.write, fs.read fowwling the db.attachment.get from the initial pattern main doc, then we should be golden (at least for getting images and force images)
+NB > some routes I do a fs.write(img, data) res.send(data), while for forces I tried a pipe(). shouldnt matter, just sayin' 
