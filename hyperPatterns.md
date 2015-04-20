@@ -1128,3 +1128,5 @@ keep falling into same trap = iterators outside async function calls dont work a
 
 hmm not 100% sure, but trying to pipe an attachments.get() to an attachments.insert() doesnt seem to work - same db/port problems?
 will try saveing as tmp file and then sending back - inefficient but will work, and we're not expecting high traffic here..
+YEp - as predicited this way works a treat. 
+probably best to update 'pattern' doc forces new doc list here too...

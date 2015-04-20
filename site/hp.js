@@ -1442,12 +1442,34 @@ app.get("/publish/:intID", function(req, res){
 		}, function(err){
 			if (err){
 				console.log("somthing wring with addAttachments async "+err);
-			} else{
-				callback2(null);
+				callback2(err);
+			} else{  // finally finally add forcedoc ids to main pattern doc
+				linkForcesToMainDoc(doc, newForceDocs);
+				//callback2(null);
 			}
 		});//close async.eachSeries
 	}//close addAttachments
 	
+
+	var linkForcesToMainDoc = function(doc, newForceDocs){
+		//code to add list of new force docs to main pattern doc
+		db.get(doc['_id'], function(err, maindoc){
+			if (err){
+				console.log("bugger getting main doc to add final force connections "+err);
+			} else {
+				//var updated = maindoc
+				maindoc['force'] = newForceDocs; //set list
+				db.insert(maindoc, function(err, lastcall){ //put it back
+					if(err){
+						console.log('shit - cant update forces list when flipping pattern '+err);
+					} else {
+						console.log('you done it. new force docs linked to pattern');
+						callback2(null);
+					}
+				});
+			}
+		});
+	} //close linkForces...
 
 	} //end putForces()
 
@@ -1467,8 +1489,25 @@ app.get("/publish/:intID", function(req, res){
 
 	var cleanUp = function(doc, callback){
 		console.log("we're done!");
-		//remember to flip doctype to "pattern"
+		//remove tmp files
+		tidyUpTmp(function(err){
+			if(!err){
+				fs.mkdirSync('./tmp');
+				fs.openSync('./tmp/.keep', 'w');
+			} else {
+				console.log("error tydying up /tmp"+err);
+			}
+			
+		});
+
 		callback(null);
+
+		function tidyUpTmp(callback){
+			rimraf("./tmp", function(err){
+				if(err) callback(err);
+				callback(null);
+			});
+		}
 
 	}
 //*****************************************************************************
