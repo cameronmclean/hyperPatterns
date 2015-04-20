@@ -1152,5 +1152,13 @@ NOTE: when we define functions as var asdf = function(){}; vs just function asdf
 ARRRR - wwhy can't get the GET /doc/pattern routes to return the right things.... 
 
 OK narrowed down getting force images problem to the fact that when we copy over the attachments, we are getting 0 byte files.
-If i can sort the fs.write, fs.read fowwling the db.attachment.get from the initial pattern main doc, then we should be golden (at least for getting images and force images)
+Handmade force files with attachmetns (eg pattern 1) and other images/attachmetns are fine. so forces route is working. Its in the copyign over of attachments thats the problem.
+If i can sort the fs.write, fs.read fowwling the db.attachment.get from the initial pattern main doc, then we should be golden (at least for getting images and force images).
 NB > some routes I do a fs.write(img, data) res.send(data), while for forces I tried a pipe(). shouldnt matter, just sayin' 
+
+after geting force attachements saved properly, double check other API routes, then tidy up code, other things on trello, then try to get domain and spin up on digi ocean.
+
+#####20140421
+tried messing with pipes for force attachment copy - no success.
+need to check if fs.write is working properly, then fs.read. 
+could try to force sync operations, but this will block the event loop and make the server pause for everyone... 

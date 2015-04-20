@@ -9,7 +9,7 @@ var async = require('async');
 var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
-//var bibtexParse = require('bibtex-parser-js'); // using bibtex-parse-js <- not parse'r'
+//var bibtexParse = require('bibtex-parser-js'); // using bibtex-parse-js <- not parse'r' NOTE parser not yet deleted from modules
 var bibtexParse = require('bibtex-parse-js');
 var validator = require('validator');
 var tv4 = require('tv4');
@@ -1395,7 +1395,8 @@ app.get("/publish/:intID", function(req, res){
 			
 			//get the _rev of the force doc, and write attachemnt
 			db.get(file['docid'], function(err, body){
-				
+
+				//THIS CODE WORKS EXCEPT COPIED ATTACHMENTS ARE 0 BYTES				
 				db.attachment.get(doc.id, file['filename'], function(err, data){
 					if(err){
 						console.log("error getting protopattern attachment for forces "+err);
@@ -1419,6 +1420,17 @@ app.get("/publish/:intID", function(req, res){
 						});//close writefile
 					}
 				}); //close attchment.get
+
+			
+
+				// //TRY TO PIPE IT
+				// var save = db.attachment.get(doc.id, file['filename']).pipe(db.attachment.insert(file['docid'], file['newfilename'], null, file['contenttype'], {"rev": body["_rev"]})); 
+				// //once piped, do the callback and move to next attachment/force
+				// save.on('finish', function(){
+				// 	callback();
+				// });
+
+
 
 
 				// request.get("http://127.0.0.1:5984/patterns/"+doc.id+"/"+file['filename']).pipe(
