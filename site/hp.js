@@ -1196,7 +1196,7 @@ app.get('/patternlist', function(req, res){
 app.get("/publish/:intID", function(req, res){
 
 	var intID = req.params.intID
-
+//*****************************************************************************
 	var putMainDoc = function(doc, callback){
 	//console.log("putMainDoc "+doc['name']);
 
@@ -1267,6 +1267,7 @@ app.get("/publish/:intID", function(req, res){
 	});
 	
 	}
+//*****************************************************************************
 
 	var putForces = function(doc, callback2){
 		//console.log("putForces doc number "+doc['int_id']);
@@ -1301,7 +1302,8 @@ app.get("/publish/:intID", function(req, res){
 					if (re.test(item)){
 						//console.log("regex match!");
 						//get and add the attachment filename
-						forces['pic'] = ""+item;
+						var itemSuffix = item.split("__")
+						forces['pic'] = ""+itemSuffix[1]; //just save/use the original filename
 					}
 
 				}
@@ -1315,12 +1317,6 @@ app.get("/publish/:intID", function(req, res){
 		}
 
 	
-  //   	//create new force docs for each force
- 	// 	var forceList = [];
-	 //    forceList = doc['forces'];
-		// for (var i=0; i < forceList.length; i++){
-		// console.log("trying to access force names from doc "+forceList[i]['name']);
-		// }
 	    var newForceDocs = []; //to store _id of newly created force docs
 
 		//get array of filenames for force pics
@@ -1371,21 +1367,27 @@ app.get("/publish/:intID", function(req, res){
 
 	} //end putForces()
 
+//*****************************************************************************
+
 	var putAuthors = function(doc, callback){
 		console.log("putAuthors eg- "+doc['author']);
 		callback(null);
 	}
+//*****************************************************************************
 
 	var putReferences = function(doc, callback){
 		console.log('need to parse the refs');
 		callback(null);
 	}
+//*****************************************************************************
 
 	var cleanUp = function(doc, callback){
 		console.log("we're done!");
 		callback(null);
 
 	}
+//*****************************************************************************
+
 
 	var functionList = [putMainDoc, putForces, putAuthors, putReferences, cleanUp];
 
