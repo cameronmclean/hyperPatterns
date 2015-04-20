@@ -1130,3 +1130,7 @@ hmm not 100% sure, but trying to pipe an attachments.get() to an attachments.ins
 will try saveing as tmp file and then sending back - inefficient but will work, and we're not expecting high traffic here..
 YEp - as predicited this way works a treat. 
 probably best to update 'pattern' doc forces new doc list here too...
+
+OK - slowly working on wrangling 
+ we have body, forces, authors working > except now the patternview breaks the server as pictograms can't be found.
+ we get a "Can't set headers after they are sent" which means probably that node after not findng the force img (which it should) tries to send a 404, but somwhere else must have also set/sent a response....

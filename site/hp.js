@@ -1212,7 +1212,7 @@ app.get("/publish/:intID", function(req, res){
 	newDoc['_rev'] = doc['_rev'];
 	newDoc['doctype'] = "pattern"; 
 	newDoc['name'] = doc['name'];
-	newDoc['authors'] = []; //will be an array of coucdb doc _id - added during cleanUp
+	newDoc['author'] = []; //will be an array of coucdb doc _id - added during cleanUp
 	newDoc['context'] = doc['contex'];
 	newDoc['problem'] = doc['problem'];
 	newDoc['solution'] = doc['solution'];
@@ -1493,7 +1493,7 @@ app.get("/publish/:intID", function(req, res){
 				authorList.push(author);
 				}
 		}
-		
+
 		var createAuthors = function(authorlist, callback3){
 			var name = authorlist["ORCID"].split("orcid.org/");
 			db.insert(authorlist, name[1], function(err, body){
