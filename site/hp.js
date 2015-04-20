@@ -1510,7 +1510,8 @@ app.get("/publish/:intID", function(req, res){
 						}
 					});
 				} else { //doc already exists
-					newAuthorDocs.push(body.id); //just link exisiting doc
+					console.log("author doc exists ");
+					newAuthorDocs.push(body['_id']); //just link exisiting doc
 					callback3(null);
 				}
 			});
