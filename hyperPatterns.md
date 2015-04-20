@@ -1122,3 +1122,9 @@ Doesnt seem to be picking up the "pic" string to hardcode to the new force doc "
 Sort this next > as _attachement deets/filenames need to be db.get.attachment , saved to mem and copied to corresponding nre force docs as attachments .
  NB - write a fucntion that does this, and call it from the first putForces() async.eachSerial callback... (to avoid deep nesting/readability)
  
+#####20140420
+
+keep falling into same trap = iterators outside async function calls dont work as expected... sigh
+
+hmm not 100% sure, but trying to pipe an attachments.get() to an attachments.insert() doesnt seem to work - same db/port problems?
+will try saveing as tmp file and then sending back - inefficient but will work, and we're not expecting high traffic here..

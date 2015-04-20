@@ -15,6 +15,7 @@ var tv4 = require('tv4');
 var cors = require('cors');
 var rimraf = require('rimraf');
 var crypto = require('crypto');
+var request = require('request');
 var app = express();
 
 //couch db settings
@@ -1151,7 +1152,7 @@ app.get('/prototype/:intID/:img', function(req, res){
 	}
 
 	function goToError(err){
-		console.log("**********error getting pattern diagram "+img+" ... "+err);
+		console.log("**********error getting protopattern "+intID+" image "+img+" ... "+err);
 		res.sendStatus(404);
 	}
 
@@ -1209,7 +1210,7 @@ app.get("/publish/:intID", function(req, res){
 
 	newDoc['_id'] = doc['_id'];
 	newDoc['_rev'] = doc['_rev'];
-	newDoc['doctype'] = "pattern";
+	newDoc['doctype'] = "pattern"; 
 	newDoc['name'] = doc['name'];
 	newDoc['authors'] = []; //will be an array of coucdb doc _id - added during cleanUp
 	newDoc['context'] = doc['contex'];
@@ -1385,18 +1386,58 @@ app.get("/publish/:intID", function(req, res){
 	//attachedfiles sould be an array of objects, where objects contain doc id: and filename: fields
 	var addAttachments = function(attachedFiles){
 		async.eachSeries(attachedFiles, function(file, callback){
-			//for each item in forceAttachemnts, get the prototype doc attachment and pipe to file['data']
-			db.attachment.get(doc.id, file['filename']).pipe(file['data']);
+			//for each item in forceAttachemnts, get the prototype doc attachment and pipe to file['data'
+			
 			//get the _rev of the force doc, and write attachemnt
 			db.get(file['docid'], function(err, body){
-				db.attachment.insert(body.id, file.newfilename, file['data'], file.contenttype, {"rev": body["_rev"]}, function(err, data){
-					if (err){
-						console.log("probs pipeing in force attachment "+err);
-					} else{
-						console.log("attachment "+file.filename+" attached");
-						callback();
+				
+				db.attachment.get(doc.id, file['filename'], function(err, data){
+					if(err){
+						console.log("error getting protopattern attachment for forces "+err);
+					} else { //save the attachemnt
+						fs.writeFile("./tmp/"+file['newfilename'], data, function(err){
+							if (!err){ //if ok - read back in and send to db
+								fs.readFile("./tmp/"+file['newname'], function(err, data2){
+									db.attachment.insert(file['docid'], file['newfilename'], data2, file['contenttype'], {"rev": body["_rev"]}, function(err, body2){
+										if (!err) {
+											console.log("fianlly attachment saved ! "+file['newfilename']);
+											callback();
+										} else {
+											console.log("shitting shit balls cant insert attachment "+err);
+											callback(err);
+										}
+									});
+								}); //close readfile
+							} else {
+								console.log("error writng temp attachment "+err);
+							}
+						});//close writefile
 					}
-				}); //close db.attachment
+				}); //close attchment.get
+
+
+				// request.get("http://127.0.0.1:5984/patterns/"+doc.id+"/"+file['filename']).pipe(
+				// 	db.attachment.insert(body.id, file["newfilename"], null, file['contenttype'], {"rev": body["_rev"]}, function(err, data){
+				// 		if (err){
+				// 			console.log("bugger with attachment "+err);
+				// 		} else {
+				// 			console.log('force attachment copied over '+file['newfilename']);
+				// 			callback();
+				// 		}
+				// 	})//close attachment.insert
+				// );//close pipe
+
+				
+
+				// db.attachment.insert(body.id, file.newfilename, file['data'], file.contenttype, {"rev": body["_rev"]}, function(err, data){
+				// 	if (err){
+				// 		console.log("probs pipeing in force attachment "+err);
+				// 	} else{
+				// 		console.log("attachment "+file.filename+" attached");
+				// 		callback();
+				// 	}
+				//}); //close db.attachment
+
 			});//close db.get
 		}, function(err){
 			if (err){
@@ -1426,6 +1467,7 @@ app.get("/publish/:intID", function(req, res){
 
 	var cleanUp = function(doc, callback){
 		console.log("we're done!");
+		//remember to flip doctype to "pattern"
 		callback(null);
 
 	}
