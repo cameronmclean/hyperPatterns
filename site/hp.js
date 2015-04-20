@@ -1280,12 +1280,12 @@ app.get("/publish/:intID", function(req, res){
 			var attachmentInfo = doc['_attachments']
 		} 
 		
-		// for (var i =0; i < keys.length; i++){
-		// 	console.log("the doc keys are "+i+" "+keys[i]);
-		// }
+		//get attched files and read into mem
+
 
 		//subset the keys that relate to forces, and group them in an array of objects to send to async.forEach
 		var forceList = [];
+		var forceAttachments = [];
 		//we allow up to 20 forces
 		for (var x = 0; x < 20; x++){
 	//		console.log("looping");
@@ -1300,10 +1300,15 @@ app.get("/publish/:intID", function(req, res){
 				for (item in attachmentInfo){
 				//	console.log(item);
 					if (re.test(item)){
-						//console.log("regex match!");
+						console.log("regex match! "+item);
 						//get and add the attachment filename
 						var itemSuffix = item.split("__")
 						forces['pic'] = ""+itemSuffix[1]; //just save/use the original filename
+						var deetsForAddingAttachments = {};
+						deetsForAddingAttachments['filename'] = item;
+						deetsForAddingAttachments['newfilename'] = ""+itemSuffix[1];
+						deetsForAddingAttachments['contenttype'] = attachmentInfo[item]["content_type"];
+						forceAttachments.push(deetsForAddingAttachments);
 					}
 
 				}
@@ -1316,7 +1321,14 @@ app.get("/publish/:intID", function(req, res){
 
 		}
 
-	
+		for (var i = 0; i < forceAttachments.length; i++){
+			console.log("looping through forceAttachments "+forceAttachments[i]['filename']);
+			console.log(forceAttachments[i]['newfilename']);
+			console.log(forceAttachments[i]['contenttype']);
+
+		}
+
+
 	    var newForceDocs = []; //to store _id of newly created force docs
 
 		//get array of filenames for force pics
@@ -1326,6 +1338,7 @@ app.get("/publish/:intID", function(req, res){
 		}
 
 		var forceCounter = 1; // to be incremented each time through the async.eachSeries
+		var attachmentCounter =0;
 
 		async.eachSeries(forceList, function(force, callback){
 			var newDoc = {};
@@ -1347,6 +1360,9 @@ app.get("/publish/:intID", function(req, res){
 					// 	console.log("newdoc keys "+newdockeys[i]);
 					// }
 				newForceDocs.push(body.id);
+				//console.log("force counter = "+forceCounter+" looking inside forceAttachments "+forceAttachments[forceCounter - 1]['filename']);
+				forceAttachments[attachmentCounter]['docid'] = body.id;
+				attachmentCounter++;
 				callback();
 				}
 			});
@@ -1357,13 +1373,40 @@ app.get("/publish/:intID", function(req, res){
 				for (var i = 0; i < newForceDocs.length; i++){
 					console.log(newForceDocs[i]);			
 				}
-				callback2(null);
+				//callback2(null);
+				addAttachments(forceAttachments);
 		    } else {
 		    	console.log("something wrong with add Forces async "+err);
 		    	callback2(err);
 		    }//if (!err)
 		  } //end final callback function
 		);// end putForces async
+
+	//attachedfiles sould be an array of objects, where objects contain doc id: and filename: fields
+	var addAttachments = function(attachedFiles){
+		async.eachSeries(attachedFiles, function(file, callback){
+			//for each item in forceAttachemnts, get the prototype doc attachment and pipe to file['data']
+			db.attachment.get(doc.id, file['filename']).pipe(file['data']);
+			//get the _rev of the force doc, and write attachemnt
+			db.get(file['docid'], function(err, body){
+				db.attachment.insert(body.id, file.newfilename, file['data'], file.contenttype, {"rev": body["_rev"]}, function(err, data){
+					if (err){
+						console.log("probs pipeing in force attachment "+err);
+					} else{
+						console.log("attachment "+file.filename+" attached");
+						callback();
+					}
+				}); //close db.attachment
+			});//close db.get
+		}, function(err){
+			if (err){
+				console.log("somthing wring with addAttachments async "+err);
+			} else{
+				callback2(null);
+			}
+		});//close async.eachSeries
+	}//close addAttachments
+	
 
 	} //end putForces()
 
