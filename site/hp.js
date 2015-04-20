@@ -1515,29 +1515,6 @@ app.get("/publish/:intID", function(req, res){
 					callback3(null);
 				}
 			});
-
-			// db.insert(authorlist, name[1], function(err, body){
-			// 	if(err){
-			// 		console.log("bugger creating new author doc "+err);
-			// 		if (err === "Document update conflict."){
-			// 			//likely the author already exists
-			// 			db.get(name[1], function(err, body2){
-			// 				if(err){
-			// 					console.log("still trouble adding author "+err)
-			// 					callback3(err);
-			// 				} else{
-			// 					newAuthorDocs.push(body2.id);
-			// 				}
-			// 			});
-			// 		} else {
-			// 		callback3(err);
-			// 		}
-			// 	} else{
-			// 		newAuthorDocs.push(body.id);
-			// 		callback3(null);
-			// 	}
-			// });
-
 		};//end createAuthors def
 
 		var updateMainDoc = function(doc, newAuthorDocs){
@@ -1594,7 +1571,8 @@ app.get("/publish/:intID", function(req, res){
 				var ref = {};
 				ref['entrytype'] = pref[0]['entryType'];
 				for (entry in pref[0]['entryTags']){
-					ref[entry] = pref[0][entry];
+
+					ref[entry] = pref[0]['entryTags'][entry];
 				}
 				ref['int_id'] = x+1;
 				ref['doctype'] = "evidence";
