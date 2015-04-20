@@ -1475,10 +1475,71 @@ app.get("/publish/:intID", function(req, res){
 
 //*****************************************************************************
 
-	var putAuthors = function(doc, callback){
+	var putAuthors = function(doc, callback2){
 		console.log("putAuthors eg- "+doc['author']);
-		callback(null);
+
+		var authorList = []; //to store objects and loop through with async.eachSeries
+		var newAuthorDocs = []; //to store list of author docs to update "pattern" doc
+		var keys = Object.keys(doc);
+
+		//allow 20 authors - grab keys and deets and store in authorList
+		for (var x = 0; x < 20; x++){
+				if ( (keys.indexOf('author_'+String(x)+'_name') > -1) && (keys.indexOf('author_'+String(x)+'_orcid') > -1)){
+	//			console.log('keys match');
+				var author = {};
+				author['authorName'] = doc['author_'+String(x)+'_name'];
+				author['ORCID'] = doc['author_'+String(x)+'_orcid'];
+				author['doctype'] = "contributor";
+				authorList.push(author);
+				}
+		}
+		
+		var createAuthors = function(authorlist, callback3){
+			var name = authorlist["ORCID"].split("orcid.org/");
+			db.insert(authorlist, name[1], function(err, body){
+				if(err){
+					console.log("bugger creating new author doc "+err);
+					callback3(err);
+				} else{
+					newAuthorDocs.push(body.id);
+					callback3(null);
+				}
+			});
+		};//end createAuthors def
+
+		var updateMainDoc = function(doc, newAuthorDocs){
+			db.get(doc["_id"], function(err, maindoc){
+				maindoc['author'] = newAuthorDocs;
+				db.insert(maindoc, function(err, finalcall){
+					if (err) {
+						console.log("bugger updating main doc with author doc list "+err);
+						callback2(err);
+					} else {
+						console.log("authors updated");
+						callback2(null);
+					}
+				});
+			});
+		};		
+
+		async.eachSeries(authorList, function(author, callback){
+			createAuthors(author, function(err){
+				if (!err){
+					callback();
+				}
+			}); //close create authors
+		}, function(err){
+			if (err){
+				console.log("shit putAuthors "+err);
+				callback2(err);
+			} else {
+				updateMainDoc(doc, newAuthorDocs);
+			}
+		}); //end async
+
+
 	}
+
 //*****************************************************************************
 
 	var putReferences = function(doc, callback){
@@ -1487,29 +1548,38 @@ app.get("/publish/:intID", function(req, res){
 	}
 //*****************************************************************************
 
-	var cleanUp = function(doc, callback){
-		console.log("we're done!");
+    var cleanUp = function(doc, callback){
+		console.log("we're done! - attempting to clean up");
+
+		function tidyUpTmp(callback2){
+			rimraf("./tmp", function(err){
+				if (err){
+					callback2(err);
+				} else {
+					callback2(null);
+				}
+			});
+		}
+
+
 		//remove tmp files
 		tidyUpTmp(function(err){
 			if(!err){
 				fs.mkdirSync('./tmp');
 				fs.openSync('./tmp/.keep', 'w');
+				callback(null);
 			} else {
 				console.log("error tydying up /tmp"+err);
-			}
-			
+				callback(err);
+			}			
 		});
-
-		callback(null);
-
-		function tidyUpTmp(callback){
-			rimraf("./tmp", function(err){
-				if(err) callback(err);
-				callback(null);
-			});
-		}
-
 	}
+
+		
+
+		
+
+	
 //*****************************************************************************
 
 
@@ -1542,14 +1612,14 @@ app.get("/publish/:intID", function(req, res){
 							console.log("error "+err);
 							res.sendStatus(500);
 						}
-					})
+					});
 
 				});
 			}
 		}
 	});
 
-});
+}); //end /publish route
 
 
 //*******************************************
