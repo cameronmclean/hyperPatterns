@@ -1140,4 +1140,13 @@ OK - slowly working on wrangling
  BUT 
   - if author exisits, doc id in main doc = null
   - fields other than article type are not being populated to the "evidence" doc before saving
-  
+ Fixed and Fixed.
+
+ Current bugs now include
+ 	- can't get force images
+ 	- watch hardcoded URLs in final linkeddata (some are 127.0.0.1 others labpatterns.org)
+ 	- check API routes for JSON-LD - not all are working. (likely mismash between schema/data of newly saved patterns vs old "toy" published pattern)
+
+NOTE: when we define functions as var asdf = function(){}; vs just function asdf(){}; this matters as to the order of when the function is defined and callable...
+
+ARRRR - wwhy can't get the GET /doc/pattern routes to return the right things.... 

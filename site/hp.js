@@ -880,7 +880,7 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 						counter++;
 					//	console.log("counter = "+counter+" progress = "+progress);
 					}
-				}
+				} 
 				
 				// if we have been through the for loop and found nothing....
 				if (counter === list.length && progress < 1){
@@ -891,56 +891,59 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 			}
 			
 			else{
+				console.log("error looking up pattern number "+err);
 				goToError(err);
 			}
 		});
 	}
 
 	function getForces(array){
-				// a list of all force nums and id in the db
-		db.get('_design/patterns/_view/getForceByNum', function(err, body){
-			if(!err){
-				var list = body['rows']; //list of force numbers to check
-				//console.log(body['rows']);
-				var counter = 0; // counter available outside of for loop
-	
-				//test to see if :fNum matches a force doc on the list
-				//if so get it							
-				for (var x=0; x < list.length; x++){
+		// for (var i =0; i < array.length; i++){
+		// 	console.log(array[i]);
+		// }
+				// a list of all force ids for this pattern
+				//check to see if fNum is one of the int_ids, if so, gran the attachment and send
 
-					if (String(list[x].value) === fNum){
-						db.get(list[x].id, function(err, body){
-							if ( body._attachments && img in body._attachments ) { 
-								//console.log("img exists!");
-								var docName = body._id;
-								db.attachment.get(docName, img, function(err, body){
-									if(!err){
-										fs.write(img, body);
-										res.send(body);
-									}
-								});
-								progress++;
-							}
-							else{
-								goToError("image not found!");
+		//TODO implement async.eachSeries() loop through force doc ids...
+
+		var getForceAndCheck = function(doc, callback2){
+			db.get(doc, function(err, body){
+				console.log("getting force doc "+doc);
+				if(err){
+					console.log("error fetching force docs for images"+err);
+					goToError(err);
+				} else {
+					//console.log("gotten doc int = "+body["int_id"]+" fNum = "+fNum);
+					if (String(body["int_id"]) === fNum){
+						console.log("match fNum = "+fNum+" int_id = "+body["int_id"]);
+						
+					//	db.attachment.get(doc, img).pipe(res);
+						db.attachment.get(doc, img, function(err, data){
+							if (err) {
+								callback2(err);
+							} else {
+								console.log("sending img "+img);
+								fs.write(img, data);
+								res.send(data);
+								res.end();
+								//callback2(null);
 							}
 						});
-					}
-					else {
-						counter++;
-						//console.log("counter = "+counter+" progress = "+progress);
+					} else {
+						callback2(null);
 					}
 				}
-				
-				// if we have been through the for loop and found nothing....
-				if (counter === list.length && progress < 2){
-					//console.log("no match!");
-					goToError("force doc not found in db list!");
-				 }
-
-			}
-			
-			else{
+			})
+		};
+	
+		async.eachSeries(array, function(docID, callback){
+			getForceAndCheck(docID, function(err){
+				if (!err){
+					callback();
+				}
+			});
+		}, function(err){
+			if (err) {
 				goToError(err);
 			}
 		});
@@ -1214,7 +1217,7 @@ app.get("/publish/:intID", function(req, res){
 	newDoc['doctype'] = "pattern"; 
 	newDoc['name'] = doc['name'];
 	newDoc['author'] = []; //will be an array of coucdb doc _id - added during cleanUp
-	newDoc['context'] = doc['contex'];
+	newDoc['context'] = doc['context'];
 	newDoc['problem'] = doc['problem'];
 	newDoc['solution'] = doc['solution'];
 	newDoc['rationale'] = doc['rationale'];
