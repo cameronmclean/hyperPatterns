@@ -1497,15 +1497,46 @@ app.get("/publish/:intID", function(req, res){
 
 		var createAuthors = function(authorlist, callback3){
 			var name = authorlist["ORCID"].split("orcid.org/");
-			db.insert(authorlist, name[1], function(err, body){
-				if(err){
-					console.log("bugger creating new author doc "+err);
-					callback3(err);
-				} else{
-					newAuthorDocs.push(body.id);
+			//try and get Author first to see if they exist, if so get doc id, else, try and add
+			db.get(name[1], function(err, body){
+				if(err){ //assume doc not exist - try and add
+					db.insert(authorlist, name[1], function(err, body2){
+						if (err){  //hhmm cant insert either
+							console.log("trouble adding author "+err);
+							callback3(err);
+						} else { //new author added
+							newAuthorDocs.push(body2.id);
+							callback3(null);
+						}
+					});
+				} else { //doc already exists
+					newAuthorDocs.push(body.id); //just link exisiting doc
 					callback3(null);
 				}
 			});
+
+			// db.insert(authorlist, name[1], function(err, body){
+			// 	if(err){
+			// 		console.log("bugger creating new author doc "+err);
+			// 		if (err === "Document update conflict."){
+			// 			//likely the author already exists
+			// 			db.get(name[1], function(err, body2){
+			// 				if(err){
+			// 					console.log("still trouble adding author "+err)
+			// 					callback3(err);
+			// 				} else{
+			// 					newAuthorDocs.push(body2.id);
+			// 				}
+			// 			});
+			// 		} else {
+			// 		callback3(err);
+			// 		}
+			// 	} else{
+			// 		newAuthorDocs.push(body.id);
+			// 		callback3(null);
+			// 	}
+			// });
+
 		};//end createAuthors def
 
 		var updateMainDoc = function(doc, newAuthorDocs){

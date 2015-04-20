@@ -1133,4 +1133,11 @@ probably best to update 'pattern' doc forces new doc list here too...
 
 OK - slowly working on wrangling 
  we have body, forces, authors working > except now the patternview breaks the server as pictograms can't be found.
- we get a "Can't set headers after they are sent" which means probably that node after not findng the force img (which it should) tries to send a 404, but somwhere else must have also set/sent a response....
+ we get a "Can't set headers after they are sent" which means probably that node after not findng the force img (which it should) tries to send a 404, but somwhere else must have also set/sent a response.... it wasnt broken before!
+ Oh well.
+
+ So nearly there - cleanUp works on site/tmp
+ BUT 
+  - if author exisits, doc id in main doc = null
+  - fields other than article type are not being populated to the "evidence" doc before saving
+  
