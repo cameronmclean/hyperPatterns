@@ -1174,3 +1174,19 @@ Things seem to be working, but might be better to explicitly specify ['_id'] rat
 REMINDER TO write up debugging stategy
 	- what do we get, what do we expect - at each point!!!
 I have reached a new phase in coding expertise though - time now to work on unit tests and debegging tools/skills...
+
+AND we have finished v 1.0 for hyperpatterns functionality.
+*although still to clean up cruft, remove uneeded/old attachments and fields in the main pattern doc
+
+Turns out, piping a db.get to a db.insert can be done, just have to pipe the right CONTENT. duh.
+
+ended up implementing the force attachment copy like so..
+
+```javascript
+
+db.get(file['docid'], function(err, body){
+	db.attachment.get(doc['\_id'], file['filename']).pipe(db.attachment.insert(file['docid'], file['newfilename'], null, file['contenttype'], {"rev": body["_rev"]})); 
+	callback();    //once piped, do the callback and move to next attachment/force in async.eachSeries
+});
+
+```
