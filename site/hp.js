@@ -1120,6 +1120,7 @@ app.get('/prototype/:intID/:img', function(req, res){
 							var docName = body._id;
 							db.attachment.get(docName, img, function(err, body){
 								if(!err){
+									//console.log("attachment.get body "+body);
 									fs.write(img, body);
 									res.send(body);
 								}
@@ -1395,37 +1396,37 @@ app.get("/publish/:intID", function(req, res){
 			
 			//get the _rev of the force doc, and write attachemnt
 			db.get(file['docid'], function(err, body){
-
-				//THIS CODE WORKS EXCEPT COPIED ATTACHMENTS ARE 0 BYTES				
-				db.attachment.get(doc.id, file['filename'], function(err, data){
-					if(err){
-						console.log("error getting protopattern attachment for forces "+err);
-					} else { //save the attachemnt
-						fs.writeFile("./tmp/"+file['newfilename'], data, function(err){
-							if (!err){ //if ok - read back in and send to db
-								fs.readFile("./tmp/"+file['newname'], function(err, data2){
-									db.attachment.insert(file['docid'], file['newfilename'], data2, file['contenttype'], {"rev": body["_rev"]}, function(err, body2){
-										if (!err) {
-											console.log("fianlly attachment saved ! "+file['newfilename']);
-											callback();
-										} else {
-											console.log("shitting shit balls cant insert attachment "+err);
-											callback(err);
-										}
-									});
-								}); //close readfile
-							} else {
-								console.log("error writng temp attachment "+err);
-							}
-						});//close writefile
-					}
-				}); //close attchment.get
+				
+			// 	//THIS CODE WORKS EXCEPT COPIED ATTACHMENTS ARE 0 BYTES				
+			// 	db.attachment.get(doc['_id'], file['filename'], function(err, data){ //gets the attachment from the original doc
+			// 		if(err){
+			// 			console.log("error getting protopattern attachment for forces "+err);
+			// 		} else { //save the attachemnt
+			// 			fs.writeFile("./tmp/"+file['newfilename'], data, function(err){
+			// 				if (!err){ //if ok - read back in and send to db */
+			// 					fs.readFile("./tmp/"+file['newname'], function(err, data2){
+			// 						db.attachment.insert(file['docid'], file['newfilename'], data2, file['contenttype'], {"rev": body["_rev"]}, function(err, body2){
+			// 							if (!err) {
+			// 								console.log("fianlly attachment saved ! "+file['newfilename']);
+			// 								callback();
+			// 							} else {
+			// 								console.log("shitting shit balls cant insert attachment "+err);
+			// 								callback(err);
+			// 							}
+			// 					});
+			// 					}); //close readfile
+			// 				} else {
+			// 					console.log("error writng temp attachment "+err);
+			// 				}
+			// 			});//close writefile 
+			// 		}
+			// 	}); //close attchment.get
 
 			
 
 				// //TRY TO PIPE IT
-				// var save = db.attachment.get(doc.id, file['filename']).pipe(db.attachment.insert(file['docid'], file['newfilename'], null, file['contenttype'], {"rev": body["_rev"]})); 
-				// //once piped, do the callback and move to next attachment/force
+				db.attachment.get(doc['_id'], file['filename']).pipe(db.attachment.insert(file['docid'], file['newfilename'], null, file['contenttype'], {"rev": body["_rev"]})); 
+				callback();// //once piped, do the callback and move to next attachment/force
 				// save.on('finish', function(){
 				// 	callback();
 				// });
@@ -1455,7 +1456,7 @@ app.get("/publish/:intID", function(req, res){
 				// 	}
 				//}); //close db.attachment
 
-			});//close db.get
+			});//close inital  db.get
 		}, function(err){
 			if (err){
 				console.log("somthing wring with addAttachments async "+err);
@@ -1657,18 +1658,18 @@ app.get("/publish/:intID", function(req, res){
 			});
 		}
 
-
+		callback(null);
 		//remove tmp files
-		tidyUpTmp(function(err){
-			if(!err){
-				fs.mkdirSync('./tmp');
-				fs.openSync('./tmp/.keep', 'w');
-				callback(null);
-			} else {
-				console.log("error tydying up /tmp"+err);
-				callback(err);
-			}			
-		});
+		// tidyUpTmp(function(err){
+		// 	if(!err){
+		// 		fs.mkdirSync('./tmp');
+		// 		fs.openSync('./tmp/.keep', 'w');
+		// 		callback(null);
+		// 	} else {
+		// 		console.log("error tydying up /tmp"+err);
+		// 		callback(err);
+		// 	}			
+		// });
 	}
 
 		

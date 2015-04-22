@@ -1158,7 +1158,19 @@ NB > some routes I do a fs.write(img, data) res.send(data), while for forces I t
 
 after geting force attachements saved properly, double check other API routes, then tidy up code, other things on trello, then try to get domain and spin up on digi ocean.
 
-#####20140421
+#####20150421
 tried messing with pipes for force attachment copy - no success.
 need to check if fs.write is working properly, then fs.read. 
 could try to force sync operations, but this will block the event loop and make the server pause for everyone... 
+
+#####20150422
+OK, so it seems the fs.Writefile when copying attachments over is not writing out  - the files saved to tmp have size 246 bytes - should be 1-3KB. Somthing to do with buffers, streams, and async calls - seems it's being cut short as we go through the loop,,,
+
+arrgh! for day this blasted thing hasnt been working - all because I was using doc.id (dot notation) not doc['_id'] to get the attachment.
+.id seems to be reserved - but sometimes it works, sometimes it doesnt.
+NEED TO CHECK THIS IN REST OF CODE.
+Things seem to be working, but might be better to explicitly specify ['_id'] rather than .id (and hope this doesnt break anything else!)
+
+REMINDER TO write up debugging stategy
+	- what do we get, what do we expect - at each point!!!
+I have reached a new phase in coding expertise though - time now to work on unit tests and debegging tools/skills...
