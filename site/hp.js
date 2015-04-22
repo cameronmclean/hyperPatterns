@@ -11,11 +11,11 @@ var fs = require('fs');
 var path = require('path');
 //var bibtexParse = require('bibtex-parser-js'); // using bibtex-parse-js <- not parse'r' NOTE parser not yet deleted from modules
 var bibtexParse = require('bibtex-parse-js');
-var validator = require('validator');
-var tv4 = require('tv4');
+//var validator = require('validator');
+//var tv4 = require('tv4');
 var cors = require('cors');
 var rimraf = require('rimraf');
-var crypto = require('crypto');
+//var crypto = require('crypto');
 var request = require('request');
 var app = express();
 
@@ -1724,24 +1724,24 @@ app.post('/new', function(req, res){
 //	console.log("hey look, a new pattern!");
 
 	//get a random ID for this POST
-	var session = crypto.randomBytes(20).toString('hex');
-	var saveTo = "./tmp/"+session;
+//	var session = crypto.randomBytes(20).toString('hex');
+//	var saveTo = "./tmp/"+session;
 
 	var protoPattern = {}; //blank object to store parsed form fields
 	//var protoForce = {};
 	//var protoRef = {};
 	//var protoAuthor = {};
 	
-	fs.mkdir(saveTo, function(err){
-		if(err) console.log(err);
-	});
+//	fs.mkdir(saveTo, function(err){
+//		if(err) console.log(err);
+//	});
 
 	//remove tmp files
 	function tidyUp(callback){
-		rimraf("./tmp/"+session, function(err){
-			if(err) callback(err);
+	//	rimraf("./tmp/"+session, function(err){
+	//		if(err) callback(err);
 			callback(null);
-		});
+	//	});
 	}
 	
 
@@ -1762,10 +1762,10 @@ app.post('/new', function(req, res){
 			attachments.push({"name":fieldname+"__"+filename, "data":data, "content_type":mimetype});
 			
 			//also write files to ./tmp  <<<<<< can maybe dispense with this >>>>>>>>>>>>>>>
-			fs.writeFile(saveTo+"/"+fieldname+"__"+filename, data, function(err){
-				if(err) console.log(err);
-				console.log("File saved? @ "+saveTo+"/"+fieldname+"__"+filename);
-			});	
+	//		fs.writeFile(saveTo+"/"+fieldname+"__"+filename, data, function(err){
+	//			if(err) console.log(err);
+	//			console.log("File saved? @ "+saveTo+"/"+fieldname+"__"+filename);
+	//		});	
 		});			
 	});
 
