@@ -115,8 +115,8 @@ app.get('/doc/contributor/:orcid', function(req, res){
 
 	// to be called when all async requests to coucdb and responses have been marshaled
 	function done(){
-		console.log('Final doc assembled for response!');
-		console.log(JSON.stringify(doc, null, 2));
+		//console.log('Final doc assembled for response!');
+		//console.log(JSON.stringify(doc, null, 2));
 		res.send(JSON.stringify(doc, null, 2));		
 	}
 
@@ -351,7 +351,7 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 //**********************************************************************************
 
 app.get('/doc/pattern/:pNum/force/:fNum', function(req, res){
-	//check that pNum and fNum are numbers - save dblookup if its garbage
+	//check that pNum and fNum are numbers - save a dblookup if its garbage
 	if (isNaN(req.params.pNum) || isNaN(req.params.fNum)){
 	 goToError();
 	}
@@ -416,53 +416,47 @@ app.get('/doc/pattern/:pNum/force/:fNum', function(req, res){
 	}
 
 	function getForces(array){
-				// a list of all force nums and id in the db
-		db.get('_design/patterns/_view/getForceByNum', function(err, body){
-			if(!err){
-				var list = body['rows']; //list of force numbers to check
-				//console.log(body['rows']);
-				var counter = 0; // counter available outside of for loop
-	
-				//test to see if :fNum matches a force doc on the list
-				//if so get it							
-				for (var x=0; x < list.length; x++){
-
-					if (String(list[x].value) === fNum){
-						db.get(list[x].id, function(err, body){
-							forceMatch = body;
-							delete forceMatch['_id'];				//delete all the coucdb interal key/values
-							delete forceMatch['_rev'];
-							delete forceMatch['int_id'];
-							delete forceMatch['parentPattern'];
-							delete forceMatch['doctype'];
-							delete forceMatch['_attachments'];
-							progress++;
-							console.log('progress from getForces = '+progress);
-							addContext(forceMatch); //<------------if all done, move to next function
-						});
-					}
-					else {
-						counter++;
-						//console.log("counter = "+counter+" progress = "+progress);
+		// array = a list of all pattern/:pNum force doc id in the db
+		async.eachSeries(array, function(forceitem, callback){
+			db.get(forceitem, function(err, forcedata){
+				//console.log("getting things");
+				if (err){
+					callback(err);
+				} else {
+					if(String(forcedata['int_id']) === fNum){
+						progress++;
+						var force = forcedata;
+						delete force['_id'];				//delete all the couchdb interal key/values
+						delete force['_rev'];
+						delete force['int_id'];
+						delete force['parentPattern'];
+						delete force['doctype'];
+						delete force['_attachments'];
+						var safepic = encodeURI(force['pic']);
+						force['pic'] = safepic;
+						addContext(force);
+					}else{
+						callback();
 					}
 				}
-				
-				// if we have been through the for loop and found nothing....
-				if (counter === list.length && progress < 2){
-					//console.log("no match!");
-					goToError("force doc not found in db list!");
-				 }
-
-			}
-			
-			else{
-				goToError(err);
+			});
+		}, function(err){
+			if(!err){
+				//we never get here if there is a match
+				if(progress < 3){
+					res.sendStatus(404);
+				}
+				//console.log("you shouldn't be here - /doc/pattern/id/force/id had no match and no error"); 
+			} else {
+				goToError("error looking up forces "+err);
 			}
 		});
-	}
+	}			
+
 
 	function addContext(match){
 		db.get('force', function(err, body){
+			//console.log("adding context");
 			match['@context'] = body['@context'];
 			match['@id'] = 'http://labpatterns.org/id/pattern/'+pNum+"/force/"+fNum; // <--------- we add @id of resource to the JSONLD here
 			match['@type'] = 'http://purl.org/NET/labpatterns#Force'; //<----------- and declare that this resource is type Force

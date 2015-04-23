@@ -1213,3 +1213,6 @@ played briefly with encodeURIComponent()
 https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
 however it still saved attachments with spaces- presumably it;s decoded upon saving.
 could try to implement encodeURI at /doc/.. pattern + force get routes??
+!FIXED > used encodeURI() on all final docToSend objects for /doc/pattern/:intID and /doc/pattern/:int/force/:int
+
+Next- need to fix GET on /doc/pattern/:intID/force/:intID
