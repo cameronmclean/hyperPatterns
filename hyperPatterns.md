@@ -1202,3 +1202,14 @@ browserify -r path/to/npm/bibtex-parse-js:bibtex-parse-js > bundle.js
 ```
 now we can load bundle.js into the html page, and use `var bt = require('bibtex-parse-js')` just as for node on the server side.
 http://thinkingonthinking.com/unix-in-the-browser/ was useful in figuring things out.
+
+Added a bunch of stuff to the alpaca "options": in order to validate ORCID, bibTEX, and to preview images for pic and diagram
+Havnt implemented force pic preview yet as its diffcult - we can't eaisily get the form DOM elements as they are dynamic 
+Could probably wrangel some jQuery though to add  force images to the edit forms using similar logic to the newform preview code...
+
+new bug - filenames need to be URL encoded!
+using a file with spaces results in invalid linked data as it cant be parsed. (arsed!)
+played briefly with encodeURIComponent() 
+https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/encodeURIComponent
+however it still saved attachments with spaces- presumably it;s decoded upon saving.
+could try to implement encodeURI at /doc/.. pattern + force get routes??

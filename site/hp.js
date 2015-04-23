@@ -673,6 +673,15 @@ app.get('/doc/pattern/:intID', function(req, res){
 		 		delete docToSend['int_id'];
 		 		delete docToSend['doctype'];
 		 		delete docToSend['_attachments'];
+		 		//URL encode/make safe any filenames
+		 		var picsafe = encodeURI(docToSend['pic']);
+		 		docToSend['pic'] = picsafe;
+		 		var diagramsafe = encodeURI(docToSend['diagram']);
+		 		docToSend['diagram'] = diagramsafe;
+		 		for (var i = 0; i < docToSend['force'].length; i++){
+		 			var forcepicsafe = encodeURI(docToSend['force'][i]['pic']);
+		 			docToSend['force'][i]['pic'] = forcepicsafe;
+		 		} 
 		 		res.send(JSON.stringify(docToSend, null, 2)); //<--- we're done, send the response! 
 		 	}
 		 	else {
@@ -903,7 +912,7 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 
 		var getForceAndCheck = function(doc, callback2){
 			db.get(doc, function(err, body){
-				console.log("getting force doc "+doc);
+				//console.log("getting force doc "+doc);
 				if(err){
 					console.log("error fetching force docs for images"+err);
 					goToError(err);
