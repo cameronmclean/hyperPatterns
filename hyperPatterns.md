@@ -1228,6 +1228,10 @@ force all pics to 100x100?
 
 ####Digital Ocean server
 Evening fun.
+
+
+
+
 fired up a digital ocean droplet $5 month.
 'https://www.digitalocean.com/community/tutorials/how-to-set-up-a-host-name-with-digitalocean'
 https://www.digitalocean.com/community/tutorials/additional-recommended-steps-for-new-ubuntu-14-04-servers
@@ -1244,3 +1248,51 @@ sudo setcap cap_net_bind_service=+ep /usr/bin/nodejs
 cant get any clients to connect on port 80 however... will check with nick/ben tomorrow. using hello.js
 
 also need to copy over the current couchdb files to the server so all the goodness that hp.js needs is there...
+
+#####201150424
+OK still on digiO
+did `sudo apt-get remove nodejs`
+and instead installed node from source 
+```
+sudo apt-get install -y build-essential openssl libssl-dev pkg-config
+cd ~
+wget http://nodejs.org/dist/v0.12.2/node-v0.12.2.tar.gz
+tar xvf node-v*
+./configure
+make
+sudo make install
+cd ~
+rm -rf node-v*
+```
+
+ALRIGHT!
+With Ben's awesome help we got everthing running.
+turns out, the main problem was within node apps, we need to specify the actual ip of the server 192.xyx.xyx.xyx etc not 127.0.0.1
+this was causing behaviour where we could see the app (listen) via localhost but not from the outside..
+NOTE: express.js abstracts a lot of this away - we just specify the port and off we go.
+So, to fire things up
+1) use screen 
+http://www.rackaid.com/blog/linux-screen-tutorial-and-how-to/
+`screen`
+then ctr-a + c = new window
+ctr-a + n = switch windows
+
+2) in one window do `sudo couchdb`
+3) switch/new screen
+4) `sudo node hp.js`
+5) Golden!
+
+COnfigured ufw to allow all on 2244 (ssh) and 80 tcp. Everthing else closed.
+
+_Copied over couchdb files._
+1) on my local machine, copy and zip everthing in /usr/local/var/lib/couchdb
+2) public dropbox the zip
+3) on the DO server, wget http://dropboxlink
+4) unzip into ~/couchdump
+5) cd couchdump
+6) mv {.,}* /var/lib/couchdb
+
+Sweet as.
+
+Now just need to branch git repo into deploy v1.0 , replace all the hardcoded 127.0.0.1 to labpatterns.org and re-clone, reload.
+Should be good!
