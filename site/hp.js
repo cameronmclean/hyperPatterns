@@ -1283,7 +1283,7 @@ app.get("/publish/:intID", function(req, res){
 				for (item in attachmentInfo){
 				//	console.log(item);
 					if (re.test(item)){
-						console.log("regex match! "+item);
+						//console.log("regex match! "+item);
 						//get and add the attachment filename
 						var itemSuffix = item.split("__")
 						forces['pic'] = ""+itemSuffix[1]; //just save/use the original filename
@@ -1301,12 +1301,12 @@ app.get("/publish/:intID", function(req, res){
 
 		}
 
-		for (var i = 0; i < forceAttachments.length; i++){
-			console.log("looping through forceAttachments "+forceAttachments[i]['filename']);
-			console.log(forceAttachments[i]['newfilename']);
-			console.log(forceAttachments[i]['contenttype']);
+		// for (var i = 0; i < forceAttachments.length; i++){
+		// 	console.log("looping through forceAttachments "+forceAttachments[i]['filename']);
+		// 	console.log(forceAttachments[i]['newfilename']);
+		// 	console.log(forceAttachments[i]['contenttype']);
 
-		}
+		// }
 
 
 	    var newForceDocs = []; //to store _id of newly created force docs
@@ -1345,11 +1345,10 @@ app.get("/publish/:intID", function(req, res){
 
 		}, function(err){ //callback for when async.eachSeries is finished
 			if (!err){
-				console.log("we saved some new forces! but havnt added attachemnts yet");
-				for (var i = 0; i < newForceDocs.length; i++){
-					console.log(newForceDocs[i]);			
-				}
-				//callback2(null);
+				// console.log("we saved some new forces! but havnt added attachemnts yet");
+				// for (var i = 0; i < newForceDocs.length; i++){
+				// 	console.log(newForceDocs[i]);			
+				// }				
 				addAttachments(forceAttachments);
 		    } else {
 		    	console.log("something wrong with add Forces async "+err);
@@ -1393,7 +1392,7 @@ app.get("/publish/:intID", function(req, res){
 					if(err){
 						console.log('shit - cant update forces list when flipping pattern '+err);
 					} else {
-						console.log('you done it. new force docs linked to pattern');
+						//console.log('you done it. new force docs linked to pattern');
 						callback2(null);
 					}
 				});
@@ -1406,7 +1405,7 @@ app.get("/publish/:intID", function(req, res){
 //*****************************************************************************
 
 	var putAuthors = function(doc, callback2){
-		console.log("putAuthors eg- "+doc['author']);
+		//console.log("putAuthors eg- "+doc['author']);
 
 		var authorList = []; //to store objects and loop through with async.eachSeries
 		var newAuthorDocs = []; //to store list of author docs to update "pattern" doc
@@ -1439,7 +1438,7 @@ app.get("/publish/:intID", function(req, res){
 						}
 					});
 				} else { //doc already exists
-					console.log("author doc exists ");
+					//console.log("author doc exists ");
 					newAuthorDocs.push(body['_id']); //just link exisiting doc
 					callback3(null);
 				}
@@ -1454,7 +1453,7 @@ app.get("/publish/:intID", function(req, res){
 						console.log("bugger updating main doc with author doc list "+err);
 						callback2(err);
 					} else {
-						console.log("authors updated");
+					//	console.log("authors updated");
 						callback2(null);
 					}
 				});
@@ -1482,7 +1481,7 @@ app.get("/publish/:intID", function(req, res){
 //*****************************************************************************
 
 	var putReferences = function(doc, callback2){
-		console.log('need to parse the refs');
+		//console.log('need to parse the refs');
 		//allow 20 refs  - loop throgh and get the keys
 		var refList = []; //to store objects and loop through with async.eachSeries
 		var newRefDocs = []; //to store list of author docs to update "pattern" doc
@@ -1493,7 +1492,7 @@ app.get("/publish/:intID", function(req, res){
 				if ( (keys.indexOf('ref_'+String(x)+'_reference') > -1) ){
 	//			console.log('keys match');
 				var pref = bibtexParse.toJSON(doc['ref_'+String(x)+'_reference']);
-				console.log("pref is class "+pref);
+			//	console.log("pref is class "+pref);
 				//console.log(JSON.stringify(ref, null, 4));
 				//if parse error?
 				
@@ -1531,7 +1530,7 @@ app.get("/publish/:intID", function(req, res){
 						console.log("bugger updating main doc with newRef doc list "+err);
 						callback2(err);
 					} else {
-						console.log("ref updated in maindoc");
+					//	console.log("ref updated in maindoc");
 						callback2(null);
 					}
 				});
@@ -1558,7 +1557,7 @@ app.get("/publish/:intID", function(req, res){
 //*****************************************************************************
 
     var cleanUp = function(doc, callback){
-		console.log("we're done! - attempting to clean up");
+		//console.log("we're done! - attempting to clean up");
 
 		function tidyUpTmp(callback2){
 			rimraf("./tmp", function(err){
@@ -1614,7 +1613,7 @@ app.get("/publish/:intID", function(req, res){
 					//note we have to retreive the doc again within each function to get a current _rev
 					async.applyEachSeries(functionList, doc, function(err, done){
 						if (!err) {
-							console.log("made it through the list! ");							
+					//		console.log("made it through the list! ");							
 							res.sendStatus(200);
 						} 
 						else{
@@ -1668,7 +1667,7 @@ app.post('/new', function(req, res){
 	var attachments = []; //also save files as array in mem for sendng to couchdb?
 
 	form.on('file', function(fieldname, file, filename, encoding, mimetype){
-		console.log(fieldname+"****"+filename+"***"+encoding);
+	//	console.log(fieldname+"****"+filename+"***"+encoding);
 		file.on('data', function(data){
 			//grab all the files and store the deatails an data in array
 			attachments.push({"name":fieldname+"__"+filename, "data":data, "content_type":mimetype});
@@ -1707,7 +1706,7 @@ app.post('/new', function(req, res){
 			//save to db, then add attachemts
 			db.insert(protoPattern, function(err, body){
 				if(!err) {
-					console.log('protopattern saved... now to add attachments...');
+				//	console.log('protopattern saved... now to add attachments...');
 				
 					//add all the attachments grabbed from form.on('files', ...)
 					async.eachSeries(attachments, function(file, callback){
@@ -1777,7 +1776,7 @@ app.post('/prototype', function(req, res){
 	var attachments = []; //also save files as array in mem for sendng to couchdb?
 
 	form.on('file', function(fieldname, file, filename, encoding, mimetype){
-		console.log(fieldname+"****"+filename+"***"+encoding);
+	//	console.log(fieldname+"****"+filename+"***"+encoding);
 		file.on('data', function(data){
 			//grab all the files and store the deatails an data in array in memory
 			attachments.push({"name":fieldname+"__"+filename, "data":data, "content_type":mimetype});
@@ -1828,9 +1827,9 @@ app.post('/prototype', function(req, res){
 				
 						db.insert(protoPattern, function(err, body){
 							if(!err) {
-								console.log('protopattern saved... now to add attachments...');
+								//console.log('protopattern saved... now to add attachments...');
 								
-								console.log(Object.keys(protoPattern['_attachments']));
+								//console.log(Object.keys(protoPattern['_attachments']));
 
 								//get list of current attachments
 								var oldAttachments = Object.keys(protoPattern['_attachments']);
@@ -1844,38 +1843,38 @@ app.post('/prototype', function(req, res){
 
 								//add all the attachments grabbed from form.on('files', ...)
 								async.eachSeries(attachments, function(file, callback){
-									console.log("inside async for attachment array"+oldPrefix);
+								//	console.log("inside async for attachment array"+oldPrefix);
 									//get prefix of new file['name'] attachement (the one we just POSTed)
 									var prefix = file['name'].split('__');
-									console.log('prefix[0] ='+prefix[0]);
+								//	console.log('prefix[0] ='+prefix[0]);
 									//see if newly posted attachments already have a counterpart in the db. 
 									
 
 									if ( oldPrefix.indexOf(prefix[0]) > -1 ){
 										//then we have a match
 										var doomedAttachment = oldAttachments[oldPrefix.indexOf(prefix[0])];
-										console.log("$$$$ doomed attachment = "+doomedAttachment);
-										console.log("about to replace attachment "+prefix[0]+prefix[1]);
+								//		console.log("$$$$ doomed attachment = "+doomedAttachment);
+								//		console.log("about to replace attachment "+prefix[0]+prefix[1]);
 										db.get(body.id, function(err, moardocs){ // wrap this this in a db.get() so _rev is curren
 											//console.log("why you no delete "+oldAttachments[index]);
-											console.log("deleting attachment"+doomedAttachment);
+								//			console.log("deleting attachment"+doomedAttachment);
 											db.attachment.destroy(body.id, doomedAttachment, {"rev": moardocs['_rev']}, function(err, anotherbody){
 												if (!err) {
-													console.log("attchment destroyed"+doomedAttachment);
+								//					console.log("attchment destroyed"+doomedAttachment);
 													//now add attachment
-													console.log("now we shoud add the replacement attachment")
+								//					console.log("now we shoud add the replacement attachment")
 													db.get(body.id, function(err, body2){
 														if (!err){
 															db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
 																if(!err) {
-																	console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
+																//	console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
 																	callback();
 																} else {
-												 					console.log("error attaching file "+file+"***"+err);
+												 					console.log("error attaching file in prototype"+file+"***"+err);
 																}
 															});
 														} else {
-														console.log("error getting newly updated doc "+err);
+														console.log("error getting newly updated proto doc "+err);
 														}
 													}); //closes db.gef
 												}
@@ -1887,7 +1886,7 @@ app.post('/prototype', function(req, res){
 											if (!err){
 												db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
 													if(!err) {
-														console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
+														//console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
 														callback();
 													} else {
 												 	console.log("error attaching file "+file+"***"+err);
