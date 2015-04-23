@@ -1,5 +1,7 @@
     
     <div id="form" style='width:70%; margin:0 auto'></div>
+    <script type="text/javascript" src="/js/bundle.js"></script>
+    <script>var bt = require('bibtex-parse-js');  // var test = bt.toJSON("@article{asdf,pages={29}}"); console.log(test[0]);</script>
     <script type="text/javascript">
         $(document).ready(function() {
             $.support.cors = true;
@@ -94,7 +96,22 @@
                         "reference": {
                             "type": "textarea",
                             "placeholder": "Insert a reference in bibTeX format",
-                            "rows": 6
+                            "rows": 6,
+                            "validator": function(callback) {
+                                var value= this.getValue();
+                               // console.log(value); 
+                                var input= bt.toJSON(value);
+                                console.log(input[0]);
+                                if (typeof input[0] === 'object') {
+                                    callback({
+                                        "status": true,
+                                        "message": "Valid bibtex"
+                                    });
+                                    return;
+                                } else {
+                                callback({"status": false, "message": "Invalid bibtex"});
+                                }
+                            }
                         }
                     }
                 }

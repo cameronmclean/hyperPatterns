@@ -898,13 +898,8 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 	}
 
 	function getForces(array){
-		// for (var i =0; i < array.length; i++){
-		// 	console.log(array[i]);
-		// }
-				// a list of all force ids for this pattern
-				//check to see if fNum is one of the int_ids, if so, gran the attachment and send
-
-		//TODO implement async.eachSeries() loop through force doc ids...
+	// array = a list of all force ids for this pattern
+	//check to see if fNum is one of the int_ids, if so, gran the attachment and send
 
 		var getForceAndCheck = function(doc, callback2){
 			db.get(doc, function(err, body){
@@ -915,21 +910,8 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 				} else {
 					//console.log("gotten doc int = "+body["int_id"]+" fNum = "+fNum);
 					if (String(body["int_id"]) === fNum){
-						console.log("match fNum = "+fNum+" int_id = "+body["int_id"]);
-						
+						//console.log("match fNum = "+fNum+" int_id = "+body["int_id"]);					
 						db.attachment.get(doc, img).pipe(res);
-						// db.attachment.get(doc, img, function(err, data){
-						// 	if (err) {
-						// 		callback2(err);
-						// 	} else {
-						// 		console.log("sending img "+img);
-						// 		console.log(data);
-						// 		fs.write(img, data);
-						// 		res.send(data);
-						// 		res.end();
-						// 		//callback2(null);
-						// 	}
-						// });
 					} else {
 						callback2(null);
 					}
@@ -1050,7 +1032,6 @@ app.get('/prototype/:intID', function(req, res){
 				}
 				//if (attachmentInfo['forces_'+String(x)+'_pic']){
 				//	console.log('attached file found!');
-
 				//}
 				wrangled['forces'].push(forces);
 			}
@@ -1260,12 +1241,7 @@ app.get("/publish/:intID", function(req, res){
 	//update the protopattern to pattern, still not done though...
 	db.insert(newDoc, function(err, body){
 		if(!err) { 
-
 			callback(null);
-			// db.get(body.id, function(err, body2){
-			// 	//console.log("new doc rev "+body2._rev);
-			// 	callback(null);
-			// })
 		}
 		else {
 			console.log("error in putMainDoc "+err)
@@ -1319,10 +1295,7 @@ app.get("/publish/:intID", function(req, res){
 					}
 
 				}
-				//if (attachmentInfo['forces_'+String(x)+'_pic']){
-				//	console.log('attached file found!');
 
-				//}
 				forceList.push(forces);
 			}
 
@@ -1345,7 +1318,8 @@ app.get("/publish/:intID", function(req, res){
 		}
 
 		var forceCounter = 1; // to be incremented each time through the async.eachSeries
-		var attachmentCounter =0;
+							  // starts at 1 because we dont want /doc/pattern/x/force/0/ etc
+		var attachmentCounter =0; //
 
 		async.eachSeries(forceList, function(force, callback){
 			var newDoc = {};
@@ -1354,7 +1328,6 @@ app.get("/publish/:intID", function(req, res){
 			newDoc['description'] = force['definition'];
 			newDoc['int_id'] = forceCounter;
 			newDoc['pic'] = "http://127.0.0.1:3000/doc/pattern/"+doc['int_id']+"/force/"+forceCounter+"/"+force['pic'];
-		//	newDoc['pic'] = forces['pic'];
 			newDoc['parentPattern'] = doc['_id'];
 			forceCounter++;
 			
@@ -1362,10 +1335,6 @@ app.get("/publish/:intID", function(req, res){
 				if (err) {
 					console.log("error creating new force doc "+err);
 				} else {
-					// var newdockeys = Object.keys(body);
-					// for (var i=0; i < newdockeys.length; i++){
-					// 	console.log("newdoc keys "+newdockeys[i]);
-					// }
 				newForceDocs.push(body.id);
 				//console.log("force counter = "+forceCounter+" looking inside forceAttachments "+forceAttachments[forceCounter - 1]['filename']);
 				forceAttachments[attachmentCounter]['docid'] = body.id;
@@ -1396,66 +1365,9 @@ app.get("/publish/:intID", function(req, res){
 			
 			//get the _rev of the force doc, and write attachemnt
 			db.get(file['docid'], function(err, body){
-				
-			// 	//THIS CODE WORKS EXCEPT COPIED ATTACHMENTS ARE 0 BYTES				
-			// 	db.attachment.get(doc['_id'], file['filename'], function(err, data){ //gets the attachment from the original doc
-			// 		if(err){
-			// 			console.log("error getting protopattern attachment for forces "+err);
-			// 		} else { //save the attachemnt
-			// 			fs.writeFile("./tmp/"+file['newfilename'], data, function(err){
-			// 				if (!err){ //if ok - read back in and send to db */
-			// 					fs.readFile("./tmp/"+file['newname'], function(err, data2){
-			// 						db.attachment.insert(file['docid'], file['newfilename'], data2, file['contenttype'], {"rev": body["_rev"]}, function(err, body2){
-			// 							if (!err) {
-			// 								console.log("fianlly attachment saved ! "+file['newfilename']);
-			// 								callback();
-			// 							} else {
-			// 								console.log("shitting shit balls cant insert attachment "+err);
-			// 								callback(err);
-			// 							}
-			// 					});
-			// 					}); //close readfile
-			// 				} else {
-			// 					console.log("error writng temp attachment "+err);
-			// 				}
-			// 			});//close writefile 
-			// 		}
-			// 	}); //close attchment.get
-
-			
-
 				// //TRY TO PIPE IT
 				db.attachment.get(doc['_id'], file['filename']).pipe(db.attachment.insert(file['docid'], file['newfilename'], null, file['contenttype'], {"rev": body["_rev"]})); 
-				callback();// //once piped, do the callback and move to next attachment/force
-				// save.on('finish', function(){
-				// 	callback();
-				// });
-
-
-
-
-				// request.get("http://127.0.0.1:5984/patterns/"+doc.id+"/"+file['filename']).pipe(
-				// 	db.attachment.insert(body.id, file["newfilename"], null, file['contenttype'], {"rev": body["_rev"]}, function(err, data){
-				// 		if (err){
-				// 			console.log("bugger with attachment "+err);
-				// 		} else {
-				// 			console.log('force attachment copied over '+file['newfilename']);
-				// 			callback();
-				// 		}
-				// 	})//close attachment.insert
-				// );//close pipe
-
-				
-
-				// db.attachment.insert(body.id, file.newfilename, file['data'], file.contenttype, {"rev": body["_rev"]}, function(err, data){
-				// 	if (err){
-				// 		console.log("probs pipeing in force attachment "+err);
-				// 	} else{
-				// 		console.log("attachment "+file.filename+" attached");
-				// 		callback();
-				// 	}
-				//}); //close db.attachment
-
+				callback();// //once piped (or pipe is started), do the callback and move to next attachment/force
 			});//close inital  db.get
 		}, function(err){
 			if (err){
@@ -2027,114 +1939,114 @@ app.post('/prototype', function(req, res){
 //*********************************************
 //* /json-new is no longer needed!! delete this route once we are happy with the app.
 //*********************************************
-app.post('/json-new', function(req, res){
-	console.log("were posting to new!");
-	//note body-parser should check for valid JSON first.
-	//if OK it is parsed into req.body object.
+// app.post('/json-new', function(req, res){
+// 	console.log("were posting to new!");
+// 	//note body-parser should check for valid JSON first.
+// 	//if OK it is parsed into req.body object.
 
-	//copy req.body object to payload
-	var payload = req.body;
+// 	//copy req.body object to payload
+// 	var payload = req.body;
 
-	console.log(Object.keys(payload));
-	for (var x in payload){
-		console.log(x);
-	}
-	res.send(payload);
+// 	console.log(Object.keys(payload));
+// 	for (var x in payload){
+// 		console.log(x);
+// 	}
+// 	res.send(payload);
 
-//	checkPayload(payload);
+// //	checkPayload(payload);
 
-	//validate payload against schema for newly sumbitted pattern
-	function checkPayload(postInput){
-		db.get('newPatternValidationSchema', function(err, body){
-			if(!err){
-				var schema = body;
-				//remove db specific fields from schema
-				delete schema["_id"];
-				delete schema["_rev"];
-				delete schema['doctype'];
+// 	//validate payload against schema for newly sumbitted pattern
+// 	function checkPayload(postInput){
+// 		db.get('newPatternValidationSchema', function(err, body){
+// 			if(!err){
+// 				var schema = body;
+// 				//remove db specific fields from schema
+// 				delete schema["_id"];
+// 				delete schema["_rev"];
+// 				delete schema['doctype'];
 
-				console.log(postInput);
+// 				console.log(postInput);
 
-				var valid = tv4.validate(JSON.stringify(postInput), JSON.stringify(schema));
+// 				var valid = tv4.validate(JSON.stringify(postInput), JSON.stringify(schema));
 
-				if (valid === true){
-					console.log("payload validates! "+valid);
-					//res.send("OK!");
-					//go to wrangle next
-					saveNewProtoPattern(postInput);
-				}
-				else{
-					console.log("nope - validation returned "+valid);
-					res.sendStatus(400);
-				}
+// 				if (valid === true){
+// 					console.log("payload validates! "+valid);
+// 					//res.send("OK!");
+// 					//go to wrangle next
+// 					saveNewProtoPattern(postInput);
+// 				}
+// 				else{
+// 					console.log("nope - validation returned "+valid);
+// 					res.sendStatus(400);
+// 				}
 
-			}
-			else{
-				console.log("error getting validation schema from db"+err);
-				goToError();
-			}
-		});
-	}
+// 			}
+// 			else{
+// 				console.log("error getting validation schema from db"+err);
+// 				goToError();
+// 			}
+// 		});
+// 	}
 
-	// if checkpayload validates, this is called to persist data as proto pattern to couchdb
-	function saveNewProtoPattern(input){
+// 	// if checkpayload validates, this is called to persist data as proto pattern to couchdb
+// 	function saveNewProtoPattern(input){
 
-		var newID = null;
-		//get the 
-		//modify fields in preparation for save to db
-		//note this is the first time we save/create a protopattern doc - _id and _rev dont exist yet..
-		input['doctype'] = "protopattern";
-		input['revision'] = 1;
-		//fetch the number of pattern and protopattern docs - set new int_id to one higher than the highest
-		db.get('_design/patterns/_view/getLastIntID', function(err, body){
-			//console.log(body.rows.length);
-			var listOfResults = body.rows;
-			var listOfValues = [];
-			for (x in listOfResults){
-				listOfValues.push(listOfResults[x].value);
-			}
-			newID = Math.max.apply(Math, listOfValues)+1;
-			//console.log("latest Int ID = "+newID);
-			//now set the new unique int_id for this pattern
-			input['int_id'] = newID;
+// 		var newID = null;
+// 		//get the 
+// 		//modify fields in preparation for save to db
+// 		//note this is the first time we save/create a protopattern doc - _id and _rev dont exist yet..
+// 		input['doctype'] = "protopattern";
+// 		input['revision'] = 1;
+// 		//fetch the number of pattern and protopattern docs - set new int_id to one higher than the highest
+// 		db.get('_design/patterns/_view/getLastIntID', function(err, body){
+// 			//console.log(body.rows.length);
+// 			var listOfResults = body.rows;
+// 			var listOfValues = [];
+// 			for (x in listOfResults){
+// 				listOfValues.push(listOfResults[x].value);
+// 			}
+// 			newID = Math.max.apply(Math, listOfValues)+1;
+// 			//console.log("latest Int ID = "+newID);
+// 			//now set the new unique int_id for this pattern
+// 			input['int_id'] = newID;
 
-			//now save the newly created protopattern 
-			db.insert(input, null, function(err, body){
-				if(!err){
-					res.send("saved OK!");
-				}
-				else{
-					goToError(err);
-				}
-			});
-		});
-	}
+// 			//now save the newly created protopattern 
+// 			db.insert(input, null, function(err, body){
+// 				if(!err){
+// 					res.send("saved OK!");
+// 				}
+// 				else{
+// 					goToError(err);
+// 				}
+// 			});
+// 		});
+// 	}
 
-	//check to see if object converts to valid JSON
-//	var check = JSON.stringify(payload);
-//		if (validator.isJSON(check)){
-//			console.log("passed isJSON test");
-//			console.log("and we can access payload object context "+payload['context']);
-//			res.send("OK!")
-//		}
-//		else{
-//			console.log('failed test - isJSON');
-//			goTo400();
-//		}
-//	}
-//	else {
-//		console.log("failed first test");
-//		goTo400();
-//	}
+// 	//check to see if object converts to valid JSON
+// //	var check = JSON.stringify(payload);
+// //		if (validator.isJSON(check)){
+// //			console.log("passed isJSON test");
+// //			console.log("and we can access payload object context "+payload['context']);
+// //			res.send("OK!")
+// //		}
+// //		else{
+// //			console.log('failed test - isJSON');
+// //			goTo400();
+// //		}
+// //	}
+// //	else {
+// //		console.log("failed first test");
+// //		goTo400();
+// //	}
 	
-//	function goTo400(err){
-//		console.log("doesnt appear to be proper JSON or a newpattern doc");
-//		res.sendStatus(400);
-//	} 
-	function goToError(err){
-		console.log(err);
-		res.sendStatus(500);
-	}
-});
+// //	function goTo400(err){
+// //		console.log("doesnt appear to be proper JSON or a newpattern doc");
+// //		res.sendStatus(400);
+// //	} 
+// 	function goToError(err){
+// 		console.log(err);
+// 		res.sendStatus(500);
+// 	}
+// });
 
 

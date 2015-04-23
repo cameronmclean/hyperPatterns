@@ -1122,7 +1122,7 @@ Doesnt seem to be picking up the "pic" string to hardcode to the new force doc "
 Sort this next > as _attachement deets/filenames need to be db.get.attachment , saved to mem and copied to corresponding nre force docs as attachments .
  NB - write a fucntion that does this, and call it from the first putForces() async.eachSerial callback... (to avoid deep nesting/readability)
  
-#####20140420
+#####20150420
 
 keep falling into same trap = iterators outside async function calls dont work as expected... sigh
 
@@ -1190,3 +1190,15 @@ db.get(file['docid'], function(err, body){
 });
 
 ```
+ALSO - need to implement bibtex check at edit/post
+ALSO - diagram often not attached properly...
+
+#####20150423
+Oakie Dokes, so thinking about trying to parse the ref form input for validation before POSTing.
+first step = get bibtex-parse-js working in the browser.
+bit of experimenting and after installing browserify http://browserify.org/index.html this did the trick
+```
+browserify -r path/to/npm/bibtex-parse-js:bibtex-parse-js > bundle.js
+```
+now we can load bundle.js into the html page, and use `var bt = require('bibtex-parse-js')` just as for node on the server side.
+http://thinkingonthinking.com/unix-in-the-browser/ was useful in figuring things out.
