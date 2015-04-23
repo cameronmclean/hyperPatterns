@@ -37,7 +37,7 @@
                             "placeholder": "http://orchid.org/1234-5678-9012-3456",
                             "helper": "ORCID URL",
                             "validator": function(callback) {  
-                              var re = new RegExp('^http:\/\/orcid.org\/(.{4})-(.{4})-(.{4})-(.{4})');
+                              var re = new RegExp('^http:\/\/orcid.org\/(.{4})-(.{4})-(.{4})-(.{4})$');
                               var ORCIDvalue= this.getValue();
                               if (re.test(ORCIDvalue)) {
                                     callback({

@@ -1216,3 +1216,31 @@ could try to implement encodeURI at /doc/.. pattern + force get routes??
 !FIXED > used encodeURI() on all final docToSend objects for /doc/pattern/:intID and /doc/pattern/:int/force/:int
 
 Next- need to fix GET on /doc/pattern/:intID/force/:intID
+DONE
+
+Only main things left to do
+- force and image previews/edit form population
+- sanitize input and limit filesizes, add bot prevtion scripts..?
+- add human words and deatiled instructions
+
+could implement image resizing on server side?
+force all pics to 100x100?
+
+####Digital Ocean server
+Evening fun.
+fired up a digital ocean droplet $5 month.
+'https://www.digitalocean.com/community/tutorials/how-to-set-up-a-host-name-with-digitalocean'
+https://www.digitalocean.com/community/tutorials/additional-recommended-steps-for-new-ubuntu-14-04-servers
+
+getting couch to install/run https://launchpad.net/~couchdb/+archive/ubuntu/stable
+note - start couch by doing `sudo start couchdb`
+to run node app listening on 127.0.0.0:80 must run `sudo nodejs hp.js` on digi ocean server
+or better still
+https://www.digitalocean.com/community/tutorials/how-to-use-pm2-to-setup-a-node-js-production-environment-on-an-ubuntu-vps
+```
+sudo apt-get install libcap2-bin
+sudo setcap cap_net_bind_service=+ep /usr/bin/nodejs
+```
+cant get any clients to connect on port 80 however... will check with nick/ben tomorrow. using hello.js
+
+also need to copy over the current couchdb files to the server so all the goodness that hp.js needs is there...

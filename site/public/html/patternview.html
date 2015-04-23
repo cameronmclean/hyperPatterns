@@ -125,15 +125,9 @@
  				$("#top").append('<p id="status"><h3>Pattern</h3></p>')
 
  				//append the pattern pic
- 		//		if ( prefix.indexOf("pic") > -1 ){
- 				//	console.log("pic match!");
-						//then we have a match
-		//				var imagename = attachments[prefix.indexOf("pic")];
-						$("#top").append('<img class="pattern-image" src="'+data['pic']+'" />');
+				$("#top").append('<img class="pattern-image" src="'+data['pic']+'" />');
 
-				//}
-
- 				
+				 				
  				$("#top").append('<h1>'+data['name']+'</h1>');
 
  				for (var i = 0; i < data['author'].length; i++){
@@ -144,19 +138,8 @@
 				$('#problem').append('<p class="problem-text alert alert-warning">'+data['problem']+'</p>');
 
 				for (var i = 0; i < data['force'].length; i++){
-					console.log(data['force']);
-					console.log('loop through forces '+i);
-					//console.log('looping over forces');
-
 					$('#force-details').append('<div class="force-item" id="f'+i+'"></div>')
-				//	if ( prefix.indexOf("forces_"+i+"_pic") > -1 ){
- 					//console.log("pic match!");
-						//then we have a match
-				//		var imagename = attachments[prefix.indexOf("forces_"+i+"_pic")];
-						$("#f"+i).append('<img class="force-image" src="'+data['force'][i]['pic']+'" />');
-
-				//	}
-				//	$("#f"+i).append('<img class="force-image" src="" />');
+					$("#f"+i).append('<img class="force-image" src="'+data['force'][i]['pic']+'" />');
 					$("#f"+i).append('<p class="force-name"><h4>'+data['force'][i]['forceName']+'<h4></p>');
 					$("#f"+i).append('<p class="force-text">'+data['force'][i]['description']+'</p>');
 				}
@@ -170,7 +153,6 @@
 				var replacer = ["entrytype", "booktitle", "volume", "series", "editor", "doi", "title", "url", "publisher", "author", "pages", "month", "year", "journal"]
 
 				for (var i = 0; i < data['evidence'].length; i++){
-					//console.log("ref "+data['evidence'][i]);
 					$("#ref-container").append('<p><pre><code>'+JSON.stringify(data['evidence'][i], replacer, 4)+'</code></pre></p>');
 					}
 
