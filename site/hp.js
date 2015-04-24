@@ -1087,6 +1087,7 @@ app.get('/prototype/:intID/:img', function(req, res){
 
 	function getPattern(num){
 		// a list of all pattern nums and id in the db
+		console.log("getting proto doc");
 		db.get('_design/patterns/_view/getProtoPatternByNum', function(err, body){
 			if(!err){
 				var list = body['rows'];
@@ -1096,15 +1097,16 @@ app.get('/prototype/:intID/:img', function(req, res){
 				//test to see if :intID matches a patter doc on the list
 				//if so get it							
 				for (var x=0; x < list.length; x++){
-		
+				console.log("inside for loop");
 					if (String(list[x].value) === num){
+						console.log("doc found");
 						db.get(list[x].id, function(err, body){
 							if ( img in body._attachments) { 
-							//console.log("img exists!");
+							console.log("img exists!");
 							var docName = body._id;
 							db.attachment.get(docName, img, function(err, body){
 								if(!err){
-									//console.log("attachment.get body "+body);
+									console.log("attachment.get body "+body);
 									fs.write(img, body);
 									res.send(body);
 								}
