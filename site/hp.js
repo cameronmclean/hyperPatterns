@@ -1090,50 +1090,79 @@ app.get('/prototype/:intID/:img', function(req, res){
 		console.log("getting proto doc");
 		db.get('_design/patterns/_view/getProtoPatternByNum', function(err, body){
 			if(!err){
-				var list = body['rows'];
-				var counter = 0; // counter available outside of for loop
+				list = body['rows'];
+				async.eachSeries(list, function(protopattern, callback){
+					if(protopattern['value'] === num){
+						console.log("protopattern found");
+						//check for img in attachments
+						db.get(protopattern['_id'], function(err, body2){
+							if(err){
+								callback(err);
+							} else {
+								if (img in body2['_attachments']){
+									//yes we have the image
+									console.log("image found");
+									db.attachment.get(protopattern['_id'], img).pipe(res);
+									callback(null);
+								} else {
+									callback("No img in _attachments");
+								}
+							}
+						});
+						
+					} else {
+						callback();
+					}
+				}, function(err){
+					if(err){
+						goToError(err);
+					}
+				}); //close async
+
+				// var list = body['rows'];
+				// var counter = 0; // counter available outside of for loop
 	
 
-				//test to see if :intID matches a patter doc on the list
-				//if so get it							
-				for (var x=0; x < list.length; x++){
-				console.log("inside for loop");
-					if (String(list[x].value) === num){
-						console.log("doc found");
-						db.get(list[x].id, function(err, body){
-							if ( img in body._attachments) { 
-							console.log("img exists!");
-							var docName = body._id;
-							db.attachment.get(docName, img, function(err, body){
-								if(!err){
-									console.log("attachment.get body "+body);
-									fs.write(img, body);
-									res.send(body);
-								}
-							});
-							//docToSend = JSON.parse(JSON.stringify(body));
-							//console.log(docToSend);
-							progress++;
-							}
-							else {
-								console.log("pattern pic not found");
-								goToError("Image not found");
-							}
-							//var docToPass = JSON.parse(JSON.stringify(docToSend)); //? ? eh?
-							//getPatternForces(docToPass); //<------------if all done, move to next function
-						});
-					}
-					else {
-						counter++;
-						//console.log("counter = "+counter+" progress = "+progress);
-					}
-				}
+				// //test to see if :intID matches a patter doc on the list
+				// //if so get it							
+				// for (var x=0; x < list.length; x++){
+				// console.log("inside for loop");
+				// 	if (String(list[x].value) === num){
+				// 		console.log("doc found");
+				// 		db.get(list[x].id, function(err, body){
+				// 			if ( img in body._attachments) { 
+				// 			console.log("img exists!");
+				// 			var docName = body._id;
+				// 			db.attachment.get(docName, img, function(err, body){
+				// 				if(!err){
+				// 					console.log("attachment.get body "+body);
+				// 					fs.write(img, body);
+				// 					res.send(body);
+				// 				}
+				// 			});
+				// 			//docToSend = JSON.parse(JSON.stringify(body));
+				// 			//console.log(docToSend);
+				// 			progress++;
+				// 			}
+				// 			else {
+				// 				console.log("pattern pic not found");
+				// 				goToError("Image not found");
+				// 			}
+				// 			//var docToPass = JSON.parse(JSON.stringify(docToSend)); //? ? eh?
+				// 			//getPatternForces(docToPass); //<------------if all done, move to next function
+				// 		});
+				// 	}
+				// 	else {
+				// 		counter++;
+				// 		//console.log("counter = "+counter+" progress = "+progress);
+				// 	}
+				// }
 				
-				// if we have been through the for loop and found nothing....
-				if (counter === list.length && progress < 1){
-					//console.log("no match!");
-					goToError("doc not found in db list!");
-				 }
+				// // if we have been through the for loop and found nothing....
+				// if (counter === list.length && progress < 1){
+				// 	//console.log("no match!");
+				// 	goToError("doc not found in db list!");
+				//  }
 
 			}
 			
