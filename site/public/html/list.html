@@ -44,7 +44,7 @@ $(document).ready(function(){
  		var answer = confirm("Are you sure you want to publish\n\n"+text+"\n\nYou can no longer edit this pattern once published.");
  		
  		if (answer === true ){
- 			$.get("http://127.0.0.1:3000/publish/"+number, function(){	
+ 			$.get("http://labpatterns.org/publish/"+number, function(){	
  					window.location.href='/published.html?id='+number;
  				})
  				.fail(function(){

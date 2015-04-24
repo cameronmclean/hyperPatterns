@@ -71,28 +71,28 @@ var server = app.listen(3000, function() {
 // sets up the 303 redirect if folks try to dereference the pattern concept.
 app.get('/id/pattern/:pid', function(req, res){
 	res.writeHead(303, {
-		'Location': 'http://127.0.0.1:3000/doc/pattern/'+req.params.pid
+		'Location': 'http://labpatterns.org/doc/pattern/'+req.params.pid
 	});
 	res.end();
 });
 
 app.get('/id/pattern/:pid/force/:fid', function(req,res){
 	res.writeHead(303, {
-		'Location': 'http://127.0.0.1:3000/doc/pattern/'+req.params.pid+'/force/'+req.params.fid
+		'Location': 'http://labpatterns.org/doc/pattern/'+req.params.pid+'/force/'+req.params.fid
 	});
 	res.end();
 });
 
 app.get('/id/pattern/:pid/ref/:rid', function(req, res){
 	res.writeHead(303, {
-		'Location': 'http://127.0.0.1:3000/doc/pattern/'+req.params.pid+'/ref/'+req.params.rid
+		'Location': 'http://labpatterns.org/doc/pattern/'+req.params.pid+'/ref/'+req.params.rid
 	});
 	res.end();
 });
 
 app.get('/id/contributor/:cid', function(req, res){
 	res.writeHead(303, {
-		'Location': 'http://127.0.0.1:3000/doc/contributor/'+req.params.cid
+		'Location': 'http://labpatterns.org/doc/contributor/'+req.params.cid
 	});
 	res.end();
 });
@@ -1228,14 +1228,14 @@ app.get("/publish/:intID", function(req, res){
 		//see if 'pic' exists, if so encode the location
 	 	var picPlace = prefix.indexOf("pic"); 
 	 	if (picPlace != -1){
-	 		newDoc["pic"] = "http://127.0.0.1:3000/doc/pattern/"+doc['int_id']+"/"+files[picPlace];
+	 		newDoc["pic"] = "http://labpatterns.org/doc/pattern/"+doc['int_id']+"/"+files[picPlace];
 	 	} else {
 	 		newDoc["pic"] = null;
 		 }
 	 	//do the same for diagram
 	 	var diagramPlace = prefix.indexOf("diagram");
 	 	if (diagramPlace != -1){
-	 		newDoc["diagram"] = "http://127.0.0.1:3000/doc/pattern/"+doc['int_id']+"/diagram/"+files[diagramPlace];
+	 		newDoc["diagram"] = "http://labpatterns.org/doc/pattern/"+doc['int_id']+"/diagram/"+files[diagramPlace];
 	 	} else {
 	 		newDoc['diagram'] = null;
 		 }
@@ -1330,7 +1330,7 @@ app.get("/publish/:intID", function(req, res){
 			newDoc['forceName'] = force['name'];
 			newDoc['description'] = force['definition'];
 			newDoc['int_id'] = forceCounter;
-			newDoc['pic'] = "http://127.0.0.1:3000/doc/pattern/"+doc['int_id']+"/force/"+forceCounter+"/"+force['pic'];
+			newDoc['pic'] = "http://labpatterns.org/doc/pattern/"+doc['int_id']+"/force/"+forceCounter+"/"+force['pic'];
 			newDoc['parentPattern'] = doc['_id'];
 			forceCounter++;
 			
