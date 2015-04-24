@@ -1093,17 +1093,17 @@ app.get('/prototype/:intID/:img', function(req, res){
 				list = body['rows'];
 				console.log("body rows "+body['rows']);
 				async.eachSeries(list, function(protopattern, callback){
-					if(protopattern['value'] === num){
+					if(String(protopattern['value']) === num){
 						console.log("protopattern found");
 						//check for img in attachments
-						db.get(protopattern['_id'], function(err, body2){
+						db.get(protopattern['id'], function(err, body2){
 							if(err){
 								callback(err);
 							} else {
 								if (img in body2['_attachments']){
 									//yes we have the image
 									console.log("image found");
-									db.attachment.get(protopattern['_id'], img).pipe(res);
+									db.attachment.get(protopattern['id'], img).pipe(res);
 									callback(null);
 								} else {
 									callback("No img in _attachments");
