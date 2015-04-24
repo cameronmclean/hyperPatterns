@@ -1087,14 +1087,14 @@ app.get('/prototype/:intID/:img', function(req, res){
 
 	function getPattern(num){
 		// a list of all pattern nums and id in the db
-		console.log("getting proto doc");
+		//console.log("getting proto doc");
 		db.get('_design/patterns/_view/getProtoPatternByNum', function(err, body){
 			if(!err){
 				list = body['rows'];
-				console.log("body rows "+body['rows']);
+		//		console.log("body rows "+body['rows']);
 				async.eachSeries(list, function(protopattern, callback){
 					if(String(protopattern['value']) === num){
-						console.log("protopattern found");
+					//	console.log("protopattern found");
 						//check for img in attachments
 						db.get(protopattern['id'], function(err, body2){
 							if(err){
@@ -1102,7 +1102,7 @@ app.get('/prototype/:intID/:img', function(req, res){
 							} else {
 								if (img in body2['_attachments']){
 									//yes we have the image
-									console.log("image found");
+					//				console.log("image found");
 									db.attachment.get(protopattern['id'], img).pipe(res);
 									callback(null);
 								} else {
@@ -1119,55 +1119,8 @@ app.get('/prototype/:intID/:img', function(req, res){
 						goToError(err);
 					}
 				}); //close async
-
-				// var list = body['rows'];
-				// var counter = 0; // counter available outside of for loop
-	
-
-				// //test to see if :intID matches a patter doc on the list
-				// //if so get it							
-				// for (var x=0; x < list.length; x++){
-				// console.log("inside for loop");
-				// 	if (String(list[x].value) === num){
-				// 		console.log("doc found");
-				// 		db.get(list[x].id, function(err, body){
-				// 			if ( img in body._attachments) { 
-				// 			console.log("img exists!");
-				// 			var docName = body._id;
-				// 			db.attachment.get(docName, img, function(err, body){
-				// 				if(!err){
-				// 					console.log("attachment.get body "+body);
-				// 					fs.write(img, body);
-				// 					res.send(body);
-				// 				}
-				// 			});
-				// 			//docToSend = JSON.parse(JSON.stringify(body));
-				// 			//console.log(docToSend);
-				// 			progress++;
-				// 			}
-				// 			else {
-				// 				console.log("pattern pic not found");
-				// 				goToError("Image not found");
-				// 			}
-				// 			//var docToPass = JSON.parse(JSON.stringify(docToSend)); //? ? eh?
-				// 			//getPatternForces(docToPass); //<------------if all done, move to next function
-				// 		});
-				// 	}
-				// 	else {
-				// 		counter++;
-				// 		//console.log("counter = "+counter+" progress = "+progress);
-				// 	}
-				// }
-				
-				// // if we have been through the for loop and found nothing....
-				// if (counter === list.length && progress < 1){
-				// 	//console.log("no match!");
-				// 	goToError("doc not found in db list!");
-				//  }
-
 			}
-			
-			else{
+			else{ //err getting dbview
 				goToError(err);
 			}
 		});
@@ -1670,24 +1623,24 @@ app.post('/new', function(req, res){
 //	console.log("hey look, a new pattern!");
 
 	//get a random ID for this POST
-//	var session = crypto.randomBytes(20).toString('hex');
-//	var saveTo = "./tmp/"+session;
+	var session = crypto.randomBytes(20).toString('hex');
+	var saveTo = "./tmp/"+session;
 
 	var protoPattern = {}; //blank object to store parsed form fields
 	//var protoForce = {};
 	//var protoRef = {};
 	//var protoAuthor = {};
 	
-//	fs.mkdir(saveTo, function(err){
-//		if(err) console.log(err);
-//	});
+	fs.mkdir(saveTo, function(err){
+		if(err) console.log(err);
+	});
 
 	//remove tmp files
 	function tidyUp(callback){
-	//	rimraf("./tmp/"+session, function(err){
-	//		if(err) callback(err);
+		rimraf("./tmp/"+session, function(err){
+			if(err) callback(err);
 			callback(null);
-	//	});
+		});
 	}
 	
 
@@ -1703,17 +1656,22 @@ app.post('/new', function(req, res){
 
 	form.on('file', function(fieldname, file, filename, encoding, mimetype){
 	//	console.log(fieldname+"****"+filename+"***"+encoding);
-		file.on('data', function(data){
+	
+	//	file.on('data', function(data){
+		
 			//grab all the files and store the deatails an data in array
-			attachments.push({"name":fieldname+"__"+filename, "data":data, "content_type":mimetype});
-			
+	//		attachments.push({"name":fieldname+"__"+filename, "data":data, "content_type":mimetype});
+			console.log("piping file "+saveTo+"/"+fieldname+"__"+filename);
 			//also write files to ./tmp  <<<<<< can maybe dispense with this >>>>>>>>>>>>>>>
-	//		fs.writeFile(saveTo+"/"+fieldname+"__"+filename, data, function(err){
-	//			if(err) console.log(err);
-	//			console.log("File saved? @ "+saveTo+"/"+fieldname+"__"+filename);
-	//		});	
+			file.pipe(fs.createWriteStream(saveTo+"/"+fieldname+"__"+filename));
+			console.log("saving file deets in mem "+fieldname+"__"+filename+"   "+mimetype);
+			attachments.push({"name":fieldname+"__"+filename, "content_type":mimetype});
+			// fs.writeFile(saveTo+"/"+fieldname+"__"+filename, data, function(err){
+			// 	if(err) console.log(err);
+			// 	console.log("File saved? @ "+saveTo+"/"+fieldname+"__"+filename);
+			//});	
 		});			
-	});
+//	});
 
 	form.on('field', function(fieldname, value, fieldnameTruncated, valTruncated){
 		protoPattern[fieldname] = value;
@@ -1741,20 +1699,27 @@ app.post('/new', function(req, res){
 			//save to db, then add attachemts
 			db.insert(protoPattern, function(err, body){
 				if(!err) {
-				//	console.log('protopattern saved... now to add attachments...');
+					console.log('protopattern saved... now to add attachments...');
 				
 					//add all the attachments grabbed from form.on('files', ...)
 					async.eachSeries(attachments, function(file, callback){
+						//get the doc each time for fresh _rev
 						db.get(body.id, function(err, body2){
 							if (!err){
-								db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
-									if(!err) {
-								//		console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
-										callback();
-									} else {
-									 console.log("error attaching file "+file+"***"+err);
-									}
-								});
+								console.log("about to pipe in attachment "+saveTo+"/"+file['name']);
+								fs.createReadStream(saveTo+"/"+file['name']).pipe(db.attachment.insert(body.id, file['name'], null, file['content_type'], {"rev": body2['_rev']}));
+								console.log("hopefully piped in saved file as attachment "+file['name']);
+								callback();
+							
+						//});
+								// db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
+								// 	if(!err) {
+								// //		console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
+								// 		callback();
+								// 	} else {
+								// 	 console.log("error attaching file "+file+"***"+err);
+								// 	}
+								// });
 							} else {
 								console.log("error getting newly created doc "+err);
 							}
@@ -1776,7 +1741,7 @@ app.post('/new', function(req, res){
 							
 							});
 						}
-					});  									
+					});  //close async									
 				
 				}
 				else {
