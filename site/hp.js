@@ -1091,6 +1091,7 @@ app.get('/prototype/:intID/:img', function(req, res){
 		db.get('_design/patterns/_view/getProtoPatternByNum', function(err, body){
 			if(!err){
 				list = body['rows'];
+				console.log("body rows "+body['rows']);
 				async.eachSeries(list, function(protopattern, callback){
 					if(protopattern['value'] === num){
 						console.log("protopattern found");
