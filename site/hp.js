@@ -15,7 +15,7 @@ var bibtexParse = require('bibtex-parse-js');
 //var tv4 = require('tv4');
 var cors = require('cors');
 var rimraf = require('rimraf');
-//var crypto = require('crypto');
+var crypto = require('crypto');
 var request = require('request');
 var app = express();
 
@@ -1637,8 +1637,8 @@ app.post('/new', function(req, res){
 
 	//remove tmp files
 	function tidyUp(callback){
-		rimraf("./tmp/"+session, function(err){
-			if(err) callback(err);
+	//	rimraf("./tmp/"+session, function(err){
+	//		if(err) callback(err);
 			callback(null);
 		});
 	}
@@ -1707,10 +1707,17 @@ app.post('/new', function(req, res){
 						db.get(body.id, function(err, body2){
 							if (!err){
 								console.log("about to pipe in attachment "+saveTo+"/"+file['name']);
-								fs.createReadStream(saveTo+"/"+file['name']).pipe(db.attachment.insert(body.id, file['name'], null, file['content_type'], {"rev": body2['_rev']}));
-								console.log("hopefully piped in saved file as attachment "+file['name']);
-								callback();
-							
+								var s = fs.createReadStream(saveTo+"/"+file['name']);
+								db.attachment.insert(body.id, file['name'], s, file['content_type'], {"rev": body2['_rev']}, function(err, whatever){
+									if(!err){
+										console.log("hopefully piped in saved file as attachment "+file['name']);
+										callback();
+									} else{
+										console.log("error writing buffer to attahcemnts "+err);
+									}
+								});
+								
+								
 						//});
 								// db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
 								// 	if(!err) {
@@ -1732,7 +1739,7 @@ app.post('/new', function(req, res){
 						//	console.log("tidyUP!");
 							tidyUp(function(err){
 								if(!err){
-									fs.openSync('./tmp/.keep', 'w');
+								//	fs.openSync('./tmp/.keep', 'w');
 									res.writeHead(302, {"Location": "/created.html"});
 									res.end();
 								} else {
