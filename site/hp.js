@@ -1640,7 +1640,7 @@ app.post('/new', function(req, res){
 	//	rimraf("./tmp/"+session, function(err){
 	//		if(err) callback(err);
 			callback(null);
-		});
+	//	});
 	}
 	
 
