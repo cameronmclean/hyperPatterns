@@ -1707,15 +1707,29 @@ app.post('/new', function(req, res){
 						db.get(body.id, function(err, body2){
 							if (!err){
 								console.log("about to pipe in attachment "+saveTo+"/"+file['name']);
-								var s = fs.createReadStream(saveTo+"/"+file['name']);
-								db.attachment.insert(body.id, file['name'], s, file['content_type'], {"rev": body2['_rev']}, function(err, whatever){
+								fs.readFile(saveTo+"/"+file['name'], function(err, filedata){
 									if(!err){
-										console.log("hopefully piped in saved file as attachment "+file['name']);
-										callback();
-									} else{
-										console.log("error writing buffer to attahcemnts "+err);
+										db.attachment.insert(body.id, file['name'], filedata, file['content_type'], {"rev": body2['_rev']}, function(err, whatever){
+											if(!err){
+											console.log("hopefully piped in saved file as attachment "+file['name']);
+											callback();
+											} else{
+											console.log("error writing buffer to attahcemnts "+err);
+											}	
+										});
+									} else {
+										console.log("error reading file "+saveTo+"/"+file['name']);
 									}
+									
 								});
+								// db.attachment.insert(body.id, file['name'], s, file['content_type'], {"rev": body2['_rev']}, function(err, whatever){
+								// 	if(!err){
+								// 		console.log("hopefully piped in saved file as attachment "+file['name']);
+								// 		callback();
+								// 	} else{
+								// 		console.log("error writing buffer to attahcemnts "+err);
+								// 	}
+								// });
 								
 								
 						//});
