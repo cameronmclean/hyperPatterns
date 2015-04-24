@@ -1296,3 +1296,8 @@ Sweet as.
 
 Now just need to branch git repo into deploy v1.0 , replace all the hardcoded 127.0.0.1 to labpatterns.org and re-clone, reload.
 Should be good!
+
+Kinda
+except getting images crashes everything
+node: ../src/node_file.cc:819: void node::WriteBuffer(const v8::FunctionCallbackInfo<v8::Value>&): Assertion `args[0]->IsInt32()' failed.
+not sure if images/attachments are saved into couch db and we just cant get them or if the prob is somewhere else..
