@@ -198,20 +198,20 @@ app.get('/doc/contributor/:orcid', function(req, res){
 
 // note this is temp / for testing - we dont need to implement a POST to /contribitor.
 
-app.post('/patterns/contributor', function(req, res){
+// app.post('/patterns/contributor', function(req, res){
 	
-	var payload = JSON.stringify(req.body, null, 2);
-	//console.log(payload);
+// 	var payload = JSON.stringify(req.body, null, 2);
+// 	//console.log(payload);
 	
-	if (JSON.parse(payload)){
-	//	console.log("Looks legit");
-		res.send("OK!");
-	}
-	else{
-		res.send("Please submit valid JSON");
-	}
+// 	if (JSON.parse(payload)){
+// 	//	console.log("Looks legit");
+// 		res.send("OK!");
+// 	}
+// 	else{
+// 		res.send("Please submit valid JSON");
+// 	}
 	
-});
+// });
 
 
 //**********************************************************************************
@@ -826,45 +826,31 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 		// a list of all pattern nums and id in the db
 		db.get('_design/patterns/_view/getPatternByNum', function(err, body){
 			if(!err){
-				var list = body['rows'];
-				var counter = 0; // counter available outside of for loop
-	
-				//test to see if :pNum matches a patter doc on the list
-				//if so get it							
-				for (var x=0; x < list.length; x++){
-					//console.log("list.length = "+list.length);
-					//console.log("before if, x = "+x);
-					
-					if (String(list[x].value) === num){
-						db.get(list[x].id, function(err, body){
-							if(body.force){ //make sure body.force is defined
-								listOfForces = body.force;
-							//	console.log("force list passed to getForces()"+listOfForces[0]);
-								progress++;
-							//	console.log('progress from getPattern = '+progress);
-								getForces(listOfForces); //<------------if all done (pattern doc exists, move to next function
-							}
-							else{ // body.force err
-								goToError("error getting force list from pattern");
+				list = body['rows'];
+		//		console.log("body rows "+body['rows']);
+				async.eachSeries(list, function(pattern, callback){
+					if(String(pattern['value']) === num){
+					//	console.log("protopattern found");
+						//check for img in attachments
+						db.get(pattern['id'], function(err, body2){
+							if(err){
+								callback(err);
+							} else {
+									listOfForces = body2['force'];
+									getForces(listOfForces);
 							}
 						});
+						
+					} else {
+						callback();
 					}
-					else {
-						counter++;
-					//	console.log("counter = "+counter+" progress = "+progress);
+				}, function(err){
+					if(err){
+						goToError(err);
 					}
-				} 
-				
-				// if we have been through the for loop and found nothing....
-				if (counter === list.length && progress < 1){
-				//	console.log("no match!");
-					goToError("pattern doc not found in db list!");
-				 }
-
+				}); //close async
 			}
-			
-			else{
-				console.log("error looking up pattern number "+err);
+			else{ //err getting dbview
 				goToError(err);
 			}
 		});
