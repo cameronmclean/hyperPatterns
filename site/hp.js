@@ -430,6 +430,8 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 			}, function(err){
 				if(err){
 					goToError(err);
+				} else {
+					goToError("didnt find match");
 				}
 		});// close async
 	} //close getRef function
