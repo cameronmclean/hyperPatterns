@@ -273,11 +273,11 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 			if(!err){
 				var list2 = body3['rows']; //list of Reference numbers to check
 				
-				async.eachSeries(list2, function(ref, callback){
+				async.eachSeries(array, function(ref, callback2){
 					//if(String(ref['value']) === eNum) {
-						db.get(ref['id'], function(err, body4){
+						db.get(ref, function(err, body4){
 							if(err){
-								callback(err);
+								callback2(err);
 							} else {
 								if(body4['int_id'] === eNum) {
 									refMatch = body4;
@@ -288,7 +288,7 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 									delete refMatch['doctype'];
 									addContext(refMatch);
 								} else {
-									callback();
+									callback2();
 								}
 							}
 						});//db.get
@@ -360,134 +360,108 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 });
 
 //**********************************************************************************
-
-app.get('/doc/pattern/:pNum/force/:fNum', function(req, res){
-	//check that pNum and fNum are numbers - save a dblookup if its garbage
-	if (isNaN(req.params.pNum) || isNaN(req.params.fNum)){
+app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
+	//check that pNum and eNum are numbers - save dblookup if its garbage
+	if (isNaN(req.params.pNum) || isNaN(req.params.eNum)){
 	 goToError();
 	}
 	
 	else {
 	var pNum = req.params.pNum;
-	var fNum = req.params.fNum;
-	var listOfForces = [];
-	var forceMatch = {};
-	var progress = 0; 
+	var eNum = req.params.eNum;
+	var listOfReferences = [];
+	var refMatch = {};
+	var docToSend = {};
+	var progress = 0;
 
-	//console.log("you tried to get pattern "+pNum+" force "+fNum);
-
-	//first - try to get pattern with pNum
+	//start here and first try to get pattern doc with pNum
 	getPattern(pNum);
-	
+
 	function getPattern(num){
-		// a list of all pattern nums and id in the db
+
 		db.get('_design/patterns/_view/getPatternByNum', function(err, body){
 			if(!err){
-				var list = body['rows'];
-				var counter = 0; // counter available outside of for loop
-	
-				//test to see if :pNum matches a patter doc on the list
-				//if so get it							
-				for (var x=0; x < list.length; x++){
-					//console.log("list.length = "+list.length);
-					//console.log("before if, x = "+x);
-					
-					if (String(list[x].value) === num){
-						db.get(list[x].id, function(err, body){
-							if(body.force){ //make sure body.force is defined
-								listOfForces = body.force;
-							//	console.log("force list passed to getForces()"+listOfForces[0]);
+				list = body['rows'];
+				//go through each pattern in the db, see if int_id matches :pNum
+				async.eachSeries(list, function(pattern, callback){
+					if(String(pattern['value']) === num){
+					//	console.log("pattern found");
+						db.get(pattern['id'], function(err, body2){
+							if(err){
+								callback(err);
+							} else {
 								progress++;
-							//	console.log('progress from getPattern = '+progress);
-								getForces(listOfForces); //<------------if all done (pattern doc exists, move to next function
-							}
-							else{ // body.force err
-								goToError("error getting force list from pattern");
+								listOfReferences = body2['evidence'];
+								getReferences(listOfReferences);
 							}
 						});
+						
+					} else { //no match, keep checking
+						callback();
 					}
-					else {
-						counter++;
-					//	console.log("counter = "+counter+" progress = "+progress);
+				}, function(err){
+					if(err){
+						goToError(err);
 					}
-				}
-				
-				// if we have been through the for loop and found nothing....
-				if (counter === list.length && progress < 1){
-				//	console.log("no match!");
-					goToError("pattern doc not found in db list!");
-				 }
-
+					if (progress < 1) {
+						goToError("Pattern not found");
+					}
+				}); //close async
 			}
-			
-			else{
+			else{ //err getting dbview
 				goToError(err);
 			}
 		});
 	}
 
-	function getForces(array){
-		// array = a list of all pattern/:pNum force doc id in the db
-		async.eachSeries(array, function(forceitem, callback){
-			db.get(forceitem, function(err, forcedata){
-				//console.log("getting things");
-				if (err){
-					callback(err);
-				} else {
-					if(String(forcedata['int_id']) === fNum){
-						progress++;
-						var force = forcedata;
-						delete force['_id'];				//delete all the couchdb interal key/values
-						delete force['_rev'];
-						delete force['int_id'];
-						delete force['parentPattern'];
-						delete force['doctype'];
-						delete force['_attachments'];
-						var safepic = encodeURI(force['pic']);
-						force['pic'] = safepic;
-						addContext(force);
-					}else{
-						callback();
+	
+	function getReferences(array){						
+		async.eachSeries(array, function(ref, callback2){
+			db.get(ref, function(err, body4){
+				if(err){
+					callback2(err);
+					} else {
+						if(body4['int_id'] === eNum) {
+							console.log("ref doc and eNum match");
+							refMatch = body4;
+							delete refMatch['_id'];				//delete all the coucdb interal key/value									
+							delete refMatch['_rev'];
+							delete refMatch['int_id'];
+							delete refMatch['parentPattern'];
+							delete refMatch['doctype'];
+							addContext(refMatch);
+						} else {
+							callback2();
+						}									
 					}
+			});//db.get
+			}, function(err){
+				if(err){
+					goToError(err);
 				}
-			});
-		}, function(err){
-			if(!err){
-				//we never get here if there is a match
-				if(progress < 3){
-					res.sendStatus(404);
-				}
-				//console.log("you shouldn't be here - /doc/pattern/id/force/id had no match and no error"); 
-			} else {
-				goToError("error looking up forces "+err);
-			}
-		});
-	}			
-
+		});// close async
+	} //close getRef function
 
 	function addContext(match){
-		db.get('force', function(err, body){
-			//console.log("adding context");
-			match['@context'] = body['@context'];
-			match['@id'] = 'http://labpatterns.org/id/pattern/'+pNum+"/force/"+fNum; // <--------- we add @id of resource to the JSONLD here
-			match['@type'] = 'http://purl.org/NET/labpatterns#Force'; //<----------- and declare that this resource is type Force
+		db.get('bibTEX', function(err, body3){
+			match['@context'] = body3['@context'];
+			match['@id'] = 'http://labpatterns.org/id/pattern/'+pNum+"/ref/"+eNum; // <--------- we add @id of resource to the JSONLD here
+			match['@type'] = 'http://purl.org/NET/labpatterns#Reference'; //<----------- and declare that this resource is type Reference
 			match['partOf'] = 'http://labpatterns.org/id/pattern/'+pNum;
-			progress++
-			//console.log('progress from addContext = '+progress);
-			//if forceDoc content already done
-			if (progress === 3){
-				res.send(JSON.stringify(match, null, 2));
-			}
+			res.send(JSON.stringify(match, null, 2));
+			//}
 		});
-	}
-}//closes else at top
+	 }
 
+	}//closes else at top of route
+	
 	function goToError(err){
-		console.log("**********error getting pattern doc "+pNum+" and force "+fNum+" ... "+err);
+		console.log("**********error getting pattern doc "+pNum+" and evidence "+eNum+" ... "+err);
 		res.sendStatus(404);
 	}
 
 });
+
 
 
 
