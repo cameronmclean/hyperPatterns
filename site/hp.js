@@ -412,8 +412,8 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 				if(err){
 					callback2(err);
 					} else {
-						console.log("got ref doc "+ref);
-						if(body4['int_id'] === eNum) {
+						console.log("got ref doc "+body4["_id"]);
+						if(String(body4['int_id']) === String(eNum)) {
 							console.log("ref doc and eNum match, adding context");
 							refMatch = body4;
 							delete refMatch['_id'];				//delete all the coucdb interal key/value									
@@ -435,7 +435,9 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 	} //close getRef function
 
 	function addContext(match){
+		console.log("about to add context");
 		db.get('bibTEX', function(err, body3){
+			console.log("got context from DB");
 			match['@context'] = body3['@context'];
 			match['@id'] = 'http://labpatterns.org/id/pattern/'+pNum+"/ref/"+eNum; // <--------- we add @id of resource to the JSONLD here
 			match['@type'] = 'http://purl.org/NET/labpatterns#Reference'; //<----------- and declare that this resource is type Reference
