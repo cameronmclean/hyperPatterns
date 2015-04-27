@@ -1313,3 +1313,12 @@ OK , so got all the image requests working.
 Still more work to be done.
 Need to check the order of how the routes are specified in teh code - this might be causing my troubles getting pattern/x/force/x or pattern/x/ref/x etc . We can order them properly and add conditional checks, if not match go to next();
 also - force/x/:img just does a straight out get and pipe, doesnt send 404 if img doesnt exist - sends 200 with JSON error message.
+
+OK oK oK - fixed all the routes for JSON-LD or images.
+Documents now created, edit, publish all A-OK!
+Will give to lab folks to try and break it on wed.
+
+got PM2 working by `cd ~` and `chmod 777 .pm2 .`
+All seems okaie dokie now.
+Will need to read up more on PM2 - but later.
+Will try and keep the server up overnight and see if it's still running (under my control!) tomorrow.
