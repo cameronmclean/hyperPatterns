@@ -1658,7 +1658,7 @@ app.post('/new', function(req, res){
 	//	console.log(fieldname+"****"+filename+"***"+encoding);
 	
 		//file.on('data', function(data){
-		
+			if(filename){
 			//grab all the files and store the deatails an data in array
 	//		attachments.push({"name":fieldname+"__"+filename, "data":data, "content_type":mimetype});
 			console.log("piping file "+saveTo+"/"+fieldname+"__"+filename);
@@ -1666,6 +1666,9 @@ app.post('/new', function(req, res){
 			data.pipe(fs.createWriteStream(saveTo+"/"+fieldname+"__"+filename));
 			console.log("saving file deets in mem "+fieldname+"__"+filename+"   "+mimetype);
 			attachments.push({"name":fieldname+"__"+filename, "content_type":mimetype});
+		} else {
+			file.resume();
+		}
 			// fs.writeFile(saveTo+"/"+fieldname+"__"+filename, data, function(err){
 			// 	if(err) console.log(err);
 			// 	console.log("File saved? @ "+saveTo+"/"+fieldname+"__"+filename);
