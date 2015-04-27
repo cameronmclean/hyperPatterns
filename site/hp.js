@@ -361,6 +361,7 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 
 //**********************************************************************************
 app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
+	console.log("getting reference doc");
 	//check that pNum and eNum are numbers - save dblookup if its garbage
 	if (isNaN(req.params.pNum) || isNaN(req.params.eNum)){
 	 goToError();
@@ -381,16 +382,19 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 
 		db.get('_design/patterns/_view/getPatternByNum', function(err, body){
 			if(!err){
+				console.log("get list of patterns");
 				list = body['rows'];
 				//go through each pattern in the db, see if int_id matches :pNum
 				async.eachSeries(list, function(pattern, callback){
+					console.log("inside async.Series for get pattern "+pattern);
 					if(String(pattern['value']) === num){
-					//	console.log("pattern found");
+						console.log("pattern found");
 						db.get(pattern['id'], function(err, body2){
 							if(err){
 								callback(err);
 							} else {
 								progress++;
+								console.log("handing over to getReferences()");
 								listOfReferences = body2['evidence'];
 								getReferences(listOfReferences);
 							}
@@ -417,10 +421,12 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 	
 	function getReferences(array){						
 		async.eachSeries(array, function(ref, callback2){
+			console.log("inside getRef async "+ref);
 			db.get(ref, function(err, body4){
 				if(err){
 					callback2(err);
 					} else {
+						console.log("got ref doc "+ref);
 						if(body4['int_id'] === eNum) {
 							console.log("ref doc and eNum match");
 							refMatch = body4;
