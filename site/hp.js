@@ -1793,6 +1793,10 @@ app.post('/prototype', function(req, res){
 	var session = crypto.randomBytes(20).toString('hex');
 	var saveTo = "./tmp/"+session;
 
+	fs.mkdir(saveTo, function(err){
+		if(err) console.log(err);
+	});
+
 	var protoPattern = {}; //blank object to store parsed form fields
 
 	//create a new busboy object to stream the req object to
