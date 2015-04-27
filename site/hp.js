@@ -1788,21 +1788,28 @@ app.post('/new', function(req, res){
 //**************************************************
 app.post('/prototype', function(req, res){
 	console.log("posting to update protopattern");
+	
+	//to save files as tmp
+	var session = crypto.randomBytes(20).toString('hex');
+	var saveTo = "./tmp/"+session;
+
 	var protoPattern = {}; //blank object to store parsed form fields
 
 	//create a new busboy object to stream the req object to
 	var form = new busboy({headers: req.headers});
 
 	//get the files and save them to /tmp - prefix the filename with "formfield__"
-	var attachments = []; //also save files as array in mem for sendng to couchdb?
+	var attachments = []; //also save filedeets in array for sendng to couchdb?
 
+	//save attachments to tmp
 	form.on('file', function(fieldname, file, filename, encoding, mimetype){
-	//	console.log(fieldname+"****"+filename+"***"+encoding);
-		file.on('data', function(data){
-			//grab all the files and store the deatails an data in array in memory
-			attachments.push({"name":fieldname+"__"+filename, "data":data, "content_type":mimetype});
-		});			
-	});
+		console.log("piping file "+saveTo+"/"+fieldname+"__"+filename);
+		file.pipe(fs.createWriteStream(saveTo+"/"+fieldname+"__"+filename));
+		console.log("saving file deets in mem "+fieldname+"__"+filename+"   "+mimetype);
+		attachments.push({"name":fieldname+"__"+filename, "content_type":mimetype});	
+	});	
+
+
 
 	// next parse and store all the key/value pairs
 	form.on('field', function(fieldname, value, fieldnameTruncated, valTruncated){
@@ -1812,7 +1819,7 @@ app.post('/prototype', function(req, res){
 
 	//once done , wrangle and update the protopatten
 	form.on('finish', function(){
-		console.log("finsihed rading form data");
+		console.log("finsihed reading form data");
 	//	console.log(protoPattern);
 		//set additional fields to identify pattern
 		protoPattern["doctype"] = "protoPattern";
@@ -1887,14 +1894,17 @@ app.post('/prototype', function(req, res){
 								//					console.log("now we shoud add the replacement attachment")
 													db.get(body.id, function(err, body2){
 														if (!err){
-															db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
-																if(!err) {
-																//	console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
-																	callback();
-																} else {
-												 					console.log("error attaching file in prototype"+file+"***"+err);
-																}
-															});
+															fs.readFile(saveTo+"/"+file['name'], function(err, filedata){
+																if (err) console.log("error reading tmp file...");
+																db.attachment.insert(body.id, file['name'], filedata, file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
+																	if(!err) {
+																	//	console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
+																		callback();
+																	} else {
+												 						console.log("error attaching file in prototype"+file+"***"+err);
+																	}
+																});
+															}); //close fsRead
 														} else {
 														console.log("error getting newly updated proto doc "+err);
 														}
