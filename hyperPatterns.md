@@ -1322,3 +1322,5 @@ got PM2 working by `cd ~` and `chmod 777 .pm2 .`
 All seems okaie dokie now.
 Will need to read up more on PM2 - but later.
 Will try and keep the server up overnight and see if it's still running (under my control!) tomorrow.
+AND the real trick to getting PM2 to load things = must specify the user to run things.
+`sudo pm2 start hp.js -u yourusername` is the biz to get things running..!
