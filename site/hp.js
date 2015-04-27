@@ -1787,7 +1787,7 @@ app.post('/new', function(req, res){
 //for posting edited protpatterns via alpaca form data - data sent from edit.html
 //**************************************************
 app.post('/prototype', function(req, res){
-
+	console.log("posting to update protopattern");
 	var protoPattern = {}; //blank object to store parsed form fields
 
 	//create a new busboy object to stream the req object to
@@ -1812,6 +1812,7 @@ app.post('/prototype', function(req, res){
 
 	//once done , wrangle and update the protopatten
 	form.on('finish', function(){
+		console.log("finsihed rading form data");
 	//	console.log(protoPattern);
 		//set additional fields to identify pattern
 		protoPattern["doctype"] = "protoPattern";
@@ -1828,7 +1829,7 @@ app.post('/prototype', function(req, res){
 			for (var x = 0; x < listOfPrototypes.length; x++){
 		
 				if (String(listOfPrototypes[x]['value']) === String(protoPattern['int_id'])){ 
-					//	console.log("match!");
+					console.log("match post with exisiting doc!");
 					//Get the matching (old) prototype doc if there is a match
 					db.get(listOfPrototypes[x].id, function(err, doc){
 						if (err) console.log("error getting proto doc" +err);
