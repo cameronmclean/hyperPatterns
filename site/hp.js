@@ -708,48 +708,33 @@ app.get('/doc/pattern/:intID/:img', function(req, res){
 		db.get('_design/patterns/_view/getPatternByNum', function(err, body){
 			if(!err){
 				var list = body['rows'];
-				var counter = 0; // counter available outside of for loop
-	
-
-				//test to see if :intID matches a patter doc on the list
-				//if so get it							
-				for (var x=0; x < list.length; x++){
-		
-					if (String(list[x].value) === num){
-						db.get(list[x].id, function(err, body){
-							if ( img in body._attachments) { 
-							//console.log("img exists!");
-							var docName = body._id;
-							db.attachment.get(docName, img, function(err, body){
-								if(!err){
-									fs.write(img, body);
-									res.send(body);
+				async.eachSeries(list, function(pattern, callback){
+					if(String(pattern['value']) === num){
+					//	console.log("protopattern found");
+						//check for img in attachments
+						db.get(pattern['id'], function(err, body2){
+							if(err){
+								callback(err);
+							} else {
+								if (img in body2['_attachments']){
+									//yes we have the image
+					//				console.log("image found");
+									db.attachment.get(pattern['id'], img).pipe(res);
+									callback(null);
+								} else {
+									callback("No img in _attachments");
 								}
-							});
-							//docToSend = JSON.parse(JSON.stringify(body));
-							//console.log(docToSend);
-							progress++;
 							}
-							else {
-								console.log("pattern pic not found");
-								goToError("Image not found");
-							}
-							//var docToPass = JSON.parse(JSON.stringify(docToSend)); //? ? eh?
-							//getPatternForces(docToPass); //<------------if all done, move to next function
 						});
+						
+					} else {
+						callback();
 					}
-					else {
-						counter++;
-						//console.log("counter = "+counter+" progress = "+progress);
+				}, function(err){
+					if(err){
+						goToError(err);
 					}
-				}
-				
-				// if we have been through the for loop and found nothing....
-				if (counter === list.length && progress < 1){
-					//console.log("no match!");
-					goToError("doc not found in db list!");
-				 }
-
+				}); //close async
 			}
 			
 			else{
