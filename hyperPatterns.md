@@ -1300,4 +1300,12 @@ Should be good!
 Kinda
 except getting images crashes everything
 node: ../src/node_file.cc:819: void node::WriteBuffer(const v8::FunctionCallbackInfo<v8::Value>&): Assertion `args[0]->IsInt32()' failed.
-not sure if images/attachments are saved into couch db and we just cant get them or if the prob is somewhere else..
+not sure if images/attachments are saved into couch db and we just cant get them or if the prob is somewhere else...
+
+#####201500427
+created repo branch v1.0 to fix all the bugs evident once node app was deployed.
+Many of the orginial file save logic was incorrect - in hte real world, the operataions take longer and my async calls were being cut-off before all things could be saved. Re-factored to 1) save (pipe) buffer objects to tmp files first. Then do fs.readFile, and pipe the buffer obecjt into the db, and wait for this to finish before moving on to next file/pattern doc ['_rev']...
+
+There were errors in the GET xyz/img routes to do with lookup and mathching of docs. need to implement async.eachSeries to test :intid = ['int_id'], and if so, get the attachment and pipe back. 
+Not fixed on all routes yet! <<<<
+
