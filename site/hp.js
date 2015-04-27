@@ -274,28 +274,30 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 				var list2 = body3['rows']; //list of Reference numbers to check
 				
 				async.eachSeries(list2, function(ref, callback){
-					if(String(ref['value']) === eNum) {
+					//if(String(ref['value']) === eNum) {
 						db.get(ref['id'], function(err, body4){
 							if(err){
 								callback(err);
 							} else {
-							refMatch = body4;
-							delete refMatch['_id'];				//delete all the coucdb interal key/values
-							delete refMatch['_rev'];
-							delete refMatch['int_id'];
-							delete refMatch['parentPattern'];
-							delete refMatch['doctype'];
-							addContext(refMatch);
+								if(body4['int_id'] === eNum) {
+									refMatch = body4;
+									delete refMatch['_id'];				//delete all the coucdb interal key/values
+									delete refMatch['_rev'];
+									delete refMatch['int_id'];
+									delete refMatch['parentPattern'];
+									delete refMatch['doctype'];
+									addContext(refMatch);
+								} else {
+									callback();
+								}
 							}
 						});//db.get
-					} else {
-						callback();
-					}
-				}, function(err){
+					}, function(err){
 					if(err){
 						goToError(err);
 					}
 				});// close async
+			} //close if
 	
 				//test to see if :eNum matches a force doc on the list
 			// 	//if so get it							
