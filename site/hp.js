@@ -1807,10 +1807,12 @@ app.post('/prototype', function(req, res){
 
 	//save attachments to tmp
 	form.on('file', function(fieldname, file, filename, encoding, mimetype){
-		console.log("piping file "+saveTo+"/"+fieldname+"__"+filename);
-		file.pipe(fs.createWriteStream(saveTo+"/"+fieldname+"__"+filename));
-		console.log("saving file deets in mem "+fieldname+"__"+filename+"   "+mimetype);
-		attachments.push({"name":fieldname+"__"+filename, "content_type":mimetype});	
+		if(filename){
+			console.log("piping file "+saveTo+"/"+fieldname+"__"+filename);
+			file.pipe(fs.createWriteStream(saveTo+"/"+fieldname+"__"+filename));
+			console.log("saving file deets in mem "+fieldname+"__"+filename+"   "+mimetype);
+			attachments.push({"name":fieldname+"__"+filename, "content_type":mimetype});	
+	    }
 	});	
 
 
@@ -1886,8 +1888,8 @@ app.post('/prototype', function(req, res){
 									if ( oldPrefix.indexOf(prefix[0]) > -1 ){
 										//then we have a match
 										var doomedAttachment = oldAttachments[oldPrefix.indexOf(prefix[0])];
-								//		console.log("$$$$ doomed attachment = "+doomedAttachment);
-								//		console.log("about to replace attachment "+prefix[0]+prefix[1]);
+										console.log("$$$$ doomed attachment = "+doomedAttachment);
+										console.log("about to replace attachment "+prefix[0]+prefix[1]);
 										db.get(body.id, function(err, moardocs){ // wrap this this in a db.get() so _rev is curren
 											//console.log("why you no delete "+oldAttachments[index]);
 								//			console.log("deleting attachment"+doomedAttachment);
