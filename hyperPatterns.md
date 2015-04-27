@@ -1304,8 +1304,12 @@ not sure if images/attachments are saved into couch db and we just cant get them
 
 #####201500427
 created repo branch v1.0 to fix all the bugs evident once node app was deployed.
-Many of the orginial file save logic was incorrect - in hte real world, the operataions take longer and my async calls were being cut-off before all things could be saved. Re-factored to 1) save (pipe) buffer objects to tmp files first. Then do fs.readFile, and pipe the buffer obecjt into the db, and wait for this to finish before moving on to next file/pattern doc ['_rev']...
+Many of the orginial file save logic was incorrect - in hte real world, the operataions take longer and my async calls were being cut-off before all things could be saved. Re-factored to (1) save (pipe) buffer objects to tmp files first. (20) Then do fs.readFile, and pipe the buffer obecjt into the db, and wait for this to finish before moving on to next file/pattern doc ['_rev']...
 
 There were errors in the GET xyz/img routes to do with lookup and mathching of docs. need to implement async.eachSeries to test :intid = ['int_id'], and if so, get the attachment and pipe back. 
-Not fixed on all routes yet! <<<<
+Not fixed on all routes yet! <<<< FIXED!
 
+OK , so got all the image requests working.
+Still more work to be done.
+Need to check the order of how the routes are specified in teh code - this might be causing my troubles getting pattern/x/force/x or pattern/x/ref/x etc . We can order them properly and add conditional checks, if not match go to next();
+also - force/x/:img just does a straight out get and pipe, doesnt send 404 if img doesnt exist - sends 200 with JSON error message.
