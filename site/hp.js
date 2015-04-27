@@ -829,10 +829,13 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 					goToError(err);
 				} else {
 					//console.log("gotten doc int = "+body["int_id"]+" fNum = "+fNum);
-					if (String(body["int_id"]) === fNum && img in body["_attachments"]){
+					if (String(body["int_id"]) === fNum){
 						//console.log("match fNum = "+fNum+" int_id = "+body["int_id"]);
 						//TODO - this should check for img exist and repond with either image or goToError(404)					
+						var filename = Object.keys(body["_attachments"]);
+						if (img === filename){
 						db.attachment.get(doc, img).pipe(res);
+						}
 					} else {
 						callback2(null);
 					}
