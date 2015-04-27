@@ -1661,14 +1661,14 @@ app.post('/new', function(req, res){
 			if(filename){
 			//grab all the files and store the deatails an data in array
 	//		attachments.push({"name":fieldname+"__"+filename, "data":data, "content_type":mimetype});
-			console.log("piping file "+saveTo+"/"+fieldname+"__"+filename);
+				console.log("piping file "+saveTo+"/"+fieldname+"__"+filename);
 			//also write files to ./tmp  <<<<<< can maybe dispense with this >>>>>>>>>>>>>>>
-			data.pipe(fs.createWriteStream(saveTo+"/"+fieldname+"__"+filename));
-			console.log("saving file deets in mem "+fieldname+"__"+filename+"   "+mimetype);
-			attachments.push({"name":fieldname+"__"+filename, "content_type":mimetype});
-		} else {
-			file.resume();
-		}
+				file.pipe(fs.createWriteStream(saveTo+"/"+fieldname+"__"+filename));
+				console.log("saving file deets in mem "+fieldname+"__"+filename+"   "+mimetype);
+				attachments.push({"name":fieldname+"__"+filename, "content_type":mimetype});
+			} else {
+				file.resume();
+			}
 			// fs.writeFile(saveTo+"/"+fieldname+"__"+filename, data, function(err){
 			// 	if(err) console.log(err);
 			// 	console.log("File saved? @ "+saveTo+"/"+fieldname+"__"+filename);
@@ -1925,19 +1925,22 @@ app.post('/prototype', function(req, res){
 											});
 										}); //done deleting and replacing attachment										
 
-										} else { // no mattch - just add attachment
+										} else { // no match to exisitng  - just add new attachment
 										db.get(body.id, function(err, body2){
 											if (!err){
-												db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
-													if(!err) {
-														//console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
-														callback();
-													} else {
-												 	console.log("error attaching file "+file+"***"+err);
-													}
-												});
+												fs.readFile(saveTo+"/"+file['name'], function(err, filedata){
+													if (err) console.log("error reading tmp file...");
+														db.attachment.insert(body.id, file['name'], filedata, file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
+															if(!err) {
+														//	console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
+																callback();
+															} else {
+												 				console.log("error attaching file in prototype"+file+"***"+err);
+															}
+														});
+													}); //close fsRead
 											} else {
-												console.log("error getting updated created doc "+err);
+												console.log("error getting newly updated proto doc "+err);
 											}
 										}); //closes db.gef
 										}//closes else if no match
