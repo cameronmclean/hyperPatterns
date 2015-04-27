@@ -194,26 +194,6 @@ app.get('/doc/contributor/:orcid', function(req, res){
 });
 
 
-//*******************************************************************************
-
-// note this is temp / for testing - we dont need to implement a POST to /contribitor.
-
-// app.post('/patterns/contributor', function(req, res){
-	
-// 	var payload = JSON.stringify(req.body, null, 2);
-// 	//console.log(payload);
-	
-// 	if (JSON.parse(payload)){
-// 	//	console.log("Looks legit");
-// 		res.send("OK!");
-// 	}
-// 	else{
-// 		res.send("Please submit valid JSON");
-// 	}
-	
-// });
-
-
 //**********************************************************************************
 
 app.get('/doc/pattern/:pNum/force/:fNum', function(req, res){
@@ -849,7 +829,7 @@ app.get('/doc/pattern/:pNum/force/:fNum/:img', function(req, res){
 					goToError(err);
 				} else {
 					//console.log("gotten doc int = "+body["int_id"]+" fNum = "+fNum);
-					if (String(body["int_id"]) === fNum){
+					if (String(body["int_id"]) === fNum && img in body["_attachments"]){
 						//console.log("match fNum = "+fNum+" int_id = "+body["int_id"]);
 						//TODO - this should check for img exist and repond with either image or goToError(404)					
 						db.attachment.get(doc, img).pipe(res);
