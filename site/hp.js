@@ -234,46 +234,33 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 	getPattern(pNum);
 
 	function getPattern(num){
-		// a list of all pattern nums and id in the db
+
 		db.get('_design/patterns/_view/getPatternByNum', function(err, body){
 			if(!err){
-				var list = body['rows'];
-				var counter = 0; // counter available outside of for loop
-	
-				//test to see if :pNum matches a patter doc on the list
-				//if so get it							
-				for (var x=0; x < list.length; x++){
-					//console.log("list.length = "+list.length);
-					//console.log("before if, x = "+x);
-					
-					if (String(list[x].value) === num){
-						db.get(list[x].id, function(err, body){
-							if(body.evidence){ //make sure body.evidence is defined
-								listOfReferences = body.evidence;
-								progress++;
-							//	console.log('progress from getPattern = '+progress);
-								getReferences(listOfReferences); //<------------if all done (pattern doc exists, move to next function
-							}
-							else{ // body.force err
-								goToError("error getting reference list from pattern");
+				list = body['rows'];
+		//		console.log("body rows "+body['rows']);
+				async.eachSeries(list, function(pattern, callback){
+					if(String(pattern['value']) === num){
+					//	console.log("pattern found");
+						db.get(pattern['id'], function(err, body2){
+							if(err){
+								callback(err);
+							} else {
+								listOfReferences = body2['evidence'];
+								getReferences(listOfReferences);
 							}
 						});
+						
+					} else {
+						callback();
 					}
-					else {
-						counter++;
-					//	console.log("counter = "+counter+" progress = "+progress);
+				}, function(err){
+					if(err){
+						goToError(err);
 					}
-				}
-				
-				// if we have been through the for loop and found nothing....
-				if (counter === list.length && progress < 1){
-				//	console.log("no match!");
-					goToError("pattern doc not found in db list!");
-				 }
-
+				}); //close async
 			}
-			
-			else{
+			else{ //err getting dbview
 				goToError(err);
 			}
 		});
@@ -282,42 +269,64 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 	
 	function getReferences(array){
 				// a list of all f nums and id in the db
-		db.get('_design/patterns/_view/getRefByNum', function(err, body){
+		db.get('_design/patterns/_view/getRefByNum', function(err, body3){
 			if(!err){
-				var list = body['rows']; //list of Reference numbers to check
-				//console.log(body['rows']);
-				var counter = 0; // counter available outside of for loop
-	
-				//test to see if :eNum matches a force doc on the list
-				//if so get it							
-				for (var x=0; x < list.length; x++){
-
-					if (String(list[x].value) === eNum){
-						db.get(list[x].id, function(err, body){
-							refMatch = body;
+				var list2 = body3['rows']; //list of Reference numbers to check
+				
+				async.eachSeries(list2, function(ref, callback){
+					if(String(ref['value']) === eNum) {
+						db.get(ref['id'], function(err, body4){
+							if(err){
+								callback(err);
+							} else {
+							refMatch = body4;
 							delete refMatch['_id'];				//delete all the coucdb interal key/values
 							delete refMatch['_rev'];
 							delete refMatch['int_id'];
 							delete refMatch['parentPattern'];
 							delete refMatch['doctype'];
-							progress++;
-							//console.log('progress from getReferences = '+progress);
-							addContext(refMatch); //<------------if all done, move to next function
-						});
+							addContext(refMatch);
+							}
+						});//db.get
+					} else {
+						callback();
 					}
-					else {
-						counter++;
-						//console.log("counter = "+counter+" progress = "+progress);
+				}, function(err){
+					if(err){
+						goToError(err);
 					}
-				}
-				
-				// if we have been through the for loop and found nothing....
-				if (counter === list.length && progress < 2){
-					//console.log("no match!");
-					goToError("ref doc not found in db list!");
-				 }
+				});// close async
+	
+				//test to see if :eNum matches a force doc on the list
+			// 	//if so get it							
+			// 	for (var x=0; x < list.length; x++){
 
-			}
+			// 		if (String(list[x].value) === eNum){
+			// 			db.get(list[x].id, function(err, body){
+			// 				refMatch = body;
+			// 				delete refMatch['_id'];				//delete all the coucdb interal key/values
+			// 				delete refMatch['_rev'];
+			// 				delete refMatch['int_id'];
+			// 				delete refMatch['parentPattern'];
+			// 				delete refMatch['doctype'];
+			// 				progress++;
+			// 				//console.log('progress from getReferences = '+progress);
+			// 				addContext(refMatch); //<------------if all done, move to next function
+			// 			});
+			// 		}
+			// 		else {
+			// 			counter++;
+			// 			//console.log("counter = "+counter+" progress = "+progress);
+			// 		}
+			// 	}
+				
+			// 	// if we have been through the for loop and found nothing....
+			// 	if (counter === list.length && progress < 2){
+			// 		//console.log("no match!");
+			// 		goToError("ref doc not found in db list!");
+			// 	 }
+
+			// }
 			
 			else{
 				goToError(err);
@@ -331,12 +340,12 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 			match['@id'] = 'http://labpatterns.org/id/pattern/'+pNum+"/ref/"+eNum; // <--------- we add @id of resource to the JSONLD here
 			match['@type'] = 'http://purl.org/NET/labpatterns#Reference'; //<----------- and declare that this resource is type Reference
 			match['partOf'] = 'http://labpatterns.org/id/pattern/'+pNum;
-			progress++
+			//progress++
 			//console.log('progress from addContext = '+progress);
 			//if forceDoc content already done
-			if (progress === 3){
-				res.send(JSON.stringify(match, null, 2));
-			}
+			//if (progress === 3){
+			res.send(JSON.stringify(match, null, 2));
+			//}
 		});
 	}
 }//closes else at top of route
