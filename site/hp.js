@@ -1657,7 +1657,7 @@ app.post('/new', function(req, res){
 	form.on('file', function(fieldname, file, filename, encoding, mimetype){
 	//	console.log(fieldname+"****"+filename+"***"+encoding);
 	
-		file.on('data', function(data){
+		//file.on('data', function(data){
 		
 			//grab all the files and store the deatails an data in array
 	//		attachments.push({"name":fieldname+"__"+filename, "data":data, "content_type":mimetype});
@@ -1670,7 +1670,7 @@ app.post('/new', function(req, res){
 			// 	if(err) console.log(err);
 			// 	console.log("File saved? @ "+saveTo+"/"+fieldname+"__"+filename);
 			//});	
-		});	
+		//});	
 	});			
 //	});
 
@@ -1813,6 +1813,8 @@ app.post('/prototype', function(req, res){
 			file.pipe(fs.createWriteStream(saveTo+"/"+fieldname+"__"+filename));
 			console.log("saving file deets in mem "+fieldname+"__"+filename+"   "+mimetype);
 			attachments.push({"name":fieldname+"__"+filename, "content_type":mimetype});	
+	    } else {
+	    	file.resume();
 	    }
 	});	
 
