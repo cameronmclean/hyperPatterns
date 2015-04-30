@@ -9,14 +9,10 @@ var async = require('async');
 var _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
-//var bibtexParse = require('bibtex-parser-js'); // using bibtex-parse-js <- not parse'r' NOTE parser not yet deleted from modules
 var bibtexParse = require('bibtex-parse-js');
-//var validator = require('validator');
-//var tv4 = require('tv4');
 var cors = require('cors');
 var rimraf = require('rimraf');
 var crypto = require('crypto');
-var request = require('request');
 var app = express();
 
 //couch db settings
@@ -39,16 +35,16 @@ app.use(express.static('public'));
 
 
 //handle errors if we POST bad json... ie. body-parser returns Error: invalid json
-app.use(function (error, req, res, next){
-	console.log("error called "+error);
-	if ( error.message === 'invalid json') {
-	res.sendStatus(400);
-	}
-	else{
-		console.log(error);
-		res.sendStatus(500);
-	}
-});
+// app.use(function (error, req, res, next){
+// 	console.log("error called "+error);
+// 	if ( error.message === 'invalid json') {
+// 	res.sendStatus(400);
+// 	}
+// 	else{
+// 		console.log(error);
+// 		res.sendStatus(500);
+// 	}
+// });
 
 
 var server = app.listen(80, function() {
@@ -1208,13 +1204,6 @@ app.get("/publish/:intID", function(req, res){
 
 		}
 
-		// for (var i = 0; i < forceAttachments.length; i++){
-		// 	console.log("looping through forceAttachments "+forceAttachments[i]['filename']);
-		// 	console.log(forceAttachments[i]['newfilename']);
-		// 	console.log(forceAttachments[i]['contenttype']);
-
-		// }
-
 
 	    var newForceDocs = []; //to store _id of newly created force docs
 
@@ -1645,25 +1634,7 @@ app.post('/new', function(req, res){
 									}
 									
 								});
-								// db.attachment.insert(body.id, file['name'], s, file['content_type'], {"rev": body2['_rev']}, function(err, whatever){
-								// 	if(!err){
-								// 		console.log("hopefully piped in saved file as attachment "+file['name']);
-								// 		callback();
-								// 	} else{
-								// 		console.log("error writing buffer to attahcemnts "+err);
-								// 	}
-								// });
-								
-								
-						//});
-								// db.attachment.insert(body.id, file['name'], file['data'], file['content_type'], { "rev": body2['_rev'] }, function(err, body3){
-								// 	if(!err) {
-								// //		console.log("file attached "+file['name']+" to _rev "+body2['_rev']);
-								// 		callback();
-								// 	} else {
-								// 	 console.log("error attaching file "+file+"***"+err);
-								// 	}
-								// });
+					
 							} else {
 								console.log("error getting newly created doc "+err);
 							}
@@ -1698,12 +1669,6 @@ app.post('/new', function(req, res){
 	//pipe the req to be processed
 	req.pipe(form);
 	
-	//pu this inside loop when done to say OK!
-	//NB - add call back to index jQuery to redirect/change/update DOM if we get 201.
-	//res.writeHead('201', {
-	//	"Location": "http://127.0.0.1:3000/"
-	//});
-	//res.end();
 });
 
 
@@ -1894,124 +1859,3 @@ app.post('/prototype', function(req, res){
 	req.pipe(form);
 }); //closes app.post()
 		
-
-//*************************************************
-//* /publish - takes the :id and wrangles the couchdb doc into final form for linked data.
-//**************************************************
-
-
-
-//*********************************************
-//* /json-new is no longer needed!! delete this route once we are happy with the app.
-//*********************************************
-// app.post('/json-new', function(req, res){
-// 	console.log("were posting to new!");
-// 	//note body-parser should check for valid JSON first.
-// 	//if OK it is parsed into req.body object.
-
-// 	//copy req.body object to payload
-// 	var payload = req.body;
-
-// 	console.log(Object.keys(payload));
-// 	for (var x in payload){
-// 		console.log(x);
-// 	}
-// 	res.send(payload);
-
-// //	checkPayload(payload);
-
-// 	//validate payload against schema for newly sumbitted pattern
-// 	function checkPayload(postInput){
-// 		db.get('newPatternValidationSchema', function(err, body){
-// 			if(!err){
-// 				var schema = body;
-// 				//remove db specific fields from schema
-// 				delete schema["_id"];
-// 				delete schema["_rev"];
-// 				delete schema['doctype'];
-
-// 				console.log(postInput);
-
-// 				var valid = tv4.validate(JSON.stringify(postInput), JSON.stringify(schema));
-
-// 				if (valid === true){
-// 					console.log("payload validates! "+valid);
-// 					//res.send("OK!");
-// 					//go to wrangle next
-// 					saveNewProtoPattern(postInput);
-// 				}
-// 				else{
-// 					console.log("nope - validation returned "+valid);
-// 					res.sendStatus(400);
-// 				}
-
-// 			}
-// 			else{
-// 				console.log("error getting validation schema from db"+err);
-// 				goToError();
-// 			}
-// 		});
-// 	}
-
-// 	// if checkpayload validates, this is called to persist data as proto pattern to couchdb
-// 	function saveNewProtoPattern(input){
-
-// 		var newID = null;
-// 		//get the 
-// 		//modify fields in preparation for save to db
-// 		//note this is the first time we save/create a protopattern doc - _id and _rev dont exist yet..
-// 		input['doctype'] = "protopattern";
-// 		input['revision'] = 1;
-// 		//fetch the number of pattern and protopattern docs - set new int_id to one higher than the highest
-// 		db.get('_design/patterns/_view/getLastIntID', function(err, body){
-// 			//console.log(body.rows.length);
-// 			var listOfResults = body.rows;
-// 			var listOfValues = [];
-// 			for (x in listOfResults){
-// 				listOfValues.push(listOfResults[x].value);
-// 			}
-// 			newID = Math.max.apply(Math, listOfValues)+1;
-// 			//console.log("latest Int ID = "+newID);
-// 			//now set the new unique int_id for this pattern
-// 			input['int_id'] = newID;
-
-// 			//now save the newly created protopattern 
-// 			db.insert(input, null, function(err, body){
-// 				if(!err){
-// 					res.send("saved OK!");
-// 				}
-// 				else{
-// 					goToError(err);
-// 				}
-// 			});
-// 		});
-// 	}
-
-// 	//check to see if object converts to valid JSON
-// //	var check = JSON.stringify(payload);
-// //		if (validator.isJSON(check)){
-// //			console.log("passed isJSON test");
-// //			console.log("and we can access payload object context "+payload['context']);
-// //			res.send("OK!")
-// //		}
-// //		else{
-// //			console.log('failed test - isJSON');
-// //			goTo400();
-// //		}
-// //	}
-// //	else {
-// //		console.log("failed first test");
-// //		goTo400();
-// //	}
-	
-// //	function goTo400(err){
-// //		console.log("doesnt appear to be proper JSON or a newpattern doc");
-// //		res.sendStatus(400);
-// //	} 
-// 	function goToError(err){
-// 		console.log(err);
-// 		res.sendStatus(500);
-// 	}
-// });
-
-

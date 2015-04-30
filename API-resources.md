@@ -1,28 +1,38 @@
 
-Resources											HTTP
+Resources													HTTP 			Response
 
-/patterns											GET - returns list of all patterns {Name, Pictogram, Problem, Authors, GET URL}
-/patterns/new										GET - returns form/json template? (API specific resource for HTML client) - POST to /patterns
-/patterns											POST - JSON encoded strucutre 
-/patterns/{patternName}								GET - returns composite resource representatio of entire pattern and child resources
-/patterns/authors 									GET - returns {Author name, ORCID, list of pattern name, URI}
-*/patterns/authors/new								GET - template for POST*
-/patterns/{patternName}/authors						GET - returns list of all pattern authors
-/patterns/{patternName}/authors						POST - accepts JSON encoded new author (author must not already exist)
-/patterns/{patternName}/authors/{authorID}			PUT - accepts JSON encoded author edit (author must already exist)
-/patterns/{patternName}/authors/{authorID}			DELETE - and its gone
-/patterns/{patternName}/forces						GET - returns list of all pattern forces
-/patterns/{patternName}/forces						POST - accepts JSON encoded new force (force must not already exist)
-*/patterns/:patternName/forces/new					GET - template for POS*
-/patterns/{patternName}/forces/{forceName}   		GET - JSON-LD force
-/patterns/{patternName}/forces/{forceName}   		PUT - accepts JSON encoded edited force (force must exist)
-/patterns/{patternName}/forces/{forceName}   		DELETE - and its gone  
-/patterns/{patternName}/forces/{forceName}/{pic}   	DELETE - and its gone  
-/patterns/{patternName}/evidence					GET - list of JSON-LD encoded bibTEX references
-/patterns/{patternName}/evidence					POST - bibTEXT reference (media type?)
-/patterns/{patternName}/evidence/{refID}			GET - JSON-LD encoded bibtex ref
-/patterns/{patternName}/evidence/{refID}			PUT - edited bibTEX reference (media type?)
-/patterns/{patternName}/evidence/{refID}			DELETE - and it's gone
+http://labpatterns.org/id/pattern/:id 						GET				303 See Other
+http://labpatterns.org/id/pattern/:id/force/:id 			GET				303 See Other
+http://labpatterns.org/id/pattern/:id/ref/:id 				GET				303 See Other
+http://labpatterns.org/id/contributor/:id 					GET				303 See Other
+
+http://labpatterns.org/doc/contributor/:orcid				GET				200 OK
+http://labpatterns.org/doc/pattern/:id/force/:id 			GET				200 OK
+http://labpatterns.org/doc/pattern/:id/ref/:id 				GET 			200 OK
+http://labpatterns.org/doc/pattern/:id 						GET 			200 OK
+http://labpatterns.org/doc/pattern/:id/:img 				GET 			200 OK
+http://labpatterns.org/doc/pattern/:id/diagram/:img  		GET 			200 OK
+http://labpatterns.org/doc/pattern/:id/force/:id/:img 		GET 			200 OK
+
+
+http://labpatterns.org/prototypes 							GET 			200 OK
+http://labpatterns.org/prototype/:id 						GET  			200 OK
+http://labpatterns.org/prototype/:id/:img 					GET 			200 OK
+http://labpatterns.org/patternlist 							GET   			200 OK
+
+http://labpatterns.org/publish/:id 							GET 			302 Found (redirect)
+
+http://labpatterns.org/new 									POST 			302 Found (redirect)
+http://labpatterns.org/prototype 							POST 			302 Found (redirect)
+
+
+
+NOTE: We originally aimed for a completly RESTful style, but teh overhead in design and implementation was too high.
+Our aim here is a quick and simple pattern publishing service, one that we can build other proof-of-concept tools on for the purposes of the thesis. Due to time and resource constraints, this implementation is 'good enough', but does not necessarily reflect best practice in a commercial deployment setting.
+
+
+Old notes below
+------------
 
 
 ####http://www.thoughtworks.com/insights/blog/rest-api-design-resource-modeling
@@ -69,67 +79,11 @@ reifiy consumer intent into resources - eg GitHub's 'fork' and 'merge' are sub-c
 //
 yah yah - so....
 The *API* only has to provide GET functionality to the resource we need to give/mint URIs 
-The editing or creating is handled buy seperate "command" resources, with a monolithic JSON, and the node.js code implements the business logic.
+The editing or creating is handled buy seperate "command" resources, with a monolithic JSON/form-data, and the node.js code implements the business logic.
 THis gives nice separation. If want to chage the logic the client doesnt break - it still GETS the atomic resources and POSTs to the same resource - only the payloads change...
 COOl ay!
 
 
 ---------
-####OK, the master list.
 
-Routes implemented so far
-
-/patterns/contributor/:orcid 			GET - returns JSON-LD of anthorName, and ORCID as HTTP URL
-
-/patterns/contributor					POST - accepts JSON  //note just for testing - will delete later
-
-/patterns/:num							GET - returns JSON-LD of entire pattern
-
-/patterns/:num/force/:num				GET - returns JSON-LD of single force
-
-/patterns/:num/evidence/:num			GET - returns JSON-LD of pattern reference
-
-/patterns/:num/:img 					GET - return binary encoding of pattern pictogram
-
-/patterns/:num/diagram/:img 			GET - return binary encoding of pattern diagram
-
-/patterns/:num/force/:num/:img 			GET - return binary encoding of force pictorgram
-
-/new 									GET - returns a blank JSON ready to be populated by the client to create a new pattern
-
-/new 									POST - accepts an instantiated JSON of "doctype": "newpattern" - saves to db with unique 												int_id
-
------
-TODO
-
-
-/patterns								GET - return a list of patterns
-
-/contributors							GET - return list of authors
-
-/prototype								GET - return a list of all protopatterns (most recent)
-
-/prototype/:num							GET - return latest version of prototype
-
-/prototype/:num							POST - save new doc with revision+1
-
-/publish 								POST - push prototype to stable linked-data form
-
-
-/publish 								POST - accepts a doctype: protopattern JSON - splits and wrangles, persists to db as final docs - now .
-??
-prototype/:num							GET - return a populated template/object for editing // note we only allow clients to edit certain field?
-
-
-how to handle "publishing" ?? set flag published = true/fase - determines namespace it is visible under the API (and hence how it is served - as linked data or not...)?
-Add a conditional in dbviews if (doc.published === true) etc.
-
-
--------------
-
-OKOKOK
-
-The new new URI naming strategy
-
-We distingiush between the conceptual entities that patterns descibe (including the name of the pattern as a whole), and the documents that describe these entites. We also provide URIs for _sets_ of pattern concepts or documents that follow the URI pattern.
 

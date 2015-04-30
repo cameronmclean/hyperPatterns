@@ -1,6 +1,6 @@
 Schemas for *couchdb*
 
-here is the internal representation of all pattern documents that node and couchdb wrangle into protopatterns or the final JSON-LD and representations that are sent.
+Here is the internal representation of all pattern documents that node and couchdb wrangle into protopatterns or the final JSON-LD / representations that are sent. These are what is stored
 
 *@Context Doc*
 {
@@ -18,6 +18,7 @@ here is the internal representation of all pattern documents that node and couch
 {
 	"\_id": couchdb_id,
 	"\_rev":	couchdb_hash,
+	"\_attachments": pic and diagram attachments
 	"doctype": "pattern",
 	"int_id": integer,
 	"name": string,
@@ -29,7 +30,7 @@ here is the internal representation of all pattern documents that node and couch
 	"solution": string,
 	"rationale": string,
 	"diagram": url,
-	"evidence": ['_id'],
+	"evidence": ['_id']
 }
 
 *Contributor Doc*
@@ -83,22 +84,21 @@ here is the internal representation of all pattern documents that node and couch
 	"year": string
 }
 
-*Proto Pattern Doc*
+*ProtoPattern Doc*
 {
-	//the stored protodoc
-}
-
-*New pattern doc*
-{
-	//the empty patttern 'object'
-}
-
-*new pattern schema*
-{
-	//for validating the newly POSTed pattern
-}
-
-*editied protopatern schema*
-{
-	//for validating edited protopatterns
+	"\_id": couchdb_id,
+	"\_rev":	couchdb_hash,
+	"\_attachments": all file attachments (filenames prefixed with pic\_\_, force\__x, diagram__)
+	"doctype": "protopattern",
+	"int_id": integer,
+	"name": string,
+	"author\_x_name": string,
+	"author\_x_orcid": string,
+	"context": string,
+	"problem": string,
+	"force\_x_name": string,
+	"force\_x_definition": string
+	"solution": string,
+	"rationale": string,
+	"ref\_x_reference": string (must be valid bibTex)
 }
