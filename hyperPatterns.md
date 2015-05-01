@@ -1329,3 +1329,12 @@ AND the real trick to getting PM2 to load things = must specify the user to run 
 fixed up the mess with v1.0 and master branches by following 
 http://stackoverflow.com/questions/2862590/how-to-replace-master-branch-in-git-entirely-from-another-branch
 essentailly, replaced master with v1.0. So currently there is no version of hp.js that will work on "localhost" as we have hardcoded in 3-4 places the labpatters.org URL. Next to delete some cruft from the master repo, and remove old branches.
+
+#####20150501
+cleaned up old cruft from hyperPatterns repo.
+also tar and gziped the couchdb dump that contains the 5 patterns.
+in teh dump dir on the remote host `sudo tar -cvzf pdump.tar.gz .`
+to create pdump archive.
+Then from local machine
+`scp -P port username@labpatterns.org:/path/to/file local/path`
+to copy the couch db file back. 
