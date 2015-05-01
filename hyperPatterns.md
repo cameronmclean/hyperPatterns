@@ -1338,3 +1338,6 @@ to create pdump archive.
 Then from local machine
 `scp -P port username@labpatterns.org:/path/to/file local/path`
 to copy the couch db file back. 
+
+OK - restarting and getting hp.js running on the remote server. Still trouble with the EACCESS - sometimes just do
+`pm2 start hp.js` sometimes `sudo`, sometimes `-u username`. whatever. some combination of these usually gets it running.

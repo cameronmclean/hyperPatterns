@@ -33,14 +33,17 @@
 			</nav>
 		</div>
 		<div class="jumbotron first-banner">
-		<h1>Welcome to the world of patterns!</h1>
-		<p>Your one stop shop for all your pattern needs</p>
+		<h1>Laboratory patterns</h1>
+		<p>A framework to communicate and share expert knowledge about lab procedures</p>
 		</div>
 <!--		<div id='nav'><button type='button' id='home'>Home</button> !-->
 		<div id="centerstage">
-	<!--	<button type="button" id='addnew'>Add a new pattern</button>
-			<button type ="button" id='edit'>Edit protopatterns</button>
-			!-->
+			<div class='main-data'>
+				<p>Hi there. Write the background and instructions here.</p>
+				<p>Use the buttons above to navigate between patterns. You can view exisiting patterns or create, edit and publish a new laboratory pattern to share with the world. Note that when editing existing proto-patterns, any associated file attachments will remain unchanged unless you specify a new file to replace them. Click <a href="http://figshare.com/authors/Cameron_Mclean/98487">here</a> for a short screencast introducing the basic ideas and function of this site.</p>
+				<p>Once published, patterns can no longer be changed and are made available as linked data under the URI scheme described <a href="/pattern-uri-scheme.pdf">here</a>.</p>
+				<p>Many of the pictorams used to depicit pattern elements and concepts were taken or modified from <a href="https://thenounproject.com/">The Noun Project</a> and are made available under a Creative Commons Attribution 3.0 <a href="https://creativecommons.org/licenses/by/3.0/">License</a>. Click <a id="license" >here</a> to see the attribution list.
+			</div>
 		</div>
 		
 
@@ -60,6 +63,10 @@
 
 			$('#home').click(function(){
 				window.location.href='/';
+			});
+
+			$('#license').click(function(){
+				$('#centerstage').load("/html/attribution.html");
 			});
 
 		</script>
