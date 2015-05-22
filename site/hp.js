@@ -14,6 +14,7 @@ var cors = require('cors');
 var rimraf = require('rimraf');
 var crypto = require('crypto');
 var app = express();
+var request = require('request');
 
 //couch db settings
 var nano = require('nano')('http://127.0.0.1:5984');
@@ -47,7 +48,7 @@ app.use(express.static('public'));
 // });
 
 
-var server = app.listen(80, function() {
+var server = app.listen(8080, function() {
 	var host = server.address().address;
 	var port = server.address().port
 
@@ -1859,3 +1860,48 @@ app.post('/prototype', function(req, res){
 	req.pipe(form);
 }); //closes app.post()
 		
+//**************************************************************
+//**************************************************************
+// Proxy for ferrying requests to and from 4store...
+
+app.get('/sparql', function(req, res){
+	console.log("getting it!");
+	console.log(req.body);
+	var headers = {};
+	for (var key in req.headers){
+		if (req.headers.hasOwnProperty(key)){
+			headers[key] = req.get(key);
+			console.log(req.get(key));
+
+		}
+	}
+	var proxiedURL = "http://127.0.0.1:8000/sparql";
+	request.get({url:proxiedURL, headers:headers }, function(err, response, body){
+	console.log(response.headers);
+	console.log(body);
+
+	for (var key in response.headers){
+		if (response.headers.hasOwnProperty(key)){
+			res.setHeader(key, response,headers[key])
+		}
+	}
+	res.send(response.statusCode, body);
+	})
+
+});
+
+// //var proxiedURL = "http://127.0.0.1:8000/sparql";
+// var options = {
+// 	method: 'POST',
+// 	url: "http://127.0.0.1:8000/sparql",
+// 	headers: {
+// 		"Accecpt": "application/sparql-results+json"
+// 	},
+// 	formData: req.body
+// }
+// console.log(req.body);
+// console.log(req);
+// request(options).pipe(res);
+
+//***********************************
+

@@ -1341,3 +1341,10 @@ to copy the couch db file back.
 
 OK - restarting and getting hp.js running on the remote server. Still trouble with the EACCESS - sometimes just do
 `pm2 start hp.js` sometimes `sudo`, sometimes `-u username`. whatever. some combination of these usually gets it running.
+
+#####20150522
+created 4sProxy branch to establish a reverse proxy that can ferry sparql requests to and from a 4store on local host.
+Kinda working, but need to get the headers/body/url encoding right (i.e what is posted from d3sparql)
+created /exemplars/table.html to do my sparql bidding - it posts to (localhost)/sparql ...
+now just to get them talking properly....
+Once this is figured out, then set up a POST route to proxy to 4store/data or via /sparql?update etc....
