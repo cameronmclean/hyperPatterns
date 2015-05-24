@@ -2,6 +2,8 @@
 <meta charset="utf-8">
 <html>
   <head>
+<!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script> !-->
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.css"/>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/3.5.5/d3.min.js"></script>
     <script src="d3sparql.js"></script>
@@ -18,9 +20,9 @@
       d3sparql.htmltable(json, config)
     }
 
-    function exec_offline() {
-      d3.json("cache/interpro/1117-hk.json", render)
-    }
+    // function exec_offline() {
+    //   d3.json("cache/interpro/1117-hk.json", render)
+    // }
     function toggle() {
       d3sparql.toggle()
     }
@@ -32,20 +34,16 @@
       <form class="form-inline">
         <label>SPARQL endpoint:</label>
         <div class="input-append">
-          <input id="endpoint" class="span5" value="http://127.0.0.1:8080/sparql" type="text">
+          <input id="endpoint" class="span5" value="http://127.0.0.1:8080/sparql/" type="text">
           <button class="btn" type="button" onclick="exec()">Query</button>
          <!-- <button class="btn" type="button" onclick="exec_offline()">Use cache</button>
           <button class="btn" type="button" onclick="toggle()"><i id="button" class="icon-chevron-up"></i></button>
           !-->
         </div>
       </form>
-      <textarea id="sparql" class="span9" rows=15>
-
-select * where {
+      <textarea id="sparql" class="span9" rows=15> select * where {
   ?s ?o ?p
-} LIMIT 10
-
-      </textarea>
+} LIMIT 10</textarea>
     </div>
     <div id="result"></div>
   </body>

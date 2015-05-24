@@ -1865,43 +1865,22 @@ app.post('/prototype', function(req, res){
 // Proxy for ferrying requests to and from 4store...
 
 app.get('/sparql', function(req, res){
-	console.log("getting it!");
-	console.log(req.body);
-	var headers = {};
-	for (var key in req.headers){
-		if (req.headers.hasOwnProperty(key)){
-			headers[key] = req.get(key);
-			console.log(req.get(key));
 
+console.log("getting it!");
+
+var options = {
+		method: 'GET',
+		url: "http://127.0.0.1:8000"+req.url,
+		headers: {
+			"Accept": "application/sparql-results+json"
 		}
 	}
-	var proxiedURL = "http://127.0.0.1:8000/sparql";
-	request.get({url:proxiedURL, headers:headers }, function(err, response, body){
-	console.log(response.headers);
-	console.log(body);
 
-	for (var key in response.headers){
-		if (response.headers.hasOwnProperty(key)){
-			res.setHeader(key, response,headers[key])
-		}
-	}
-	res.send(response.statusCode, body);
-	})
-
+request(options, function(err, response, body){
+	res.send(response.body);
 });
 
-// //var proxiedURL = "http://127.0.0.1:8000/sparql";
-// var options = {
-// 	method: 'POST',
-// 	url: "http://127.0.0.1:8000/sparql",
-// 	headers: {
-// 		"Accecpt": "application/sparql-results+json"
-// 	},
-// 	formData: req.body
-// }
-// console.log(req.body);
-// console.log(req);
-// request(options).pipe(res);
+});
 
 //***********************************
 
