@@ -1866,7 +1866,7 @@ app.post('/prototype', function(req, res){
 
 app.get('/sparql', function(req, res){
 
-console.log("getting it!");
+//console.log("getting it!");
 
 var options = {
 		method: 'GET',

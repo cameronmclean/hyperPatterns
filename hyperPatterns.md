@@ -1354,3 +1354,11 @@ Got proxy route working for /sparql which ferries SPARQL query requests back and
 
 hooked this up to a static page in /exemplars/table.html which uses d3sparql to query and format the results.
 NOTE: table.html is not prettyfied yet - seems its not getting the .css files to load from remote cloudflare site...
+
+SO - next then - need to set up as POST proxy that can grab the (say) JSON posted from praxis, and wrangle it into another POST request to 127.0.0.1:8000/update or /data to insert the triples into the graph.
+Although - we can probably have the client put all the info in an appropriate POST - payload = 
+'update=INSERT+DATA+{urlencoded triples}'
+the 'urlencoded triples' can be turtle sysntax, with either prefix or full URIs - and then we just urlencode() and wrangle the request to labpatterns/addexemplar. cool as. (probably).
+
+NOTE: I should also get a dump of the existing patterns and put all of them into 4store too.
+ALSO NOTE: the migration of patterns into 4 store is a manual/curation process. 

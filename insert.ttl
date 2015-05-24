@@ -1,0 +1,2 @@
+<http://labpatterns.org/id/pattern/1> <http://fakeProperty#hasUpdate> "Hi mum" .
+<http://labpatterns.org/id/pattern/1> <http://fakeProperty#hasUpdate> "Hi again" .
