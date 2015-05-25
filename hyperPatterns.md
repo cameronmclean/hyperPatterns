@@ -1365,8 +1365,8 @@ ALSO NOTE: the migration of patterns into 4 store is a manual/curation process.
 
 #####20150525
 https://www.npmjs.com/package/form-urlencoded looks like it will be helpful for either the praxis plugin or labpatterns proxy to wrangle the data before sending to 4store.
-Current strategy is have the Praxis add-on send json(-ld) - this can be stored in couchdb directly
-then simultaneously wrangle the json into form-encoded and POST to 4store /update
+Current strategy is have the Praxis add-on send json(-ld)  to labatterns/annotate - this can be stored in couchdb somewhat directly
+then simultaneously wrangle the json into form-encoded and POST to 4store localhost/update
 
 BTW - getting 4store to load/serve
 first - start the db

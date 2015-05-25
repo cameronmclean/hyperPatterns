@@ -2,7 +2,8 @@
 // trying to avoid other middleware / libraries that were causing toruble.
 
 
-//var bodyParser = require('body-parser');
+var bodyParser = require('body-parser');
+var jsonParser = bodyParser.json(); //for use with /annotate POST route only
 var busboy = require('busboy');
 var express = require('express');
 var async = require('async');
@@ -1884,9 +1885,15 @@ request(options, function(err, response, body){
 
 //***********************************
 // save exemplars to couchdb + Proxy POST update to 4store via SPARQL
-app.post('/update', function(req, res) {
+app.post('/annotate', jsonParser, function(req, res) {
 console.log("adding new exemplar");
-console.log(req.body);
+//var stuff = Object.keys(req);
+console.log(req.body.force0);
+
+// for (var i in req.body){
+// 	console.log(req.body[i]);
+// }
+res.send("We got the mail");
 });
 
 
