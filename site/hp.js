@@ -1887,19 +1887,53 @@ request(options, function(err, response, body){
 // save exemplars to couchdb + Proxy POST update to 4store via SPARQL
 app.post('/annotate', jsonParser, function(req, res) {
 console.log("adding new exemplar");
-//var stuff = Object.keys(req);
-console.log(req.body.force0);
+
+//check something has been posted as JSON
+if (!req.body) return res.send(400);
+
+var postedEx = req.body;
+var annoKeys = Object.keys(postedEx);
+
+for (var i = 0; i < annoKeys.length; i++){
+	console.log(annoKeys[i])
+}
+
+//get a random ID for this POST
+var exID = crypto.randomBytes(20).toString('hex');
+postedEx['id'] = exID;
+postedEx['concernsForce'] = [];
+
+var re = new RegExp("^force[0-9]+"), item;
+	for (item in annoKeys){
+		console.log(item);
+		if (re.test(annoKeys[item])){
+			console.log("regex match");
+			postedEx["concernsForce"].push(postedEx[annoKeys[item]]); //copy force URIs into array
+			delete postedEx[annoKeys[item]]; //delete old force
+		}
+	}
+
+for (thing in postedEx){
+	console.log(thing);
+
+}
+console.log(postedEx['concernsForce']);
+console.log(postedEx['id']);
+//console.log(req.body.force0);
 
 // for (var i in req.body){
 // 	console.log(req.body[i]);
 // }
-res.send("We got the mail");
+
 });
 
 
 //******************************************
 // route for dereferencing exempar annotations
 app.get('/doc/exemplar/:uuid', function(req, res) {
+
+var annoID = req.params.uuid;
+
 //TODO lookup db for :uuid match get and return, else return 404
 //set res headers content type application/json-ld?
 console.log("getting saved exempalr");

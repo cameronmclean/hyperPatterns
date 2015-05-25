@@ -1391,4 +1391,21 @@ app.post('/api/users', jsonParser, function (req, res) {
 ```
 NOTE- make sure the POSTed request to this route -1) specifies contentType: application/json, and to use JSON.stringify(thing) so send the thing.
 
+NOTE / TODO :
+Exemplar model.
+0)change hasTarget to hasTargetURL 
+1)make hasTargetDetail a datatype property of the exemplar, not the target URL
+2)make hasTargetTitle a datatype property of the exemplar, not the target URL
+3)remove pattern name, force pic, name from annotation - these will be available if we include all the patterns in the SPARQL endpoint too. 
 
+Once the exemplar model is fixed, make the /annotate route wrange the exempar doc into JSON and create a @context to map to it.
+Create and save all of these into couchdb, and make a GET route that retuns them, (as contentType application/json-ld)!!
+
+then once we are happy with the save - how to wrangle it all again? 
+perhaps create a /dump route that will export all patterns and exemplars 
+or modify labpatterns so
+1) whenever a new pattern is published, it is also added to the sparql endpoint.
+2) whenver a new exemplar is pubished, it is also added to the sparql endpoint.
+
+eg following db.save, do a sparql update with re-wrangled data <sigh> this will be painful, but the only way to avoid duplicate graph entries.
+We will need to manually load the exisiting pattern data into 4store.
