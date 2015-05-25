@@ -1362,3 +1362,14 @@ the 'urlencoded triples' can be turtle sysntax, with either prefix or full URIs 
 
 NOTE: I should also get a dump of the existing patterns and put all of them into 4store too.
 ALSO NOTE: the migration of patterns into 4 store is a manual/curation process. 
+
+#####20150525
+https://www.npmjs.com/package/form-urlencoded looks like it will be helpful for either the praxis plugin or labpatterns proxy to wrangle the data before sending to 4store.
+Current strategy is have the Praxis add-on send json(-ld) - this can be stored in couchdb directly
+then simultaneously wrangle the json into form-encoded and POST to 4store /update
+
+BTW - getting 4store to load/serve
+first - start the db
+`4s-backend dbname`
+then
+`4s-httpd -p 8000 dbname`

@@ -1862,7 +1862,7 @@ app.post('/prototype', function(req, res){
 		
 //**************************************************************
 //**************************************************************
-// Proxy for ferrying requests to and from 4store...
+// Proxy for ferrying SPQRAL queries to and from 4store...
 
 app.get('/sparql', function(req, res){
 
@@ -1883,4 +1883,18 @@ request(options, function(err, response, body){
 });
 
 //***********************************
+// save exemplars to couchdb + Proxy POST update to 4store via SPARQL
+app.post('/update', function(req, res) {
+console.log("adding new exemplar");
+console.log(req.body);
+});
+
+
+//******************************************
+// route for dereferencing exempar annotations
+app.get('/doc/exemplar/:uuid', function(req, res) {
+//TODO lookup db for :uuid match get and return, else return 404
+//set res headers content type application/json-ld?
+console.log("getting saved exempalr");
+});
 
