@@ -1373,3 +1373,22 @@ first - start the db
 `4s-backend dbname`
 then
 `4s-httpd -p 8000 dbname`
+
+needed to find a way to handle JSON parsing on /annotate route, but leave the other routes on busboy for the labpatterns site.
+https://www.npmjs.com/package/body-parser
+yep - actually pretty straightforward
+as per the vingette
+```
+var bodyParser = require('body-parser')
+// create application/json parser 
+var jsonParser = bodyParser.json()
+
+// POST /api/users gets JSON bodies 
+app.post('/api/users', jsonParser, function (req, res) {
+  if (!req.body) return res.sendStatus(400)
+  // do things with user in req.body 
+})
+```
+NOTE- make sure the POSTed request to this route -1) specifies contentType: application/json, and to use JSON.stringify(thing) so send the thing.
+
+
