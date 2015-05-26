@@ -1913,17 +1913,29 @@ var re = new RegExp("^force[0-9]+"), item;
 		}
 	}
 
+//postedEx['hasTarget'] = "";
+//postedEx['hasTarget'] = [];
 for (thing in postedEx){
 	console.log(thing);
 
 }
 console.log(postedEx['concernsForce']);
 console.log(postedEx['id']);
-//console.log(req.body.force0);
 
-// for (var i in req.body){
-// 	console.log(req.body[i]);
+
+//***************
+//later for sending exemplar to SPARQL
+//*******************
+// var form = { update: 'INSERT+DATA+ turtle string to url encode'}
+//var formToSend = FormUrlencoded.encode(form);
+// options = {
+// 	url: 'http://127.0.0.1:8000/update',
+// 	method: "POST",
+// 	form: formToSend //use https://www.npmjs.com/package/form-urlencoded //note form: sets appropriate headers for Content-type: application/x-www-form-urlencoded	
 // }
+//request(options, function(response){
+//	handle response
+// });
 
 });
 

@@ -1409,3 +1409,10 @@ or modify labpatterns so
 
 eg following db.save, do a sparql update with re-wrangled data <sigh> this will be painful, but the only way to avoid duplicate graph entries.
 We will need to manually load the exisiting pattern data into 4store.
+
+maybe - download rdf-translator https://bitbucket.org/alexstolz/rdf-translator/src
+run it as a google app engine in dev as localhost here or in digi ocean
+
+We can probably manage to store exempars as they come it, but my datamodels and general mess for JSON-LD virtualisation of patterns means that whole patterns themselves need to be added manually to the SPARQL endpoint. (via a get JSON-LD, convert to turtle, form/urlencode and curl -POST to localhost/update)
+I can make a note of this on the web, but leave it out of the thesis?
+Again, it's the proof-of-principle of working with pattern concepts, not the polished implementation of user tools that we are evaluating here.

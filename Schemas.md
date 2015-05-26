@@ -102,3 +102,8 @@ Here is the internal representation of all pattern documents that node and couch
 	"rationale": string,
 	"ref\_x_reference": string (must be valid bibTex)
 }
+
+*Exemplar Doc*
+{
+	
+}

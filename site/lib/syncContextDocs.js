@@ -38,7 +38,7 @@ var bibTEXContext = {
 };
 
 // specifies the @contex json to be included / mapped to contributor (author) docs
-var contributorContex = {
+var contributorContext = {
 	"_id": "contributor",
 	"doctype": "context",
 	"@context": {
@@ -88,8 +88,32 @@ var forceContext = {
 	}
 };
 
+//
+var exemplarContext = {
+	"_id": "exemplar",
+	"doctype": "contenxt",
+	"@context": {
+		"comment": "http://purl.org/NET/exemplr#hasComment",
+		"targetURL": { "@id": "http://purl.org/NET/exemplr#hasTargetURL",
+		"@type": "@id"
+		},
+		"pageName": "http://purl.org/NET/exemplr#hasTargetTitle",
+		"exemplifiedBy": "http://purl.org/NET/exemplr#exemplifiedBy",
+		"targetDetail": "http://purl.org/NET/exemplr#hasTargetDetail",
+		"creatorORCID": { "@id": "http://purl.org/NET/exemplr#creatorORCID",
+		"@type": "@id"
+		},
+		"concernsForce": { "@id": "http://purl.org/NET/exemplr#concernsForce",
+		"@type": "@id"
+		},
+		"concernsPattern": { "@id": "http://purl.org/NET/exemplr#concernsPattern",
+		"@type": "@id"	
+		}
+	}
+};
 
-var contextDocs = [bibTEXContext, contributorContex, patternContext, forceContext];
+
+var contextDocs = [bibTEXContext, contributorContext, patternContext, forceContext, exemplarContext];
 
 //note this function uses an Immediately Invoked Function expression to 
 // allow async call-back funtions to close properly within the 
