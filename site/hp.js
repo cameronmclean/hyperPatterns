@@ -1905,19 +1905,24 @@ for (var i = 0; i < annoKeys.length; i++){
 //get a random ID for this POST, to use as doc _id when saving, and as handle to retreive
 var exID = crypto.randomBytes(20).toString('hex');
 //postedEx['_id'] = exID;
-postedEx['concernsForce'] = [];
+postedEx['targetDetail'] = postedEx['exemplifiedBy']; //copy annotated text to be data property of both force and exemplar
 
+postedEx['concernsForce'] = [];
 var re = new RegExp("^force[0-9]+"), item;
 	for (item in annoKeys){
 		console.log(item);
 		if (re.test(annoKeys[item])){
 			console.log("regex match");
-			postedEx["concernsForce"].push(postedEx[annoKeys[item]]); //copy force URIs into array
+			var forceItem = {};
+			forceItem["@id"] = postedEx[annoKeys[item]];
+			forceItem["@type"] = ["http://purl.org/NET/labpatterns#Force"];
+			forceItem['exemplifiedBy'] = postedEx['exemplifiedBy'];
+			postedEx["concernsForce"].push(forceItem); //push force into array
 			delete postedEx[annoKeys[item]]; //delete old force
 		}
 	}
 
-postedEx['targetDetail'] = postedEx['exemplifiedBy']; //copy annotated text to be data property of both force and exemplar
+delete postedEx['exemplifiedBy']; //should all be copied to targetDetail: or forceItem by now
 postedEx['doctype'] = "exemplar";
 
 //OK - save it!
@@ -1960,7 +1965,7 @@ db.insert(postedEx, exID, function(err, body){
 //******************************************
 // route for dereferencing exempar annotations
 app.get('/doc/exemplar/:uuid', function(req, res) {
-console.log("getting saved exempalr");
+//console.log("getting saved exempalr");
 
 var annoID = req.params.uuid;
 
@@ -1971,13 +1976,15 @@ db.get('_design/patterns/_view/getExemplars', function(err, body){
 			res.sendStatus(500);
 		} else {
 			var exemplarList = body.rows;
-			//console.log(body.rows);
+			var counter = 0;
+		//	console.log(body.rows);
 			for (var i = 0; i < exemplarList.length; i++){
 				if (exemplarList[i]['id'] === annoID){
+					//console.log("match!");
 					db.get(annoID, function(err, body2){
 						if (err) {
 							console.log("error getting matched exemplar doc");
-							res.send(500)
+							res.sendStatus(500)
 						} else {
 							delete body2['_id'];
 							delete body2['_rev'];
@@ -1987,20 +1994,24 @@ db.get('_design/patterns/_view/getExemplars', function(err, body){
 							db.get("exemplar", function(err, body3){
 								if (err) {
 									console.log("error getting exemplar @context");
-									res.send(500);
+									res.sendStatus(500);
 								} else {
+									//console.log("prepping to send");
 									delete body3['_id'];
 									delete body3['_rev'];
 									delete body3['doctype'];
 									body2['@context'] = body3;
-									res.set('Content-Type', 'application/ld+json');
+									res.setHeader('Content-Type', 'application/ld+json');
 									res.send(body2);
 								}
 							})
 						}
 					});
 				} else {
-					res.send(404); //no match to :uuid found
+					counter++;
+					if (counter === exemplarList.length){
+					res.sendStatus(404); //we have been through the list
+					}
 				}
 			}
 	
