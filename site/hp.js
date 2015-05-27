@@ -16,6 +16,7 @@ var rimraf = require('rimraf');
 var crypto = require('crypto');
 var request = require('request');
 var jsonld = require('jsonld');
+var FormUrlencoded = require('form-urlencoded');
 
 var app = express();
 
@@ -1893,7 +1894,7 @@ request(options, function(err, response, body){
 //***********************************
 // save exemplars to couchdb + Proxy POST update to 4store via SPARQL
 app.post('/annotate', jsonParser, function(req, res) {
-console.log("adding new exemplar");
+//console.log("adding new exemplar");
 
 //check something has been posted as JSON
 if (!req.body) return res.send(400);
@@ -1901,9 +1902,9 @@ if (!req.body) return res.send(400);
 var postedEx = req.body;
 var annoKeys = Object.keys(postedEx);
 
-for (var i = 0; i < annoKeys.length; i++){
-	console.log(annoKeys[i])
-}
+// for (var i = 0; i < annoKeys.length; i++){
+// 	console.log(annoKeys[i])
+// }
 
 //get a random ID for this POST, to use as doc _id when saving, and as handle to retreive
 var exID = crypto.randomBytes(20).toString('hex');
@@ -1913,9 +1914,9 @@ postedEx['targetDetail'] = postedEx['exemplifiedBy']; //copy annotated text to b
 postedEx['concernsForce'] = [];
 var re = new RegExp("^force[0-9]+"), item;
 	for (item in annoKeys){
-		console.log(item);
+		//console.log(item);
 		if (re.test(annoKeys[item])){
-			console.log("regex match");
+			//console.log("regex match");
 			var forceItem = {};
 			forceItem["@id"] = postedEx[annoKeys[item]];
 			forceItem["@type"] = ["http://purl.org/NET/labpatterns#Force"];
@@ -1934,33 +1935,64 @@ db.insert(postedEx, exID, function(err, body){
 		console.log("error saving exemplar doc "+exID+">>>"+err);
 	} else {
 		//now do sparql update?
-		res.send("Saved to couchdb"); //send this after wranging exemplars to SPARQL update
+		db.get("exemplar", function(err, body2){ //get the exemplar context doc
+			if (err) {
+				console.log("error getting context to wrangle for SPARQL update");				
+			} else {
+				postedEx['@context'] = body2; //add context to copy of just saved doc
+				delete postedEx['doctype'] // dont need that anymore 
+				postedEx['@id'] = "http://labpatterns.org/doc/exemplar/"+exID;
+				postedEx['@type'] = "http://purl.org/NET/exemplr#Exemplar";
+				//postedEx should now be valid JSON-LD...
+				//console.log(JSON.stringify(postedEx));
+				jsonld.toRDF(postedEx, {format: 'application/nquads'}, function(err, nquads) {
+  					if(err){
+  						console.log("error converting to n-quads "+err);
+  					} else {
+  					//	var urlquads = encodeURI(nquads); 
+  						console.log(nquads);
+					    var update = 'update=INSERT+DATA+{+'+encodeURI(nquads)+'+}'; // nquads is a string of nquads
+					    //var encodedForm = FormUrlencoded.encode(form);  //encoded form to POST
+					    //console.log(form);
+
+					    // request.post('http://127.0.0.1:8000/update/', {form:{update: formdata}}, function(err,httpResponse,body){
+					    // 	console.log("request made.");
+					    // 	console.log(err+httpResponse+body);}
+					    // 	);
+					   
+					   // var form = {
+					   // 	"data": nquads,
+					   // 	"mime-type": "application/x-turtle" 
+					   // }
+
+					   // var encodedForm = FormUrlencoded.encode(form);  //encoded form to POST
+					   
+					   // console.log(encodedForm);
+
+					   var options = {
+						 	url: 'http://127.0.0.1:8000/update/',
+ 							method: "POST",
+ 							headers: {
+ 								//"Content-Type": "application/x-turtle"
+ 								"Content-Type": "application/x-www-form-urlencoded"
+ 							},
+ 							body: update 
+ 						};
+
+						request(options, function(err, response, body){
+							console.log("requesting!");
+							console.log(err+response+body);//handle response
+							res.send("annotated saved!");
+						});
+ 
+  					} 
+				});
+			}
+		});
+		
 	}
 })
 
-// for (thing in postedEx){
-// 	console.log(thing);
-
-// }
-// console.log(postedEx['concernsForce']);
-// console.log(postedEx['id']);
-
-
-
-
-//***************
-//later for sending exemplar to SPARQL
-//*******************
-// var form = { update: 'INSERT+DATA+ turtle string to url encode'}
-//var formToSend = FormUrlencoded.encode(form);
-// options = {
-// 	url: 'http://127.0.0.1:8000/update',
-// 	method: "POST",
-// 	form: formToSend //use https://www.npmjs.com/package/form-urlencoded //note form: sets appropriate headers for Content-type: application/x-www-form-urlencoded	
-// }
-//request(options, function(response){
-//	handle response
-// });
 
 });
 
