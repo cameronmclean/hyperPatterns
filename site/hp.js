@@ -14,8 +14,11 @@ var bibtexParse = require('bibtex-parse-js');
 var cors = require('cors');
 var rimraf = require('rimraf');
 var crypto = require('crypto');
-var app = express();
 var request = require('request');
+var jsonld = require('jsonld');
+
+var app = express();
+
 
 //couch db settings
 var nano = require('nano')('http://127.0.0.1:5984');

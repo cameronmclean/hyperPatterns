@@ -1398,8 +1398,8 @@ Exemplar model.
 2)make hasTargetTitle a datatype property of the exemplar, not the target URL
 3)remove pattern name, force pic, name from annotation - these will be available if we include all the patterns in the SPARQL endpoint too. 
 
-Once the exemplar model is fixed, make the /annotate route wrange the exempar doc into JSON and create a @context to map to it.
-Create and save all of these into couchdb, and make a GET route that retuns them, (as contentType application/json-ld)!!
+Once the exemplar model is fixed, make the /annotate route wrange the exemplar doc into JSON and create a @context to map to it.
+Create and save all of these into couchdb, and make a GET route that returns them, (as contentType application/json-ld)!!
 
 then once we are happy with the save - how to wrangle it all again? 
 perhaps create a /dump route that will export all patterns and exemplars 
@@ -1416,3 +1416,20 @@ run it as a google app engine in dev as localhost here or in digi ocean
 We can probably manage to store exempars as they come it, but my datamodels and general mess for JSON-LD virtualisation of patterns means that whole patterns themselves need to be added manually to the SPARQL endpoint. (via a get JSON-LD, convert to turtle, form/urlencode and curl -POST to localhost/update)
 I can make a note of this on the web, but leave it out of the thesis?
 Again, it's the proof-of-principle of working with pattern concepts, not the polished implementation of user tools that we are evaluating here.
+
+#####20150527
+Righto - implemented an /annotate route where we POST a JSON contanting our praxis annotation payload, and wrangle it to store in couchdb
+NOTE - we give exemplars a crypo generated UUID at POST, so we can mint a unique ID without worring about simultaneous clashes etc etc
+	- created a @context doc for exemplars to served/dereferenced as JSON-LD from /doc/exemplar/:uuid
+	- created GET route /doc/exemplar/:uuid that fetches and serves JSON-LD if match found.
+
+Only thing left to do for minimal functionality is to wrangle the same exemplar to the sparql endpoint, and prettyfy the /exemplars page with canned queries that map to domain interests.
+Still based on the idea of manually importing patterns to sparql update at this point.
+
+So - https://www.npmjs.com/package/jsonld
+allows
+```
+// serialize a document to N-Quads (RDF) 
+jsonld.toRDF(doc, {format: 'application/nquads'}, function(err, nquads) {
+  // nquads is a string of nquads 
+``` which should make things eaiser!
