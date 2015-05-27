@@ -91,7 +91,7 @@ var forceContext = {
 //
 var exemplarContext = {
 	"_id": "exemplar",
-	"doctype": "contenxt",
+	"doctype": "context",
 	"@context": {
 		"comment": "http://purl.org/NET/exemplr#hasComment",
 		"targetURL": { "@id": "http://purl.org/NET/exemplr#hasTargetURL",

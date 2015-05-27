@@ -115,6 +115,7 @@ app.get('/doc/contributor/:orcid', function(req, res){
 	function done(){
 		//console.log('Final doc assembled for response!');
 		//console.log(JSON.stringify(doc, null, 2));
+		res.set('Content-Type', 'application/ld+json');
 		res.send(JSON.stringify(doc, null, 2));		
 	}
 
@@ -309,6 +310,7 @@ app.get('/doc/pattern/:pNum/force/:fNum', function(req, res){
 			//console.log('progress from addContext = '+progress);
 			//if forceDoc content already done
 			if (progress === 3){
+				res.set('Content-Type', 'application/ld+json');
 				res.send(JSON.stringify(match, null, 2));
 			}
 		});
@@ -422,6 +424,7 @@ app.get('/doc/pattern/:pNum/ref/:eNum', function(req, res){
 			match['@id'] = 'http://labpatterns.org/id/pattern/'+pNum+"/ref/"+eNum; // <--------- we add @id of resource to the JSONLD here
 			match['@type'] = 'http://purl.org/NET/labpatterns#Reference'; //<----------- and declare that this resource is type Reference
 			match['partOf'] = 'http://labpatterns.org/id/pattern/'+pNum;
+			res.set('Content-Type', 'application/ld+json');
 			res.send(JSON.stringify(match, null, 2));
 			//}
 		});
@@ -635,6 +638,7 @@ app.get('/doc/pattern/:intID', function(req, res){
 		 			var forcepicsafe = encodeURI(docToSend['force'][i]['pic']);
 		 			docToSend['force'][i]['pic'] = forcepicsafe;
 		 		} 
+		 		res.set('Content-Type', 'application/ld+json');
 		 		res.send(JSON.stringify(docToSend, null, 2)); //<--- we're done, send the response! 
 		 	}
 		 	else {
@@ -1898,9 +1902,9 @@ for (var i = 0; i < annoKeys.length; i++){
 	console.log(annoKeys[i])
 }
 
-//get a random ID for this POST
+//get a random ID for this POST, to use as doc _id when saving, and as handle to retreive
 var exID = crypto.randomBytes(20).toString('hex');
-postedEx['id'] = exID;
+//postedEx['_id'] = exID;
 postedEx['concernsForce'] = [];
 
 var re = new RegExp("^force[0-9]+"), item;
@@ -1913,14 +1917,27 @@ var re = new RegExp("^force[0-9]+"), item;
 		}
 	}
 
-//postedEx['hasTarget'] = "";
-//postedEx['hasTarget'] = [];
-for (thing in postedEx){
-	console.log(thing);
+postedEx['targetDetail'] = postedEx['exemplifiedBy']; //copy annotated text to be data property of both force and exemplar
+postedEx['doctype'] = "exemplar";
 
-}
-console.log(postedEx['concernsForce']);
-console.log(postedEx['id']);
+//OK - save it!
+db.insert(postedEx, exID, function(err, body){
+	if (err) {
+		console.log("error saving exemplar doc "+exID+">>>"+err);
+	} else {
+		//now do sparql update?
+		res.send("Saved to couchdb"); //send this after wranging exemplars to SPARQL update
+	}
+})
+
+// for (thing in postedEx){
+// 	console.log(thing);
+
+// }
+// console.log(postedEx['concernsForce']);
+// console.log(postedEx['id']);
+
+
 
 
 //***************
@@ -1943,11 +1960,54 @@ console.log(postedEx['id']);
 //******************************************
 // route for dereferencing exempar annotations
 app.get('/doc/exemplar/:uuid', function(req, res) {
+console.log("getting saved exempalr");
 
 var annoID = req.params.uuid;
 
-//TODO lookup db for :uuid match get and return, else return 404
-//set res headers content type application/json-ld?
-console.log("getting saved exempalr");
+
+db.get('_design/patterns/_view/getExemplars', function(err, body){
+		if(err) {
+			console.log("error getting exemplars list from couch"+err);
+			res.sendStatus(500);
+		} else {
+			var exemplarList = body.rows;
+			//console.log(body.rows);
+			for (var i = 0; i < exemplarList.length; i++){
+				if (exemplarList[i]['id'] === annoID){
+					db.get(annoID, function(err, body2){
+						if (err) {
+							console.log("error getting matched exemplar doc");
+							res.send(500)
+						} else {
+							delete body2['_id'];
+							delete body2['_rev'];
+							delete body2['doctype'];
+							body2['@id'] = "http://labpatterns.org/doc/exemplar/"+annoID;
+							body2["@type"] = "http://purl.org/NET/exemplr#Exemplar";
+							db.get("exemplar", function(err, body3){
+								if (err) {
+									console.log("error getting exemplar @context");
+									res.send(500);
+								} else {
+									delete body3['_id'];
+									delete body3['_rev'];
+									delete body3['doctype'];
+									body2['@context'] = body3;
+									res.set('Content-Type', 'application/ld+json');
+									res.send(body2);
+								}
+							})
+						}
+					});
+				} else {
+					res.send(404); //no match to :uuid found
+				}
+			}
+	
+		}
+});
+
+
+
 });
 

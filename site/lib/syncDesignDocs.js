@@ -30,6 +30,9 @@ var views = {
 		'getPatterns': {
 			"map": "function(doc){ if(doc.doctype==='pattern'){ emit('int_id', doc.int_id);}}"
 		},
+		'getExemplars': {
+			"map": "function(doc){ if(doc.doctype==='exemplar'){ emit('_id', doc._id);}}"
+		}
 
 	}
 };
