@@ -15,7 +15,6 @@
     "busboy": "^0.2.9",
     "cors": "^2.5.3",
     "express": "^4.10.6",
-    "form-urlencoded": "0.0.7",
     "jsonld": "^0.3.19",
     "nano": "^6.1.2",
     "request": "^2.55.0",

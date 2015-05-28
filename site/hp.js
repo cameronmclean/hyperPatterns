@@ -1,6 +1,4 @@
 //this is the express.js version of hyperPatterns API
-// trying to avoid other middleware / libraries that were causing toruble.
-
 
 var bodyParser = require('body-parser');
 var jsonParser = bodyParser.json(); //for use with /annotate POST route only
@@ -16,7 +14,7 @@ var rimraf = require('rimraf');
 var crypto = require('crypto');
 var request = require('request');
 var jsonld = require('jsonld');
-var FormUrlencoded = require('form-urlencoded');
+
 
 var app = express();
 
@@ -1949,25 +1947,11 @@ db.insert(postedEx, exID, function(err, body){
   					if(err){
   						console.log("error converting to n-quads "+err);
   					} else {
-  					//	var urlquads = encodeURI(nquads); 
-  						console.log(nquads);
+  					
+  					//assemble query to send to 4Store
+  					//http://4store.org/trac/wiki/SparqlServer
+  						//console.log(nquads);
 					    var update = 'update=INSERT+DATA+{+'+encodeURI(nquads)+'+}'; // nquads is a string of nquads
-					    //var encodedForm = FormUrlencoded.encode(form);  //encoded form to POST
-					    //console.log(form);
-
-					    // request.post('http://127.0.0.1:8000/update/', {form:{update: formdata}}, function(err,httpResponse,body){
-					    // 	console.log("request made.");
-					    // 	console.log(err+httpResponse+body);}
-					    // 	);
-					   
-					   // var form = {
-					   // 	"data": nquads,
-					   // 	"mime-type": "application/x-turtle" 
-					   // }
-
-					   // var encodedForm = FormUrlencoded.encode(form);  //encoded form to POST
-					   
-					   // console.log(encodedForm);
 
 					   var options = {
 						 	url: 'http://127.0.0.1:8000/update/',
@@ -1979,10 +1963,12 @@ db.insert(postedEx, exID, function(err, body){
  							body: update 
  						};
 
-						request(options, function(err, response, body){
-							console.log("requesting!");
-							console.log(err+response+body);//handle response
-							res.send("annotated saved!");
+						request(options, function(err, response){
+							if(!err){
+								res.send("annotated saved!");
+							}
+							//console.log(response);
+							
 						});
  
   					} 

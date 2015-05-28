@@ -1433,3 +1433,67 @@ allows
 jsonld.toRDF(doc, {format: 'application/nquads'}, function(err, nquads) {
   // nquads is a string of nquads 
 ``` which should make things eaiser!
+
+#####20150528
+Finished up yesterday getting it all working - exemplars now save to couch and 4store, and all links are dereferencable , serving up json-ld :)
+
+>>document learnings getting it all working here...
+
+moving on to get 4store installed on ubuntu on digi ocean
+http://4store.org/trac/wiki/Install
+
+1) get the tarball `wget http://4store.org/download/4store-v1.1.5.tar.gz`
+2) `tar xvfz 4store-v1.1.5.tar.gz`
+3) `cd 4store-v1.1.5`
+4) `./configure`
+5) - had to install a number of missing dependencies
+	`sudo apt-get install glib-2.0`
+	`sudo apt-get install libxml2-dev`  note: -dev http://ubuntuforums.org/showthread.php?t=1066942
+	`sudo apt-get install libraptor2-dev` (raptor2)
+6) had to manually install rasqal 
+https://webthreeoh.wordpress.com/2012/06/16/get-your-triples-on-installing-4store-on-a-mac-mini/
+http://librdf.org/rasqal/INSTALL.html
+	(in new dir)
+	`wget http://download.librdf.org/source/rasqal-0.9.33.tar.gz`
+	`tar -xzvf rasqal-0.9.33.tar.gz`
+	`cd rasqal....`
+	`./configure`
+	`make`
+	`sudo make install`
+7) `sudo apt-get install uuid-dev`
+8) `sudo apt-get install libreadline-dev`
+9) `sudo apt-get install libcr-dev`
+	`sudo apt-get install ncurses-dev`
+8) `make` (be patient!)
+9) `sudo make install`
+10) `make test`
+
+passed all tests except "format"
+
+Next - set it up!
+NOTE: By default 4store stores its databases in /var/lib/4store/
+
+create db
+`4s-backend-setup patterns`
+
+start it
+`4s-backend patterns`
+
+http/sparql it
+`sudo 4s-httpd -p 8000 patterns`
+
+annnnnd.... it works!
+
+(note - first time forgot to specify -p 8000 - was getting connection refused when trying to curl it - conection refused often means there is NO SERVICE LISTENING ON THAT PORT - good to know)... :)
+
+SOOOOOO
+I noticed that after running for 24D, the hp.jp app on digi ocean - PM2 tells me it is using ~120MB of RAM.
+A `sudo pm2 restart hp.js` returns it back to ~13MB. So there is some memory leak/cleanup issue somewhere, - will need to restart the app every month/weeks or so.
+
+Next to tidy up the hyperpatterns front end, check hardcoded ports/routes, merge into master, and git pull 
+
+then change praxis to POST to labpatterns.org
+
+DONT forget on digi ocean if we dont do a fresh couchdb dump/install from my local machine, to syncDesignDocs and syncContextDocs.
+
+better /eaiser to do a fresh couchdump, reload, snap a digiocean image...
