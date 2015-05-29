@@ -27,6 +27,9 @@
                     <button type="button" class="btn btn-default navbar-btn" id='addnew'>New pattern</button>
                     <button type ="button" class="btn btn-default navbar-btn" id='edit'>Proto-patterns</button>
                     <button type='button' class="btn btn-default navbar-btn" id='patterns'>Patterns</button>
+                    <button type='button' class="btn btn-default navbar-btn" id='exemplars'>Exemplars</button>
+
+
                 </div>
             </nav>
         </div>
@@ -88,6 +91,9 @@
 
 			$('#home').click(function(){
 				window.location.href='/';
+			});
+			$('#exemplars').click(function(){
+				window.location.href='/exemplars/table.html';
 			});
 
 		//function to get and parse the URL params

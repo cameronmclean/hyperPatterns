@@ -1497,3 +1497,14 @@ then change praxis to POST to labpatterns.org
 DONT forget on digi ocean if we dont do a fresh couchdb dump/install from my local machine, to syncDesignDocs and syncContextDocs.
 
 better /eaiser to do a fresh couchdump, reload, snap a digiocean image...
+
+#####20150529
+hmmmm. testing annotations live on the webs today - WAIT
+
+because I didn't update the digi ocen couchdb to save exemplar docs and context etc - it doesnt store saved exemplars, and then doesnt get to the sparql update bit...
+:)
+
+Fixed - made digi ocean image with 5 patterns in couch, couchdb and 4-store set up for exemplars but empty.
+TODO - load patterns into 4store, create some exemplars for show, re-image again as backup.
+
+also prettified /exemplars/table.html for sparql endpoint.
