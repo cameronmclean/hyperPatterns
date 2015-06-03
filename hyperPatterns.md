@@ -1508,3 +1508,13 @@ Fixed - made digi ocean image with 5 patterns in couch, couchdb and 4-store set 
 TODO - load patterns into 4store, create some exemplars for show, re-image again as backup.
 
 also prettified /exemplars/table.html for sparql endpoint.
+
+#####20150603
+
+loading in 5 sample patterns into teh remote 4Store instance
+
+did this the slow and painful way by loggin in to labpatterns.org, and at the command line
+
+`curl -i -d 'update=INSERT+DATA+{<urlencoded triples>}' http://127.0.0.1:8000/update/`
+
+http://meyerweb.com/eric/tools/dencoder/ was useful for copy/paste urlencoded triples

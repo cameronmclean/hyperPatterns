@@ -1,6 +1,6 @@
 Schemas for *couchdb*
 
-Here is the internal representation of all pattern documents that node and couchdb wrangle into protopatterns or the final JSON-LD / representations that are sent. These are what is stored
+Here is the internal representation of all pattern documents stored in couchdb that node.js wrangles into protopatterns or the final JSON-LD / representations that are sent. These are what is stored -
 
 *@Context Doc*
 {
@@ -105,5 +105,14 @@ Here is the internal representation of all pattern documents that node and couch
 
 *Exemplar Doc*
 {
-	
+	"\_id": crypto-generated-uuid,
+	"\_rev":	couchdb_hash,
+	"doctype": "exemplar",
+	"comment": string,
+	"targetURL": string,
+	"pageName": string,
+	"creatorORCID": string,
+	"concernsPattern": string,
+	"targetDetail": string,
+	"concernsForce": array of objects [{"@id": url, "@type": url, "exemplifiedBy"" string}],
 }

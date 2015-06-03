@@ -14,6 +14,7 @@ http://labpatterns.org/doc/pattern/:id/:img 				GET 			200 OK
 http://labpatterns.org/doc/pattern/:id/diagram/:img  		GET 			200 OK
 http://labpatterns.org/doc/pattern/:id/force/:id/:img 		GET 			200 OK
 
+http://labpatterns.org/doc/exemplar/:id 					GET 			200 OK
 
 http://labpatterns.org/prototypes 							GET 			200 OK
 http://labpatterns.org/prototype/:id 						GET  			200 OK
@@ -25,13 +26,22 @@ http://labpatterns.org/publish/:id 							GET 			302 Found (redirect)
 http://labpatterns.org/new 									POST 			302 Found (redirect)
 http://labpatterns.org/prototype 							POST 			302 Found (redirect)
 
+http://labaptterns.org/annotate								POST 			200 OK
+
+http://labpatterns.org/sparql 								GET/POST 		200 OK
+
+---
+Web frontend
+
+http://labpatterns.org 										GET 			200 OK
+http://labpatterns.org/exemplars/table.html 				GET 			200 OK
 
 
 NOTE: We originally aimed for a completly RESTful style, but teh overhead in design and implementation was too high.
 Our aim here is a quick and simple pattern publishing service, one that we can build other proof-of-concept tools on for the purposes of the thesis. Due to time and resource constraints, this implementation is 'good enough', but does not necessarily reflect best practice in a commercial deployment setting.
 
 
-Old notes below
+OLD notes below
 ------------
 
 
