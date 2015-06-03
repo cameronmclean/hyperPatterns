@@ -42,7 +42,7 @@
         <h1>Laboratory patterns</h1>
         <p>A framework to communicate and share expert knowledge about lab procedures</p>
         </div>
-        
+
         <div id='centerstage'>
     <div id="form" style='width:70%; margin:0 auto'></div>
     <script type="text/javascript">
@@ -50,14 +50,17 @@
     //jQuery for nav buttons
         $('#addnew').click(function(){
                 $('#centerstage').load("/html/newform.html");
+                $('#banner').load("/html/banner.html");
             });
             
             $("#edit").click(function(){
                 $('#centerstage').load("/html/list.html");
+                $('#banner').load("/html/banner.html");
             });
 
             $("#patterns").click(function(){
                 $('#centerstage').load("/html/patternlist.html");
+                $('#banner').load("/html/banner.html");
             });
 
             $('#home').click(function(){
