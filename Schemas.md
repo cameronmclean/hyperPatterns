@@ -114,5 +114,5 @@ Here is the internal representation of all pattern documents stored in couchdb t
 	"creatorORCID": string,
 	"concernsPattern": string,
 	"targetDetail": string,
-	"concernsForce": array of objects [{"@id": url, "@type": url, "exemplifiedBy"" string}],
+	"concernsForce": array of objects [{"@id": url, "@type": url, "exemplifiedBy": string}]
 }
