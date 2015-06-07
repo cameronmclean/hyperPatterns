@@ -1518,3 +1518,7 @@ did this the slow and painful way by loggin in to labpatterns.org, and at the co
 `curl -i -d 'update=INSERT+DATA+{<urlencoded triples>}' http://127.0.0.1:8000/update/`
 
 http://meyerweb.com/eric/tools/dencoder/ was useful for copy/paste urlencoded triples
+
+#####20150608
+packaged prais tool as .xpi file `jmp xpi` and created link to download it from the labpatterns main page.
+Need to fix jumbotron errors and add in more useful SPARQL default query...
