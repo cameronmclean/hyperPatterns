@@ -76,8 +76,7 @@
           !-->
         </div>
       </form>
-      <textarea id="sparql" class="span9 form-control" rows="15"> 
-      	prefix exemplr: <http://purl.org/NET/exemplr#>
+      <textarea id="sparql" class="span9 form-control" rows="15"> prefix exemplr: <http://purl.org/NET/exemplr#>
 prefix schema: <http://schema.org/>
 
 SELECT ?resource ?resourceTitle ?targetDetail ?comment WHERE {
@@ -88,6 +87,7 @@ SELECT ?resource ?resourceTitle ?targetDetail ?comment WHERE {
 	?e exemplr:hasComment ?comment .
 	FILTER (regex(?comment, "Zebrafish","i"))
 }
+</textarea>
     </div>
     <div id="result"></div>
 		</div>
