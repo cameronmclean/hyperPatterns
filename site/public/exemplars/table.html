@@ -75,10 +75,17 @@
           <button class="btn" type="button" onclick="toggle()"><i id="button" class="icon-chevron-up"></i></button>
           !-->
         </div>
-      </form>
-      <textarea id="sparql" class="span9 form-control" rows="15"> SELECT * WHERE {
-  ?s ?o ?p
-} LIMIT 10</textarea>
+      </form>prefix exemplr: <http://purl.org/NET/exemplr#>
+prefix schema: <http://schema.org/>
+
+SELECT ?resource ?resourceTitle ?targetDetail ?comment WHERE {
+	?e exemplr:concernsForce <http://labpatterns.org/id/pattern/1/force/3> .
+	?e exemplr:hasTargetURL ?resource .
+	?e exemplr:hasTargetTitle ?resourceTitle .
+	?e exemplr:hasTargetDetail ?targetDetail .
+	?e exemplr:hasComment ?comment .
+	FILTER (regex(?comment, "Zebrafish","i"))
+}</textarea>
     </div>
     <div id="result"></div>
 		</div>
