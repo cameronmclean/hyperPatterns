@@ -1523,3 +1523,7 @@ http://meyerweb.com/eric/tools/dencoder/ was useful for copy/paste urlencoded tr
 packaged prais tool as .xpi file `jmp xpi` and created link to download it from the labpatterns main page.
 Need to fix jumbotron errors and add in more useful SPARQL default query...
 Also added in CC license info.
+
+#####20150610
+crated 4-store "dump" on hte digi ocean server by `cp -R /var/lib/4store .` where . = ~/4sDump - if disaster strikes, just copy it back....
+
