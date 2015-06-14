@@ -76,7 +76,12 @@
           !-->
         </div>
       </form>
-      <textarea id="sparql" class="span9 form-control" rows="15"> prefix exemplr: <http://purl.org/NET/exemplr#>
+      <textarea id="sparql" class="span9 form-control" rows="15">
+# This is an example SPARQL query that retrieves all instances
+# showing where the force "Viable" from the pattern Biophtonic Imaging
+# has been resolved and annotation comments include the word "Zebrafish"
+
+prefix exemplr: <http://purl.org/NET/exemplr#>
 prefix schema: <http://schema.org/>
 
 SELECT ?resource ?resourceTitle ?targetDetail ?comment WHERE {
