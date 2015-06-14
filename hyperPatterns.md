@@ -1527,3 +1527,11 @@ Also added in CC license info.
 #####20150610
 crated 4-store "dump" on hte digi ocean server by `cp -R /var/lib/4store .` where . = ~/4sDump - if disaster strikes, just copy it back....
 
+#####20150615
+fixed typo in syncContexDocs that was casing incorrect URIs for hasPattern, hasContext etc.
+reloaded pattern triples into digiocean 4store instance - now there are many duplicate triples in the store.
+Must select DISTINCT when querying now... :-(
+4s defaults to allow duplicates - trade off between speed at ingress or speed at query/delete...
+Oh well.
+
+
