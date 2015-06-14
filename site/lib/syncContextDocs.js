@@ -56,11 +56,11 @@ var patternContext = {
 	"doctype": "context",
 	"@context": {
 	"name": "http://schema.org/name",
-	"context": "http://purl/NET/labpatterns#hasContext",
-	"problem": "http://purl/NET/labpatterns#hasProblem",
-	"force": "http://purl/NET/labpatterns#hasForce",
-	"solution": "http://purl/NET/labpatterns#hasSolution",
-	"rationale": "http://purl/NET/labpatterns#hasRationale",
+	"context": "http://purl.org/NET/labpatterns#hasContext",
+	"problem": "http://purl.org/NET/labpatterns#hasProblem",
+	"force": "http://purl.org/NET/labpatterns#hasForce",
+	"solution": "http://purl.org/NET/labpatterns#hasSolution",
+	"rationale": "http://purl.org/NET/labpatterns#hasRationale",
 	"diagram": {"@id": "http://schema.org/image",
 		"@type": "@id"
 	    },
