@@ -79,14 +79,18 @@
       <textarea id="sparql" class="span9 form-control" rows="15">
       	
 # This is an example SPARQL query that retrieves all exemplar instances
-# showing where the force "Viable" from the pattern Biophtonic Imaging
-# has been resolved and annotation comments include the word "Zebrafish"
+# showing where the force "Immobilisation" from the pattern Biophtonic Imaging
+# has been resolved AND where annotation comments include the word "Zebrafish"
 
 prefix exemplr: <http://purl.org/NET/exemplr#>
 prefix schema: <http://schema.org/>
+prefix lp: <http://purl.org/NET/labpatterns#>
 
-SELECT ?resource ?resourceTitle ?targetDetail ?comment WHERE {
-	?e exemplr:concernsForce <http://labpatterns.org/id/pattern/1/force/3> .
+SELECT  DISTINCT ?resource ?resourceTitle ?targetDetail ?comment WHERE {
+    ?p schema:name "Biophotonic Imaging" .
+    ?p lp:hasForce ?f .
+    ?f schema:name "Immobilisation" .
+	?e exemplr:concernsForce ?f .
 	?e exemplr:hasTargetURL ?resource .
 	?e exemplr:hasTargetTitle ?resourceTitle .
 	?e exemplr:hasTargetDetail ?targetDetail .
